@@ -13,25 +13,27 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="John Doe">
+  <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Multipass official site: https:&#x2F;&#x2F;multipass.run&#x2F;docs  启动前配置1234567## 开启mount挂载，方便拿或传文件到服务器，默认falsemultipass set local.privileged-mounts&#x3D;true## 选择虚拟机驱动，hyperv&#x2F;virtualbox## win专业版可用hyperv，家庭版只能virtualbox">
+    <meta name="description" content="这是一份Multipass基本操作文档，以及包含一些常见问题的解决方法。 Multipass 是一个轻量级的虚拟机管理工具，旨在简化在本地环境中创建和管理 Ubuntu 虚拟机。 参考资料  Multipass 官网 Multipass 文档  安装Multipass 在 Linux 上安装: 1sudo snap install multipass  在 macOS 上安装:使用 Homebre">
 <meta property="og:type" content="article">
-<meta property="og:title" content="multipass">
-<meta property="og:url" content="http://example.com/2024/07/08/multipass/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Multipass official site: https:&#x2F;&#x2F;multipass.run&#x2F;docs  启动前配置1234567## 开启mount挂载，方便拿或传文件到服务器，默认falsemultipass set local.privileged-mounts&#x3D;true## 选择虚拟机驱动，hyperv&#x2F;virtualbox## win专业版可用hyperv，家庭版只能virtualbox">
+<meta property="og:title" content="Multipass基本用法及常见问题">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2024/07/08/multipass/index.html">
+<meta property="og:site_name" content="piupiuxiupa&#39;s bolg">
+<meta property="og:description" content="这是一份Multipass基本操作文档，以及包含一些常见问题的解决方法。 Multipass 是一个轻量级的虚拟机管理工具，旨在简化在本地环境中创建和管理 Ubuntu 虚拟机。 参考资料  Multipass 官网 Multipass 文档  安装Multipass 在 Linux 上安装: 1sudo snap install multipass  在 macOS 上安装:使用 Homebre">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-07-08T03:02:11.000Z">
-<meta property="article:modified_time" content="2024-07-08T03:03:53.000Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:modified_time" content="2024-07-08T05:24:36.000Z">
+<meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="tools">
 <meta name="twitter:card" content="summary_large_image">
   
   
+    <meta name="referrer" content="no-referrer-when-downgrade">
   
-  <title>multipass - Hexo</title>
+  
+  <title>Multipass基本用法及常见问题 - piupiuxiupa&#39;s bolg</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -69,7 +71,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"piupiuxiupa.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -95,7 +97,7 @@
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <strong>Fluid</strong>
+      <strong>piupiuxiupa&#39;s blog</strong>
     </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
@@ -197,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="multipass"></span>
+            <span id="subtitle" data-typed-text="Multipass基本用法及常见问题"></span>
           
         </div>
 
@@ -220,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          195 字
+          559 字
         
       </span>
     
@@ -231,7 +233,7 @@
         
         
         
-          2 分钟
+          5 分钟
         
       </span>
     
@@ -268,26 +270,96 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">multipass</h1>
+            <h1 id="seo-header">Multipass基本用法及常见问题</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Multipass"><a href="#Multipass" class="headerlink" title="Multipass"></a>Multipass</h1><blockquote>
-<p>official site: <a target="_blank" rel="noopener" href="https://multipass.run/docs">https://multipass.run/docs</a></p>
-</blockquote>
-<h2 id="启动前配置"><a href="#启动前配置" class="headerlink" title="启动前配置"></a>启动前配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 开启mount挂载，方便拿或传文件到服务器，默认false</span><br>multipass <span class="hljs-built_in">set</span> local.privileged-mounts=<span class="hljs-literal">true</span><br><span class="hljs-comment">## 选择虚拟机驱动，hyperv/virtualbox</span><br><span class="hljs-comment">## win专业版可用hyperv，家庭版只能virtualbox</span><br>multipass <span class="hljs-built_in">set</span> local.driver=hyperv<br><span class="hljs-comment">## 设置默认操作实例</span><br>multipass get client.primary-name=primary<br></code></pre></td></tr></table></figure>
+                <p>这是一份Multipass基本操作文档，以及包含一些常见问题的解决方法。</p>
+<p>Multipass 是一个轻量级的虚拟机管理工具，旨在简化在本地环境中创建和管理 Ubuntu 虚拟机。</p>
+<p>参考资料</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://multipass.run/">Multipass 官网</a></li>
+<li><a target="_blank" rel="noopener" href="https://multipass.run/docs">Multipass 文档</a></li>
+</ul>
+<h1 id="安装Multipass"><a href="#安装Multipass" class="headerlink" title="安装Multipass"></a>安装Multipass</h1><ol>
+<li><p><strong>在 Linux 上安装</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> snap install multipass<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>在 macOS 上安装</strong>:<br>使用 Homebrew:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">brew install --cask multipass<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>在 Windows 上安装</strong>:<br>访问 <a target="_blank" rel="noopener" href="https://multipass.run/">Multipass 官网</a> 下载适用于 Windows 的安装程序，并按照提示完成安装。</p>
+</li>
+</ol>
+<h2 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h2><ol>
+<li><p><strong>启动一个新的虚拟机</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name &lt;instance-name&gt;<br></code></pre></td></tr></table></figure>
 
-<h2 id="启动实例"><a href="#启动实例" class="headerlink" title="启动实例"></a>启动实例</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch -n <span class="hljs-variable">$name</span> -d 10G -m 2G -c 2 --bridged --mount &lt;local-path&gt;:&lt;instance-path&gt;<br></code></pre></td></tr></table></figure>
+<p>例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name my-vm<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>列出所有虚拟机</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass list<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>进入虚拟机</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass shell &lt;instance-name&gt;<br></code></pre></td></tr></table></figure>
+
+<p>例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass shell my-vm<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>停止虚拟机</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass stop &lt;instance-name&gt;<br></code></pre></td></tr></table></figure>
+
+<p>例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass stop my-vm<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>删除虚拟机</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass delete &lt;instance-name&gt;<br></code></pre></td></tr></table></figure>
+
+<p>例如:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass delete my-vm<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>清理已删除的虚拟机</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass purge<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="进阶用法"><a href="#进阶用法" class="headerlink" title="进阶用法"></a>进阶用法</h2><ol>
+<li><p><strong>指定 Ubuntu 版本</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name &lt;instance-name&gt; &lt;ubuntu-version&gt;<br></code></pre></td></tr></table></figure>
+
+<p>例如，启动一个 Ubuntu 20.04 的虚拟机:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name my-vm 20.04<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>分配更多资源（CPU、内存、磁盘）</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name &lt;instance-name&gt; --cpus &lt;number&gt; --mem &lt;size&gt; --disk &lt;size&gt;<br></code></pre></td></tr></table></figure>
+
+<p>例如，分配 2 个 CPU，4GB 内存，20GB 磁盘:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name my-vm --cpus 2 --mem 4G --disk 20G<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>共享文件夹</strong>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass mount &lt;host-directory&gt; &lt;instance-name&gt;:&lt;target-directory&gt;<br></code></pre></td></tr></table></figure>
+
+<p>例如，将本地目录 <code>/home/user/projects</code> 挂载到虚拟机的 <code>/home/ubuntu/projects</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass mount /home/user/projects my-vm:/home/ubuntu/projects<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>运行命令</strong>:<br>可以在虚拟机中运行命令而不进入虚拟机：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass <span class="hljs-built_in">exec</span> &lt;instance-name&gt; -- &lt;<span class="hljs-built_in">command</span>&gt;<br></code></pre></td></tr></table></figure>
+
+<p>例如，更新虚拟机中的包列表:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass <span class="hljs-built_in">exec</span> my-vm -- <span class="hljs-built_in">sudo</span> apt update<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h1 id="启动前配置"><a href="#启动前配置" class="headerlink" title="启动前配置"></a>启动前配置</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 开启mount挂载，方便拿或传文件到服务器，默认false</span><br>multipass <span class="hljs-built_in">set</span> local.privileged-mounts=<span class="hljs-literal">true</span><br><span class="hljs-comment">## 选择虚拟机驱动，hyperv/virtualbox</span><br><span class="hljs-comment">## win专业版可用hyperv，家庭版只能virtualbox</span><br>multipass <span class="hljs-built_in">set</span> local.driver=hyperv<br><span class="hljs-comment">## 设置默认操作实例</span><br>multipass get client.primary-name=primary<br></code></pre></td></tr></table></figure>
+
+<h1 id="启动实例"><a href="#启动实例" class="headerlink" title="启动实例"></a>启动实例</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch -n <span class="hljs-variable">$name</span> -d 10G -m 2G -c 2 --bridged --mount &lt;local-path&gt;:&lt;instance-path&gt;<br></code></pre></td></tr></table></figure>
 
 <blockquote>
 <p>如果启动不了可以尝试重启multipass</p>
 </blockquote>
-<h2 id="调整实例配置"><a href="#调整实例配置" class="headerlink" title="调整实例配置"></a>调整实例配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass stop handsome-ling<br>multipass <span class="hljs-built_in">set</span> local.handsome-ling.cpus=4<br>multipass <span class="hljs-built_in">set</span> local.handsome-ling.disk=60G<br>multipass <span class="hljs-built_in">set</span> local.handsome-ling.memory=7G<br></code></pre></td></tr></table></figure>
+<h1 id="调整实例配置"><a href="#调整实例配置" class="headerlink" title="调整实例配置"></a>调整实例配置</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass stop handsome-ling<br>multipass <span class="hljs-built_in">set</span> local.handsome-ling.cpus=4<br>multipass <span class="hljs-built_in">set</span> local.handsome-ling.disk=60G<br>multipass <span class="hljs-built_in">set</span> local.handsome-ling.memory=7G<br></code></pre></td></tr></table></figure>
 
-<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 删除并清除</span><br><span class="hljs-comment">## delete 相当于把实例转为删除状态 </span><br><span class="hljs-comment">## -p or --purge 删除并清除</span><br>multipass delete <span class="hljs-variable">$instance</span> -p<br><span class="hljs-comment">## purge</span><br>multipass purge <span class="hljs-variable">$instance</span><br></code></pre></td></tr></table></figure>
+<h1 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 删除并清除</span><br><span class="hljs-comment">## delete 相当于把实例转为删除状态 </span><br><span class="hljs-comment">## -p or --purge 删除并清除</span><br>multipass delete <span class="hljs-variable">$instance</span> -p<br><span class="hljs-comment">## purge</span><br>multipass purge <span class="hljs-variable">$instance</span><br></code></pre></td></tr></table></figure>
 
-<h2 id="IPv4-N-A"><a href="#IPv4-N-A" class="headerlink" title="IPv4 N&#x2F;A"></a>IPv4 N&#x2F;A</h2><ul>
+<h1 id="IPv4-N-A"><a href="#IPv4-N-A" class="headerlink" title="IPv4 N&#x2F;A"></a>IPv4 N&#x2F;A</h1><ul>
 <li><p>重启实例</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass restart <span class="hljs-variable">$instance</span><br></code></pre></td></tr></table></figure>
 </li>
@@ -330,14 +402,14 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>multipass</div>
-      <div>http://example.com/2024/07/08/multipass/</div>
+      <div>Multipass基本用法及常见问题</div>
+      <div>https://piupiuxiupa.github.io/2024/07/08/multipass/</div>
     </div>
     <div class="license-meta">
       
         <div class="license-meta-item">
           <div>作者</div>
-          <div>John Doe</div>
+          <div>piupiuxiupa</div>
         </div>
       
       
@@ -375,15 +447,15 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2024/07/08/k8s-Prepare-Environment/" title="[k8s] Prepare Environment">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">[k8s] Prepare Environment</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/1970/01/01/hello-world/" title="Hello World">
-                        <span class="hidden-mobile">Hello World</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>
@@ -483,9 +555,33 @@
     <div class="footer-inner">
   
     <div class="footer-content">
-       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+       <a href="https://github.com" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> <a href="https://piupiuxiupa.github.io/" target="_blank" rel="nofollow noopener"><span>piupiuxiupa</span></a> 
     </div>
   
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
   
   
   
@@ -632,6 +728,8 @@
   <script>Fluid.plugins.imageCaption();</script>
 
   <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
 
