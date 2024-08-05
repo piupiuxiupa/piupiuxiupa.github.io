@@ -92,10 +92,13 @@ wsl -d centos
 
 ```bash
 ## 默认不可用systemctl控制服务，需要WSL版本0.67.6以上
-## 修改为可用
+## 默认windows访问wsl linux 以默认用户访问，因此无法访问root用户文件
+## 修改为可用systemd及默认root用户登录
 cat >> /etc/wsl.conf <<EOF
 [boot]
 systemd=true
+[user]
+default=root
 EOF
 ```
 
