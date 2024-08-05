@@ -25,6 +25,10 @@ git push -u origin master
 ## 旧版为master ，新版默认main
 git pull origin master:master 
 
+## 修改git地址
+git remote set-url origin $url
+## 已跟踪文件取消跟踪，配合.gitignore，之后推送都忽略
+git rm -r --cached $file
 ```
 
 ## reset
