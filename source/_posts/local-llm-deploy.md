@@ -7,6 +7,8 @@ tags: tools
 # 本地大模型部署
 
 > Windows根据官网下载安装即可
+>
+> [Linux 官方安装步骤](https://github.com/ollama/ollama/blob/main/docs/linux.md)
 
 ## 1. 安装ollama
 
@@ -71,4 +73,62 @@ http://127.0.0.1:3000 访问，需要注册，随便填写即可。
 
 ![open-webui](../images/local-llm-deploy/open-webui.png)
 
-至此，我们就成功部署了一个由cpu提供算力的大语言模型。
+至此，我们就成功部署了一个由CPU提供算力的大语言模型。
+
+由于CPU和GPU设计结构的不同，CPU在处理大模型语言时效果并不理想。
+
+根据前面部署完后，使用时会发现模型给出回复的时候反应很慢，且是一个字一个字蹦出来的。
+
+然而GPU驱动大模型能够显著提高其反应速度，回复也是一段一段显示。
+
+下面容器化部署一并介绍如何使用GPU提供算力。
+
+## 4. 容器化部署
+
+使用Nvidia显卡需要下载驱动
+
+> Nvidia 官网
+>
+> https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+
+```bash
+## 配置apt包仓库地址
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+    
+## 更新仓库包列表
+sudo apt-get update
+
+## 安装工具
+sudo apt-get install -y nvidia-container-toolkit
+
+## 可使用该命令查看gpu
+nvidia-smi
+## 查看显卡列表
+nvidia-smi -L
+## 在使用过程中可观察gpu运行情况变化
+watch -n 1 nvidia-smi
+# 或
+nvidia-smi -l
+
+## 运行由gpu驱动的ollama，将大模型存放路径持久化，--gpus all将所有gpu设备加入容器
+docker run --gpus all -d -v /opt/ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+
+## 下载大模型
+docker exec -it ollama ollama pull qwen2:7b
+```
+
+**其他包管理工具配置**
+
+```bash
+## yum 地址
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | \
+  sudo tee /etc/yum.repos.d/nvidia-container-toolkit.repo
+  
+## zypper地址
+sudo zypper ar https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
+sudo zypper --gpg-auto-import-keys install -y nvidia-container-toolkit
+```
+

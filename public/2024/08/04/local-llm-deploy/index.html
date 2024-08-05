@@ -16,18 +16,18 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="本地大模型部署 Windows根据官网下载安装即可  1. 安装ollama12345678910111213## 可能会比较慢，需要magiccurl -fsSL https:&#x2F;&#x2F;ollama.com&#x2F;install.sh | sh## 也可先把ollama-linux-amd64下载到本地## 然后上传到linux## 修改安装脚本两处地方再安装curl -fsSL https:&#x2F;&#x2F;ollam">
+    <meta name="description" content="本地大模型部署 Windows根据官网下载安装即可 Linux 官方安装步骤  1. 安装ollama12345678910111213## 可能会比较慢，需要magiccurl -fsSL https:&#x2F;&#x2F;ollama.com&#x2F;install.sh | sh## 也可先把ollama-linux-amd64下载到本地## 然后上传到linux## 修改安装脚本两处地方再安装curl -fsSL">
 <meta property="og:type" content="article">
 <meta property="og:title" content="本地大模型部署">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/08/04/local-llm-deploy/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s bolg">
-<meta property="og:description" content="本地大模型部署 Windows根据官网下载安装即可  1. 安装ollama12345678910111213## 可能会比较慢，需要magiccurl -fsSL https:&#x2F;&#x2F;ollama.com&#x2F;install.sh | sh## 也可先把ollama-linux-amd64下载到本地## 然后上传到linux## 修改安装脚本两处地方再安装curl -fsSL https:&#x2F;&#x2F;ollam">
+<meta property="og:description" content="本地大模型部署 Windows根据官网下载安装即可 Linux 官方安装步骤  1. 安装ollama12345678910111213## 可能会比较慢，需要magiccurl -fsSL https:&#x2F;&#x2F;ollama.com&#x2F;install.sh | sh## 也可先把ollama-linux-amd64下载到本地## 然后上传到linux## 修改安装脚本两处地方再安装curl -fsSL">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://piupiuxiupa.github.io/images/local-llm-deploy/select-model.png">
 <meta property="og:image" content="https://piupiuxiupa.github.io/images/local-llm-deploy/qwen2.png">
 <meta property="og:image" content="https://piupiuxiupa.github.io/images/local-llm-deploy/open-webui.png">
 <meta property="article:published_time" content="2024-08-04T10:59:10.000Z">
-<meta property="article:modified_time" content="2024-08-04T14:29:52.000Z">
+<meta property="article:modified_time" content="2024-08-05T14:29:58.916Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="tools">
 <meta name="twitter:card" content="summary_large_image">
@@ -226,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          351 字
+          734 字
         
       </span>
     
@@ -237,7 +237,7 @@
         
         
         
-          3 分钟
+          7 分钟
         
       </span>
     
@@ -281,6 +281,7 @@
                 
                 <h1 id="本地大模型部署"><a href="#本地大模型部署" class="headerlink" title="本地大模型部署"></a>本地大模型部署</h1><blockquote>
 <p>Windows根据官网下载安装即可</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ollama/ollama/blob/main/docs/linux.md">Linux 官方安装步骤</a></p>
 </blockquote>
 <h2 id="1-安装ollama"><a href="#1-安装ollama" class="headerlink" title="1. 安装ollama"></a>1. 安装ollama</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 可能会比较慢，需要magic</span><br>curl -fsSL https://ollama.com/install.sh | sh<br><span class="hljs-comment">## 也可先把ollama-linux-amd64下载到本地</span><br><span class="hljs-comment">## 然后上传到linux</span><br><span class="hljs-comment">## 修改安装脚本两处地方再安装</span><br>curl -fsSL https://ollama.com/install.sh &gt;&gt; ollama_install.sh<br>sed -i.bak -e <span class="hljs-string">&#x27;/TEMP_DIR=/c TEMP_DIR=/tmp&#x27;</span> -e <span class="hljs-string">&#x27;/curl --fail.*-o/s/^/#/&#x27;</span> ollama_install.sh<br><span class="hljs-comment">## 将 ollama-linux-amd64放到tmp下，并重命名为ollama</span><br><span class="hljs-built_in">mv</span> ollama-linux-amd64 /tmp/ollama<br><span class="hljs-comment">## 运行ollama_install.sh即可</span><br>sh ollama_install.sh<br><span class="hljs-comment">## 查看ollama状态</span><br>systemctl status ollama<br></code></pre></td></tr></table></figure>
 
@@ -298,7 +299,21 @@
 <p><a target="_blank" rel="noopener" href="http://127.0.0.1:3000/">http://127.0.0.1:3000</a> 访问，需要注册，随便填写即可。</p>
 <p>登录后效果如图：</p>
 <p><img src="/../images/local-llm-deploy/open-webui.png" srcset="/img/loading.gif" lazyload alt="open-webui"></p>
-<p>至此，我们就成功部署了一个由cpu提供算力的大语言模型。</p>
+<p>至此，我们就成功部署了一个由CPU提供算力的大语言模型。</p>
+<p>由于CPU和GPU设计结构的不同，CPU在处理大模型语言时效果并不理想。</p>
+<p>根据前面部署完后，使用时会发现模型给出回复的时候反应很慢，且是一个字一个字蹦出来的。</p>
+<p>然而GPU驱动大模型能够显著提高其反应速度，回复也是一段一段显示。</p>
+<p>下面容器化部署一并介绍如何使用GPU提供算力。</p>
+<h2 id="4-容器化部署"><a href="#4-容器化部署" class="headerlink" title="4. 容器化部署"></a>4. 容器化部署</h2><p>使用Nvidia显卡需要下载驱动</p>
+<blockquote>
+<p>Nvidia 官网</p>
+<p><a target="_blank" rel="noopener" href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html">https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 配置apt包仓库地址</span><br>curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | <span class="hljs-built_in">sudo</span> gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \<br>  &amp;&amp; curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \<br>    sed <span class="hljs-string">&#x27;s#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g&#x27;</span> | \<br>    <span class="hljs-built_in">sudo</span> <span class="hljs-built_in">tee</span> /etc/apt/sources.list.d/nvidia-container-toolkit.list<br>    <br><span class="hljs-comment">## 更新仓库包列表</span><br><span class="hljs-built_in">sudo</span> apt-get update<br><br><span class="hljs-comment">## 安装工具</span><br><span class="hljs-built_in">sudo</span> apt-get install -y nvidia-container-toolkit<br><br><span class="hljs-comment">## 可使用该命令查看gpu</span><br>nvidia-smi<br><span class="hljs-comment">## 查看显卡列表</span><br>nvidia-smi -L<br><span class="hljs-comment">## 在使用过程中可观察gpu运行情况变化</span><br>watch -n 1 nvidia-smi<br><span class="hljs-comment"># 或</span><br>nvidia-smi -l<br><br><span class="hljs-comment">## 运行由gpu驱动的ollama，将大模型存放路径持久化，--gpus all将所有gpu设备加入容器</span><br>docker run --gpus all -d -v /opt/ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama<br><br><span class="hljs-comment">## 下载大模型</span><br>docker <span class="hljs-built_in">exec</span> -it ollama ollama pull qwen2:7b<br></code></pre></td></tr></table></figure>
+
+<p><strong>其他包管理工具配置</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## yum 地址</span><br>curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | \<br>  <span class="hljs-built_in">sudo</span> <span class="hljs-built_in">tee</span> /etc/yum.repos.d/nvidia-container-toolkit.repo<br>  <br><span class="hljs-comment">## zypper地址</span><br><span class="hljs-built_in">sudo</span> zypper ar https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo<br><span class="hljs-built_in">sudo</span> zypper --gpg-auto-import-keys install -y nvidia-container-toolkit<br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
