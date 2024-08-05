@@ -24,7 +24,7 @@
 <meta property="og:description" content="tmux 三个概念 session - 会话 每运行一次tmux会创建一个session   window - 窗口 在session内按前缀键后，c键创建的就是一个window   pane - 窗格 将window进行分割后得到的就是pane      基础操作1. 会话外操作12345678tmux attach -t 0 ## 进入一个会话tmux ls ## 查看当前服务器的tmux会话">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-07-11T07:20:11.000Z">
-<meta property="article:modified_time" content="2024-08-04T13:19:57.000Z">
+<meta property="article:modified_time" content="2024-08-05T02:05:37.256Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="tools">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          399 字
+          528 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          4 分钟
+          5 分钟
         
       </span>
     
@@ -317,6 +317,8 @@
 <p><code>space</code>循环切换窗格布局</p>
 <p><code>&amp;</code>关闭当前窗口</p>
 <p><code>[</code>开启复制模式</p>
+<p><code>&#123;</code>将pane布局往前移动</p>
+<p><code>&#125;</code>将pane布局往后移动</p>
 <p><code>?</code>查看帮助页</p>
 <h2 id="个性化"><a href="#个性化" class="headerlink" title="个性化"></a>个性化</h2><blockquote>
 <p>以下配置将会修改</p>
@@ -330,6 +332,13 @@
 
 <p>修改完配置文件后关掉session，重开就能生效了</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 或者也可用此命令生效</span><br>tmux source-file ~/.tmux.conf<br></code></pre></td></tr></table></figure>
+
+<p>部分终端修改后可能无法复制，需要安装<code>xclip</code>，再修改配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">apt install xclip<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启用鼠标支持</span><br><span class="hljs-built_in">set</span> -g mouse on<br><br><span class="hljs-comment"># 允许鼠标选择文本并复制</span><br><span class="hljs-comment"># 启用这种模式后，你可以通过鼠标选择来复制文本</span><br><span class="hljs-built_in">bind</span> -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel <span class="hljs-string">&quot;xclip -in -selection clipboard&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>部分终端可能直接鼠标滚轮即可在pane中翻页，部分需要配合<strong>shift键</strong>才能翻页。</p>
 
                 
               </div>

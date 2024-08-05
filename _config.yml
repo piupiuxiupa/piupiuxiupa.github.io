@@ -102,5 +102,5 @@ theme: fluid
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: 'git'
-  repo: https://github.com/piupiuxiupa/piupiuxiupa.github.io.git
+  repo: git@github.com:piupiuxiupa/piupiuxiupa.github.io.git
   branch: master
