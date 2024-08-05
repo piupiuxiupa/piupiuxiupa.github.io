@@ -68,6 +68,10 @@ tmux show-options -g ## 显示所有选项
 
 `[`开启复制模式
 
+`{`将pane布局往前移动
+
+`}`将pane布局往后移动
+
 `?`查看帮助页
 
 ## 个性化
@@ -102,3 +106,20 @@ setw -g mode-keys vi
 ## 或者也可用此命令生效
 tmux source-file ~/.tmux.conf
 ```
+
+部分终端修改后可能无法复制，需要安装`xclip`，再修改配置文件
+
+```bash
+apt install xclip
+```
+
+```bash
+# 启用鼠标支持
+set -g mouse on
+
+# 允许鼠标选择文本并复制
+# 启用这种模式后，你可以通过鼠标选择来复制文本
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"
+```
+
+部分终端可能直接鼠标滚轮即可在pane中翻页，部分需要配合**shift键**才能翻页。

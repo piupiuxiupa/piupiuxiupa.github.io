@@ -33,8 +33,9 @@ deb-src http://mirrors.aliyun.com/ubuntu/ noble main restricted universe multive
 deb http://mirrors.aliyun.com/ubuntu/ noble-updates main restricted universe multiverse
 deb-src http://mirrors.aliyun.com/ubuntu/ noble-updates main restricted universe multiverse
 EOF
-
+## 配置完后update
 apt update
+
 apt install nodejs npm
 ```
 
@@ -68,8 +69,6 @@ yum install sudo
 yum install tmux
 ```
 
-
-
 ## 配置代理
 
 此处我将自己的WSL网络设置成了`mirrored`，因此在访问一些服务的时候可以通过127.0.0.1来访问。
@@ -99,5 +98,14 @@ npm config set proxy=http://127.0.0.1:7890
 npm config set registry=http://registry.npmjs.org
 
 npm install -g hexo
+```
+
+## 配置 github加速
+
+在`/etc/hosts`下添加
+
+```
+199.96.58.157 github.global.ssl.fastly.net
+20.205.243.166 github.com
 ```
 
