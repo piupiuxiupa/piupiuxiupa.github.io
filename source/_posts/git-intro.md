@@ -57,6 +57,12 @@ git checkout $branch($commit)
 git checkout -b $branch $commit 
 ## 仅切换至某分支
 git switch $branch
+## 误删除文件，还未add时
+## 放弃所有修改，恢复全部
+git checkout .
+git checkout -- *
+## 放弃某个文件，恢复某个文件
+git checkout -- $filename
 ## 如果一个分支提交过后可以用-d选项删掉分支，没有提交想删除需用-D强制删除分支
 git branch -d $branch
 git branch -D $branch
