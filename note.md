@@ -133,4 +133,39 @@ declare -c name
 ##  $(( ))可以用 ** 进行幂运算
 COUNT=$((COUNT + 5 + MAX * 2))
 let COUNT+='5+MAX*2'
+
+let COUNT+=5
+```
+
+**测试文件属性**
+
+```bash
+# 是否更新（检查文件的修改时间）​。现有文件要比不存在的文件“新”​。
+test FILE1 -nt FILE2　　
+#是否更旧。同样，不存在的文件要比现有文件“旧”​。
+test FILE1 -ot FILE2　　
+#具有相同设备和 inode 编号（即便由不同链接所指向，也视为相同的文件）​。
+test FILE1 -ef FILE2　　
+# 测试文件大小是否不为空
+test -s FILE
+```
+**用正则表达式匹配**
+
+> bash 3.0 或更高版本
+
+使用 =~ 运算符进行正则表达式匹配。只要能够匹配到某个字符串，就可以在 shell 数组变量 $BASH_REMATCH 中找到模式中的各个部分所匹配到的内容
+
+```bash
+#!/usr/bin/env bash
+# 实例文件：trackmatch
+#
+for CDTRACK in *
+do
+    if [[ "$CDTRACK" =~ "([[:alpha:][:blank:]]*)- ([[:digit:]]*) - (.*)$" ]]
+    then
+        echo Track ${BASH_REMATCH[2]} is ${BASH_REMATCH[3]}
+        mv "$CDTRACK" "Track${BASH_REMATCH[2]}"
+    fi
+done
+
 ```
