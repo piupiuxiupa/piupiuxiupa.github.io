@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="git 基本用法 git的结构就像一棵树一样 main主干，dev，test，issue … 都是分支树杈  pull &amp; push12345678910111213141516## 初始化一个git仓git init git remote add $alias $urlgit branch -M master(main)## 查看远程仓库git remote -vgit push -u">
+    <meta name="description" content="Git 基本用法 git的结构就像一棵树一样 main主干，dev，test，issue … 都是分支树杈  pull &amp; push12345678910111213141516## 初始化一个git仓git init git remote add $alias $urlgit branch -M master(main)## 查看远程仓库git remote -vgit push -u">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git 基本用法">
+<meta property="og:title" content="Git 基本用法">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/07/08/git-intro/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s bolg">
-<meta property="og:description" content="git 基本用法 git的结构就像一棵树一样 main主干，dev，test，issue … 都是分支树杈  pull &amp; push12345678910111213141516## 初始化一个git仓git init git remote add $alias $urlgit branch -M master(main)## 查看远程仓库git remote -vgit push -u">
+<meta property="og:description" content="Git 基本用法 git的结构就像一棵树一样 main主干，dev，test，issue … 都是分支树杈  pull &amp; push12345678910111213141516## 初始化一个git仓git init git remote add $alias $urlgit branch -M master(main)## 查看远程仓库git remote -vgit push -u">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-07-08T05:33:02.000Z">
-<meta property="article:modified_time" content="2024-08-05T04:32:26.243Z">
+<meta property="article:modified_time" content="2024-08-07T12:47:14.006Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="tools">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>git 基本用法 - piupiuxiupa&#39;s bolg</title>
+  <title>Git 基本用法 - piupiuxiupa&#39;s bolg</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="git 基本用法"></span>
+            <span id="subtitle" data-typed-text="Git 基本用法"></span>
           
         </div>
 
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          420 字
+          455 字
         
       </span>
     
@@ -270,12 +270,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">git 基本用法</h1>
+            <h1 id="seo-header">Git 基本用法</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="git-基本用法"><a href="#git-基本用法" class="headerlink" title="git 基本用法"></a>git 基本用法</h1><blockquote>
+                <h1 id="Git-基本用法"><a href="#Git-基本用法" class="headerlink" title="Git 基本用法"></a>Git 基本用法</h1><blockquote>
 <p>git的结构就像一棵树一样</p>
 <p>main主干，dev，test，issue … 都是分支树杈</p>
 </blockquote>
@@ -283,7 +283,7 @@
 
 <h2 id="reset"><a href="#reset" class="headerlink" title="reset"></a>reset</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">git ls-files <span class="hljs-comment">## 查看暂存区文件</span><br><br>git reset --soft <span class="hljs-comment">## 工作区和暂存区都不清空</span><br>git reset --hard <span class="hljs-comment">## 工作区暂存区全部清空</span><br>git reset --mixed <span class="hljs-comment">## 保留工作区，清理暂存区，默认选项</span><br><br>git reset HEAD^ <span class="hljs-comment">## 回退到上一次提交</span><br><br>git <span class="hljs-built_in">log</span> <span class="hljs-comment">## 公共提交记录</span><br>git reflog <span class="hljs-comment">## 本地操作记录</span><br></code></pre></td></tr></table></figure>
 
-<h2 id="switch-checkout"><a href="#switch-checkout" class="headerlink" title="switch&#x2F;checkout"></a>switch&#x2F;checkout</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 创建一个分支</span><br>git branch <span class="hljs-variable">$branch</span> <br><span class="hljs-comment">## 可以切换分支也可以切换至某次提交或恢复某次提交的文件，如分支与文件名相同会产生冲突，默认是切换分支</span><br>git checkout <span class="hljs-variable">$branch</span>(<span class="hljs-variable">$commit</span>) <br><span class="hljs-comment">## 切换某分支的某次提交</span><br>git checkout -b <span class="hljs-variable">$branch</span> <span class="hljs-variable">$commit</span> <br><span class="hljs-comment">## 仅切换至某分支</span><br>git switch <span class="hljs-variable">$branch</span><br><span class="hljs-comment">## 如果一个分支提交过后可以用-d选项删掉分支，没有提交想删除需用-D强制删除分支</span><br>git branch -d <span class="hljs-variable">$branch</span><br>git branch -D <span class="hljs-variable">$branch</span><br><span class="hljs-comment">## 图表形式查看分支结构</span><br>git <span class="hljs-built_in">log</span> --graph --oneline --decorate --all<br></code></pre></td></tr></table></figure>
+<h2 id="switch-checkout"><a href="#switch-checkout" class="headerlink" title="switch&#x2F;checkout"></a>switch&#x2F;checkout</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 创建一个分支</span><br>git branch <span class="hljs-variable">$branch</span> <br><span class="hljs-comment">## 可以切换分支也可以切换至某次提交或恢复某次提交的文件，如分支与文件名相同会产生冲突，默认是切换分支</span><br>git checkout <span class="hljs-variable">$branch</span>(<span class="hljs-variable">$commit</span>) <br><span class="hljs-comment">## 切换某分支的某次提交</span><br>git checkout -b <span class="hljs-variable">$branch</span> <span class="hljs-variable">$commit</span> <br><span class="hljs-comment">## 仅切换至某分支</span><br>git switch <span class="hljs-variable">$branch</span><br><span class="hljs-comment">## 误删除文件，还未add时</span><br><span class="hljs-comment">## 放弃所有修改，恢复全部</span><br>git checkout .<br>git checkout -- *<br><span class="hljs-comment">## 放弃某个文件，恢复某个文件</span><br>git checkout -- <span class="hljs-variable">$filename</span><br><span class="hljs-comment">## 如果一个分支提交过后可以用-d选项删掉分支，没有提交想删除需用-D强制删除分支</span><br>git branch -d <span class="hljs-variable">$branch</span><br>git branch -D <span class="hljs-variable">$branch</span><br><span class="hljs-comment">## 图表形式查看分支结构</span><br>git <span class="hljs-built_in">log</span> --graph --oneline --decorate --all<br></code></pre></td></tr></table></figure>
 
 <h2 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">git merge <span class="hljs-variable">$branch</span><br><span class="hljs-comment">## 两个分支修改了同一个文件的同一处位置会产生冲突</span><br><span class="hljs-comment">## 查看冲突具体内容，修改文件中的冲突后再提交</span><br>git diff<br><span class="hljs-comment">## 中止合并</span><br>git merge --abort<br></code></pre></td></tr></table></figure>
 
@@ -313,7 +313,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>git 基本用法</div>
+      <div>Git 基本用法</div>
       <div>https://piupiuxiupa.github.io/2024/07/08/git-intro/</div>
     </div>
     <div class="license-meta">
@@ -358,9 +358,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/11/tmux/" title="tmux基础操作">
+                      <a href="/2024/07/11/tmux/" title="TMUX 基础操作">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">tmux基础操作</span>
+                        <span class="hidden-mobile">TMUX 基础操作</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -368,8 +368,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/07/08/k8s-K8s-Install/" title="[k8s] K8s Install">
-                        <span class="hidden-mobile">[k8s] K8s Install</span>
+                      <a href="/2024/07/08/k8s-K8s-Install/" title="[K8s] Kubernetes Install">
+                        <span class="hidden-mobile">[K8s] Kubernetes Install</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
