@@ -1,17 +1,17 @@
 ---
-title: '[k8s] K8s Install'
+title: '[K8s] Kubernetes Install'
 date: 2024-07-08 13:30:02
 tags: k8s
 ---
 
 # K8s Install
 
-## 1. standard
+## 1. Standard
 
 - 2GB or more of RAM
 - 2CPUs or more
 
-## 2. prepare
+## 2. Prepare
 
 - You need to install a container runtime into each node in the cluster so that Pods can run there.
 

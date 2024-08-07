@@ -1,10 +1,10 @@
 ---
-title: git 基本用法
+title: Git 基本用法
 date: 2024-07-08 13:33:02
 tags: tools
 ---
 
-# git 基本用法
+# Git 基本用法
 
 > git的结构就像一棵树一样
 >

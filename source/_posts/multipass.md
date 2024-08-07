@@ -1,5 +1,5 @@
 ---
-title: Multipass基本用法及常见问题
+title: Multipass 基本用法及常见问题
 date: 2024-07-08 11:02:11
 tags: tools
 ---

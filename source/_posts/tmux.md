@@ -1,9 +1,9 @@
 ---
-title: tmux基础操作
+title: TMUX 基础操作
 date: 2024-07-11 15:20:11
 tags: tools
 ---
-# tmux
+# TMUX
 
 - 三个概念
   - session - 会话
