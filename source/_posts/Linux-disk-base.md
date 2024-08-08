@@ -340,6 +340,7 @@ pvcreate /dev/sda
 ## 然后扩展vg
 vgextend vg1 /dev/sda
 ## 扩充lv
+## +号必须有，不然就变成了调整lv大小，造成数据丢失
 lvextend -l +100%free /dev/vg1/lv1
 lvextend -L +20G /dev/vg1/lv1
 ## 同步文件系统
