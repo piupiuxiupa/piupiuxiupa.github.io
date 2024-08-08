@@ -105,7 +105,7 @@ parted /dev/vda print
 
    ## 磁盘分区、格式化、挂载
 
-> 磁盘有价，数据无价，对磁盘进行操作时请务必做好数据备份！！！
+> 磁盘有价，数据无价，对磁盘进行分区、扩容操作时请务必做好数据备份！！！
 
 ### 1. 分区
 
@@ -259,9 +259,15 @@ root@docker:~# partprobe -s
 
 `parted` 命令也可以直接运行进入类似`fdisk`的交互式界面，但本人更习惯直接命令行操作
 
+分区三步法：
+   1. 设置分区形式 - mklabel
+   2. 设置分区大小 - mkpart
+      - mkpart的开始分区从第2048个扇区开始，也就是1024kb,给头部信息留足空间
+   3. 按需格式化磁盘或做成pv卷扩容
+
 ```bash
 ## 指定分区形式以及分区名和大小
-parted /dev/sda mklabel gpt mkpart primary 0 100%
+parted /dev/sda mklabel gpt mkpart primary 1024kb 100%
 ## 更倾向于用扇区来指定大小，假设上一个分区的结束扇区为227328，则新分区可以+1从227329扇区开始。
 ## 此处会自动调整结束扇区，因为磁盘尾还需要存放GPT备份表
 parted /dev/sda mklabel gpt mkpart primary 227329s 100%
@@ -324,7 +330,7 @@ mount /dev/vg1/lv1 /root/tmp/
 
 通常磁盘需要做逻辑卷或者处于最后一个分区的时候进行扩容是最方便的。
 
-扩容前一定需要做好备份！！！
+扩容前一定必须做好备份！！！
 
 1. 逻辑卷扩容
 
@@ -361,7 +367,9 @@ resize2fs /dev/sda
 
 ![mbr](../images/Linux-disk-base/MBR.png)
 
-MBR只支持四个主分区，且最大只支持2TB的硬盘。
+由于分区表所在区块仅有64bytes容量，因此最多仅能有四组记录区，每组记录区记录了该区段的起始与结束的磁柱号码。
+
+也就是MBR只支持四个主分区，且最大只支持2TB的硬盘。
 
 若想多个分区，需要使用扩展分区，扩展分区从5开始计数。
 
@@ -375,7 +383,11 @@ GPT将磁盘划分为一块块的`逻辑区块地址（Logical Block Address，�
 
 - `LBA0` :包含两部分，一部分是类似MBR的446bytes,存储开机管理程序，第二部分则是存储一个特殊的标记，标识该磁盘为GPT格式，而看不懂GPT分区的程序则无法操作该磁盘，起到保护作用，放心，目前基本的管理程序都能识别GPT格式，所以该LBA块实际上与分区信息并无直接关联，这就是为啥不算入34LBA的原因
 - `LBA1` :GPT的表头，记录分区本身的位置与大小，同时记录分区在备份中最后34个LBA中的位置，方便恢复
-- `LBA2-34`:共32块LBA，每块LBA记录4笔分区表，共支持4\*32=128笔分区；而每个LBA默认为512bytes，则每笔记录用到512/4=128bytes,每笔记录拿出64bytes来记录开始、结束的扇区号码，因此对一个单一分区槽而言，支持的最大容量为2^64∗512bytes=2^63∗1Kbytes=233TB=8ZB
+- `LBA2-34`:共32块LBA，每块LBA记录4笔分区表，共支持4\*32=128笔分区；而每个LBA默认为512bytes，则每笔记录用到512/4=128bytes,每笔记录拿出64bytes来记录开始、结束的扇区号码，因此对一个单一分区槽而言，支持的最大容量为2^64∗512bytes=2^63∗1Kbytes=2^33TB=8ZB
+
+> 1024TB=1PB \
+> 1024PB=1EB \
+> 1024EB=1ZB
 
 
 
@@ -393,7 +405,9 @@ for i in /sys/class/scsi_host/*/scan; do echo $i;echo "- - -" > $i; done
 
 ## 2. 已分区没做lvm的磁盘扩容
 
-两种方案，但都需要是最后一个分区才能进行扩容
+有时候我们会遇到项目组在原磁盘上加空间，而想要扩容的那个分区是没有做逻辑卷的，以至于加的空间会浪费，下面有两种方案，其一是`fdisk`的一种特殊用法，其二是提供一个工具`growpart`，可以对没有做过逻辑卷的分区进行扩容。
+
+两种方案都需要该分区必需是整个磁盘的最后一个分区
 
 - 其一，使用`fdisk`扩容。因为fdisk在进行操作的时候分区数据不会直接写入磁盘，而是先会保存在内存中，所以可以利用这点来进行扩容
 
@@ -408,21 +422,36 @@ for i in /sys/class/scsi_host/*/scan; do echo $i;echo "- - -" > $i; done
   
 - 其二，可使用`growpart`来进行扩容
 
-  ```bash
-  growpart /dev/sda 1
-  ## 表示对/dev/sda的分区1进行扩容
-  ```
+   ```bash
+   # 联网条件下
+   yum install cloud-utils-growpart
+   # 没联网就传包吧
+   rpm -ivhU cloud-utils-growpart.rpm
+   # 如服务器有一块盘vda，仅有一个分区vda1，且没做过逻辑卷
+   # 先用growpart将空间加到vda1上
+   ## 表示对/dev/sda的分区1进行扩容
+   growpart /dev/vda 1
+   ## 如果报错 unexpected output in sfdisk --version
+   ## LANG=en_US.UTF-8 就可以了,不行可以重启下物理机试一下.(编码问题)
+   # 然后同步文件系统即可
+   xfs_growfs /
+   resize2fs /dev/vda1
+   ```
 
+**案例**
 
+>由于没有找到现成的做了分区而没做lvm的项目，但是步骤是一样的。
+
+![gdisk_caution](../images/Linux-disk-base/20221031165313.jpg)
 
 
 ## 3. 旧磁盘换到新机器无法使用
 
 面对这个情况其实如果在确定磁盘里面的数据进行了备份，或者不需要的时候可以直接进行强制格式化。
 
-也可以`dd`去备份一下磁盘头和磁盘尾信息，或者整个磁盘
+也可以`dd`去备份一下磁盘头和磁盘尾信息，或者整个磁盘。
 
-如下有一个磁盘sda，通过parted查看磁盘信息，这里建议把unit切换成s单位来看会更精确更清楚些
+如下有一个磁盘sda，通过parted查看磁盘信息，这里建议把unit切换成s单位来看会更精确更清楚些。
 
 ```shell
 root@docker:~# parted /dev/sda u s p
@@ -482,8 +511,6 @@ ls -l /proc/$pid/fd/* | grep $filename
 echo > /proc/$pid/fd/$fdnum
 ```
 
-
-
 ## 5. 实际占用与显示不符
 
 一可能是前面说的已删除文件后`df`没有变化
@@ -498,3 +525,63 @@ echo > /proc/$pid/fd/$fdnum
 
 对于网络挂载，可以在使用`du`命令的时候使用`-x`选项来进行排除（前面有介绍过），便可计算出当前本地的准确值。
 
+## 6. 由MBR (MSDOS) 格式转GPT
+**场景**
+
+MBR分区只支持四个主分区，因此，当有人在第四个分区不用逻辑分区而继续用主分区的话将无法再进行分区，且最大只能操作2T空间的磁盘，所以在面对这种四个主分区都用满或磁盘空间超过2T的情况下，需要将磁盘格式转成GPT后才能进一步进行分区和扩容。
+
+**前提条件**
+
+磁盘头信息需要留足空间转换成GPT分区，start最小需要从第63个扇区开始。
+
+​可以自己模拟下，用parted工具进行分区，第一个分区头从0开始，命令如下。
+
+```bash
+parted /dev/vdx mklabel msdos/gpt mkpart primary 0 100%
+```
+
+如果使用的label是mbr则会默认从63s开始，如果是gpt，则会从34s开始。
+
+![mbr_default](../images/Linux-disk-base/078092image.png)
+
+![gpt_default](../images/Linux-disk-base/098712image.png)
+
+如果用的是gdisk和fdisk分区，默认是从2048s开始，所以完全够从mbr转换成gpt格式。
+
+但是需要注意磁盘末尾是否还有空间，因为MBR末尾并不记录信息，所以当磁盘100%时也就是空间完全没有了，此时进行gpt转换可能造成尾部数据丢失。
+
+![fdisk_default](../images/Linux-disk-base/052384image.png)
+
+- 先备份分区表信息
+
+```bash
+# 备份分区表信息
+# 最好选择另外的盘进行备份
+dd if=/dev/vda of=/xxxx/xxx.mbr.bak  bs=1024 count=2000
+# 恢复分区表信息
+dd if=/home/xxx.mbr.bak  of=/dev/vda bs=1024 count=2000
+```
+
+- 使用gdisk将分区格式转换为gpt
+
+![gdisk_default](../images/Linux-disk-base/016511image.png)
+
+
+### 7. 新磁盘残留GPT分区信息导致无法分区扩容
+
+> 类似第三点
+
+​当项目组拿来新磁盘，要求分区扩容时，碰到如下提示gpt备份区信息与主分区信息不一致的提示时，考虑是该磁盘是曾经做过分区的盘。
+
+![gdisk_caution](../images/Linux-disk-base/20221029005856.png)
+
+​先与项目组确认是否是新盘无数据，当确认是新盘无数据后，可用`dd`命令去清空头尾记录的分区信息，一般取首尾1M左右即可，清空完后就可以按正常流程进行分区。
+
+```bash
+# 如项目组有893G磁盘
+# 清空头部信息
+dd if=/dev/zero of=/dev/sdb bs=512 count=4000
+# 清空尾部信息
+dd if=/dev/zero of=/dev/sdb bs=1M seek=890000
+# seek参数为跳过sdb的第890000个block，即将if的内容从第890000个block后开始写入
+```
