@@ -568,7 +568,7 @@ dd if=/home/xxx.mbr.bak  of=/dev/vda bs=1024 count=2000
 ![gdisk_default](../images/Linux-disk-base/016511image.png)
 
 
-### 7. 新磁盘残留GPT分区信息导致无法分区扩容
+## 7. 新磁盘残留GPT分区信息导致无法分区扩容
 
 > 类似第三点
 
