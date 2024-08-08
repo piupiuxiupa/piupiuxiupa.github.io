@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://piupiuxiupa.github.io/images/Linux-disk-base/016511image.png">
 <meta property="og:image" content="https://piupiuxiupa.github.io/images/Linux-disk-base/20221029005856.png">
 <meta property="article:published_time" content="2024-07-17T02:53:47.000Z">
-<meta property="article:modified_time" content="2024-08-08T05:35:57.436Z">
+<meta property="article:modified_time" content="2024-08-08T10:00:01.351Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -231,7 +231,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.8k 字
+          3.9k 字
         
       </span>
     
@@ -242,7 +242,7 @@
         
         
         
-          32 分钟
+          33 分钟
         
       </span>
     
@@ -397,7 +397,7 @@
 <ol>
 <li>逻辑卷扩容</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 首先加入pv</span><br>pvcreate /dev/sda<br><span class="hljs-comment">## 然后扩展vg</span><br>vgextend vg1 /dev/sda<br><span class="hljs-comment">## 扩充lv</span><br>lvextend -l +100%free /dev/vg1/lv1<br>lvextend -L +20G /dev/vg1/lv1<br><span class="hljs-comment">## 同步文件系统</span><br><span class="hljs-comment">## xfs </span><br>xfs_growfs /dev/vg1/lv1<br><span class="hljs-comment">## ext4</span><br>resize2fs /dev/vg1/lv1<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 首先加入pv</span><br>pvcreate /dev/sda<br><span class="hljs-comment">## 然后扩展vg</span><br>vgextend vg1 /dev/sda<br><span class="hljs-comment">## 扩充lv</span><br><span class="hljs-comment">## +号必须有，不然就变成了调整lv大小，造成数据丢失</span><br>lvextend -l +100%free /dev/vg1/lv1<br>lvextend -L +20G /dev/vg1/lv1<br><span class="hljs-comment">## 同步文件系统</span><br><span class="hljs-comment">## xfs </span><br>xfs_growfs /dev/vg1/lv1<br><span class="hljs-comment">## ext4</span><br>resize2fs /dev/vg1/lv1<br></code></pre></td></tr></table></figure>
 
 <ol start="2">
 <li>没分区的整块盘</li>
