@@ -24,7 +24,7 @@
 <meta property="og:description" content="Shell 实用技巧 创建简单的菜单  12345678910111213141516171819202122#!&#x2F;usr&#x2F;bin&#x2F;env bash# 实例文件：dbinit.1### 修改提示符## PS1 命令行提示符## PS2 续行提示符## PS3 select提示符DBLIST&#x3D;$(sh .&#x2F;listdb | tail -n +2)PS3&#x3D;&quot;0 inits &gt;&amp;quot">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-08-07T12:58:11.000Z">
-<meta property="article:modified_time" content="2024-08-09T13:37:20.073Z">
+<meta property="article:modified_time" content="2024-08-09T15:00:11.989Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          2.3k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          18 分钟
+          20 分钟
         
       </span>
     
@@ -429,6 +429,11 @@
 <li><code>$SECONDS</code> 会记录 shell 启动以来的时长（秒数）​。如果为其赋值，那么随后在扩展该变量时，得到的值就是先前的赋值与赋值操作以后的时长（秒数）之和。</li>
 </ul>
 </li>
+<li><p><strong>自定义文件描述符及重定向</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将标准输出定向到 out.log文件</span><br><span class="hljs-built_in">exec</span> 1&gt; out.log<br><span class="hljs-comment"># 将错误输出重定向标准输出</span><br><span class="hljs-built_in">exec</span> 2&gt;&amp;1<br><span class="hljs-comment"># 定义文件描述符 3 输出到other.log文件</span><br><span class="hljs-built_in">exec</span> 3&gt; other.log<br><span class="hljs-comment"># 关闭文件描述符 3</span><br><span class="hljs-built_in">exec</span> 3&gt;&amp;- <br></code></pre></td></tr></table></figure>
+
+<p>重定向的顺序通常很重要</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 标准输出被重定向到文件 my.file，然后标准错误被重定向到和标准输出相同的地方。所有的输出都会出现在 my.file 中</span><br>somecmd &gt;my.file 2&gt;&amp;1<br><span class="hljs-comment"># 标准错误被重定向到标准输出（此时标准输出指向的是屏幕）​，然后标准输出被重定向到 my.file。因此，只有标准输出消息会出现在文件中，而错误消息仍旧会出现在屏幕上。</span><br>somecmd 2&gt;&amp;1 &gt;my.file<br><br>somecmd 2&gt;&amp;1 | othercmd<br><span class="hljs-comment"># bash 4.x 版本中的一种便捷语法可以同时将标准输出和标准错误连入管道。</span><br>somecmd |&amp; othercmd<br></code></pre></td></tr></table></figure></li>
 </ol>
 
                 
@@ -498,6 +503,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/08/11/docker-local-registry/" title="搭建Docker本地仓库">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">搭建Docker本地仓库</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
