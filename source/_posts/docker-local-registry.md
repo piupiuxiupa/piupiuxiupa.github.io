@@ -213,4 +213,13 @@ curl -sSL -k -u $username:$passwd http://127.0.0.1:5000/v2/$image/tags/list
     "v1.0"
   ]
 }
+
+## 获取 digest信息
+curl -u $username:$passwd -sSL -H "Accept: application/vnd.docker.distribution.manifest.v2+json" http://127.0.0.1:5000/v2/$image/manifests/$tag | jq -r ".config.digest"
+
+## 通过delete方法删除对应镜像的 tag
+curl -sSLf -k -X DELETE -u $username:$passwd http://127.0.0.1:5000/v2/$image/manifests/$digest
+
+## 清理未被引用的blobs
+registry garbage-collect -m /etc/docker/registry/config.yml
 ```
