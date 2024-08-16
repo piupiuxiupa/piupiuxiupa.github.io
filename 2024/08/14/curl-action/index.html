@@ -16,24 +16,24 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="这是一份Multipass基本操作文档，以及包含一些常见问题的解决方法。 Multipass 是一个轻量级的虚拟机管理工具，旨在简化在本地环境中创建和管理 Ubuntu 虚拟机。 参考资料  Multipass 官网 Multipass 文档  安装Multipass 在 Linux 上安装: 1sudo snap install multipass  在 macOS 上安装:使用 Homebre">
+    <meta name="description" content="Curl 基础用法curl 是一个很全面的命令行浏览器，功能丰富 基本用法 -f&#x2F;–fail  在 HTTP 错误时返回非零状态码， echo $?, 不用-f即使HTTP错误状态码也为0  -s   静默输出  -S   输出错误消息，配合s使用，-sS，静默输出状态下也输出错误消息   -sSf 返回错误状态码 如：curl: (22) The requested URL retur">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Multipass 基本用法及常见问题">
-<meta property="og:url" content="https://piupiuxiupa.github.io/2024/07/08/multipass/index.html">
+<meta property="og:title" content="curl 基础用法">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2024/08/14/curl-action/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="这是一份Multipass基本操作文档，以及包含一些常见问题的解决方法。 Multipass 是一个轻量级的虚拟机管理工具，旨在简化在本地环境中创建和管理 Ubuntu 虚拟机。 参考资料  Multipass 官网 Multipass 文档  安装Multipass 在 Linux 上安装: 1sudo snap install multipass  在 macOS 上安装:使用 Homebre">
+<meta property="og:description" content="Curl 基础用法curl 是一个很全面的命令行浏览器，功能丰富 基本用法 -f&#x2F;–fail  在 HTTP 错误时返回非零状态码， echo $?, 不用-f即使HTTP错误状态码也为0  -s   静默输出  -S   输出错误消息，配合s使用，-sS，静默输出状态下也输出错误消息   -sSf 返回错误状态码 如：curl: (22) The requested URL retur">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-07-08T03:02:11.000Z">
-<meta property="article:modified_time" content="2024-08-08T00:55:28.795Z">
+<meta property="article:published_time" content="2024-08-14T12:26:42.000Z">
+<meta property="article:modified_time" content="2024-08-14T12:30:26.859Z">
 <meta property="article:author" content="piupiuxiupa">
-<meta property="article:tag" content="tools">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Multipass 基本用法及常见问题 - piupiuxiupa&#39;s blog</title>
+  <title>curl 基础用法 - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Multipass 基本用法及常见问题"></span>
+            <span id="subtitle" data-typed-text="curl 基础用法"></span>
           
         </div>
 
@@ -210,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-07-08 11:02" pubdate>
-          2024年7月8日 上午
+        <time datetime="2024-08-14 20:26" pubdate>
+          2024年8月14日 晚上
         </time>
       </span>
     
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          559 字
+          299 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          5 分钟
+          3 分钟
         
       </span>
     
@@ -270,113 +270,49 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Multipass 基本用法及常见问题</h1>
+            <h1 id="seo-header">curl 基础用法</h1>
             
             
               <div class="markdown-body">
                 
-                <p>这是一份Multipass基本操作文档，以及包含一些常见问题的解决方法。</p>
-<p>Multipass 是一个轻量级的虚拟机管理工具，旨在简化在本地环境中创建和管理 Ubuntu 虚拟机。</p>
-<p>参考资料</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://multipass.run/">Multipass 官网</a></li>
-<li><a target="_blank" rel="noopener" href="https://multipass.run/docs">Multipass 文档</a></li>
-</ul>
-<h1 id="安装Multipass"><a href="#安装Multipass" class="headerlink" title="安装Multipass"></a>安装Multipass</h1><ol>
-<li><p><strong>在 Linux 上安装</strong>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> snap install multipass<br></code></pre></td></tr></table></figure>
+                <h1 id="Curl-基础用法"><a href="#Curl-基础用法" class="headerlink" title="Curl 基础用法"></a>Curl 基础用法</h1><p>curl 是一个很全面的命令行浏览器，功能丰富</p>
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><ul>
+<li><p>-f&#x2F;–fail  在 HTTP 错误时返回非零状态码， echo $?, 不用-f即使HTTP错误状态码也为0</p>
 </li>
-<li><p><strong>在 macOS 上安装</strong>:<br>使用 Homebrew:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">brew install --cask multipass<br></code></pre></td></tr></table></figure>
+<li><p>-s   静默输出</p>
 </li>
-<li><p><strong>在 Windows 上安装</strong>:<br>访问 <a target="_blank" rel="noopener" href="https://multipass.run/">Multipass 官网</a> 下载适用于 Windows 的安装程序，并按照提示完成安装。</p>
+<li><p>-S   输出错误消息，配合s使用，-sS，静默输出状态下也输出错误消息</p>
+<p>  -sSf 返回错误状态码 如：curl: (22) The requested URL returned error: 400</p>
+<p>  不加S不会显示错误输出</p>
 </li>
-</ol>
-<h2 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h2><ol>
-<li><p><strong>启动一个新的虚拟机</strong>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name &lt;instance-name&gt;<br></code></pre></td></tr></table></figure>
-
-<p>例如:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name my-vm<br></code></pre></td></tr></table></figure>
+<li><p>-k  忽略SSL证书验证</p>
 </li>
-<li><p><strong>列出所有虚拟机</strong>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass list<br></code></pre></td></tr></table></figure>
+<li><p>–connect-timeout: 设置连接超时的秒数。这是指从开始请求到完成 TCP 连接的时间限制。如果在指定时间内无法建立连接，curl 将会中止。</p>
 </li>
-<li><p><strong>进入虚拟机</strong>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass shell &lt;instance-name&gt;<br></code></pre></td></tr></table></figure>
-
-<p>例如:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass shell my-vm<br></code></pre></td></tr></table></figure>
+<li><p>–max-time: 设置整个请求的最大时间（包括连接时间、传输时间等）。如果超过了这个时间，curl 将中止请求。</p>
 </li>
-<li><p><strong>停止虚拟机</strong>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass stop &lt;instance-name&gt;<br></code></pre></td></tr></table></figure>
-
-<p>例如:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass stop my-vm<br></code></pre></td></tr></table></figure>
+<li><p>-H 添加header</p>
 </li>
-<li><p><strong>删除虚拟机</strong>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass delete &lt;instance-name&gt;<br></code></pre></td></tr></table></figure>
-
-<p>例如:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass delete my-vm<br></code></pre></td></tr></table></figure>
+<li><p>-X GET&#x2F;POST  指定请求方法</p>
 </li>
-<li><p><strong>清理已删除的虚拟机</strong>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass purge<br></code></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="进阶用法"><a href="#进阶用法" class="headerlink" title="进阶用法"></a>进阶用法</h2><ol>
-<li><p><strong>指定 Ubuntu 版本</strong>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name &lt;instance-name&gt; &lt;ubuntu-version&gt;<br></code></pre></td></tr></table></figure>
-
-<p>例如，启动一个 Ubuntu 20.04 的虚拟机:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name my-vm 20.04<br></code></pre></td></tr></table></figure>
+<li><p>-u username:passwd  指定账号密码</p>
 </li>
-<li><p><strong>分配更多资源（CPU、内存、磁盘）</strong>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name &lt;instance-name&gt; --cpus &lt;number&gt; --mem &lt;size&gt; --disk &lt;size&gt;<br></code></pre></td></tr></table></figure>
-
-<p>例如，分配 2 个 CPU，4GB 内存，20GB 磁盘:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch --name my-vm --cpus 2 --mem 4G --disk 20G<br></code></pre></td></tr></table></figure>
+<li><p>-d 发送POST请求时附带的数据</p>
 </li>
-<li><p><strong>共享文件夹</strong>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass mount &lt;host-directory&gt; &lt;instance-name&gt;:&lt;target-directory&gt;<br></code></pre></td></tr></table></figure>
-
-<p>例如，将本地目录 <code>/home/user/projects</code> 挂载到虚拟机的 <code>/home/ubuntu/projects</code>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass mount /home/user/projects my-vm:/home/ubuntu/projects<br></code></pre></td></tr></table></figure>
+<li><p>-v 详细模式发送请求</p>
 </li>
-<li><p><strong>运行命令</strong>:<br>可以在虚拟机中运行命令而不进入虚拟机：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass <span class="hljs-built_in">exec</span> &lt;instance-name&gt; -- &lt;<span class="hljs-built_in">command</span>&gt;<br></code></pre></td></tr></table></figure>
-
-<p>例如，更新虚拟机中的包列表:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass <span class="hljs-built_in">exec</span> my-vm -- <span class="hljs-built_in">sudo</span> apt update<br></code></pre></td></tr></table></figure></li>
-</ol>
-<h1 id="启动前配置"><a href="#启动前配置" class="headerlink" title="启动前配置"></a>启动前配置</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 开启mount挂载，方便拿或传文件到服务器，默认false</span><br>multipass <span class="hljs-built_in">set</span> local.privileged-mounts=<span class="hljs-literal">true</span><br><span class="hljs-comment">## 选择虚拟机驱动，hyperv/virtualbox</span><br><span class="hljs-comment">## win专业版可用hyperv，家庭版只能virtualbox</span><br>multipass <span class="hljs-built_in">set</span> local.driver=hyperv<br><span class="hljs-comment">## 设置默认操作实例</span><br>multipass get client.primary-name=primary<br></code></pre></td></tr></table></figure>
-
-<h1 id="启动实例"><a href="#启动实例" class="headerlink" title="启动实例"></a>启动实例</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass launch -n <span class="hljs-variable">$name</span> -d 10G -m 2G -c 2 --bridged --mount &lt;local-path&gt;:&lt;instance-path&gt;<br></code></pre></td></tr></table></figure>
-
-<blockquote>
-<p>如果启动不了可以尝试重启multipass</p>
-</blockquote>
-<h1 id="调整实例配置"><a href="#调整实例配置" class="headerlink" title="调整实例配置"></a>调整实例配置</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass stop handsome-ling<br>multipass <span class="hljs-built_in">set</span> local.handsome-ling.cpus=4<br>multipass <span class="hljs-built_in">set</span> local.handsome-ling.disk=60G<br>multipass <span class="hljs-built_in">set</span> local.handsome-ling.memory=7G<br></code></pre></td></tr></table></figure>
-
-<h1 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 删除并清除</span><br><span class="hljs-comment">## delete 相当于把实例转为删除状态 </span><br><span class="hljs-comment">## -p or --purge 删除并清除</span><br>multipass delete <span class="hljs-variable">$instance</span> -p<br><span class="hljs-comment">## purge</span><br>multipass purge <span class="hljs-variable">$instance</span><br></code></pre></td></tr></table></figure>
-
-<h1 id="IPv4-N-A"><a href="#IPv4-N-A" class="headerlink" title="IPv4 N&#x2F;A"></a>IPv4 N&#x2F;A</h1><ul>
-<li><p>重启实例</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass restart <span class="hljs-variable">$instance</span><br></code></pre></td></tr></table></figure>
+<li><p>-o 将下载的文件保存为指定文件名</p>
 </li>
-<li><p>停止后再启动实例</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass stop <span class="hljs-variable">$instance</span><br>multipass start <span class="hljs-variable">$instance</span><br></code></pre></td></tr></table></figure>
+<li><p>-O 保存为原始文件名</p>
 </li>
-<li><p>重启multipass服务</p>
-<ul>
-<li>可直接杀进程</li>
-</ul>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">taskkill /f /pid <span class="hljs-variable">$pid</span><br></code></pre></td></tr></table></figure>
+<li><p>-F 上传文件  header使用 Content-Type multipart&#x2F;form-data</p>
 </li>
-<li><p>状态suspending ，尝试suspend实例</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass <span class="hljs-built_in">suspend</span> <span class="hljs-variable">$instance</span><br></code></pre></td></tr></table></figure>
+<li><p>-C 断点续传</p>
 </li>
-<li><p>状态suspended， shell连接即可</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">multipass shell <span class="hljs-variable">$instance</span><br></code></pre></td></tr></table></figure></li>
+<li><p>-I 显示响应码及源码</p>
+</li>
+<li><p>-i 只显示响应码</p>
+</li>
 </ul>
 
                 
@@ -390,7 +326,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/tools/" class="print-no-link">#tools</a>
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
       
     </div>
   
@@ -402,8 +338,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Multipass 基本用法及常见问题</div>
-      <div>https://piupiuxiupa.github.io/2024/07/08/multipass/</div>
+      <div>curl 基础用法</div>
+      <div>https://piupiuxiupa.github.io/2024/08/14/curl-action/</div>
     </div>
     <div class="license-meta">
       
@@ -415,7 +351,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年7月8日</div>
+          <div>2024年8月14日</div>
         </div>
       
       
@@ -447,15 +383,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/08/k8s-Prepare-Environment/" title="[K8s] Prepare Environment">
+                      <a href="/2024/08/15/shell-action-3/" title="Shell 实用技巧（三）">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">[K8s] Prepare Environment</span>
+                        <span class="hidden-mobile">Shell 实用技巧（三）</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2024/08/11/docker-local-registry/" title="搭建Docker本地仓库">
+                        <span class="hidden-mobile">搭建Docker本地仓库</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

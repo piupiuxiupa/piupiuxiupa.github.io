@@ -1,0 +1,697 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="piupiuxiupa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="getopts  getopts 是一个内建命令，用于处理命令行选项。 它可以让脚本在运行时接受命令行参数。 它的语法是：getopts optstring variable。 optstring 填入选项字符，如 abc 表示选项 a、b 和 c 是合法的选项。 如果是必填项要在选项后面加冒号，如a:bc 对于接受参数的选项，参数会保存在 shell 变量 $OPTARG中 当选项是不需要输入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell 实用技巧（三）">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2024/08/15/shell-action-3/index.html">
+<meta property="og:site_name" content="piupiuxiupa&#39;s blog">
+<meta property="og:description" content="getopts  getopts 是一个内建命令，用于处理命令行选项。 它可以让脚本在运行时接受命令行参数。 它的语法是：getopts optstring variable。 optstring 填入选项字符，如 abc 表示选项 a、b 和 c 是合法的选项。 如果是必填项要在选项后面加冒号，如a:bc 对于接受参数的选项，参数会保存在 shell 变量 $OPTARG中 当选项是不需要输入">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-08-15T02:53:19.000Z">
+<meta property="article:modified_time" content="2024-08-16T00:42:24.416Z">
+<meta property="article:author" content="piupiuxiupa">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Shell 实用技巧（三） - piupiuxiupa&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"piupiuxiupa.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>piupiuxiupa&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Shell 实用技巧（三）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-15 10:53" pubdate>
+          2024年8月15日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Shell 实用技巧（三）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <ol>
+<li><p><strong>getopts</strong></p>
+<ul>
+<li><code>getopts</code> 是一个内建命令，用于处理命令行选项。</li>
+<li>它可以让脚本在运行时接受命令行参数。</li>
+<li>它的语法是：<code>getopts optstring variable</code>。</li>
+<li><code>optstring</code> 填入选项字符，如 <code>abc</code> 表示选项 a、b 和 c 是合法的选项。</li>
+<li>如果是必填项要在选项后面加冒号，如<code>a:bc</code></li>
+<li>对于接受参数的选项，参数会保存在 shell 变量 <code>$OPTARG</code>中</li>
+<li>当选项是不需要输入参数的时候，<code>$OPTARG</code>为空</li>
+<li><code>$OPTIND</code> 初始值为1，每解析一个选项，<code>$OPTIND</code> 会加1</li>
+</ul>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/usr/bin/env bash</span><br><span class="hljs-comment"># 实例文件：getopts_example</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># getopts用法</span><br><span class="hljs-comment">#</span><br>aflag=<br>bflag=<br><span class="hljs-keyword">while</span> <span class="hljs-built_in">getopts</span> <span class="hljs-string">&#x27;ab:&#x27;</span> OPTION<br><span class="hljs-keyword">do</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-variable">$OPTION</span> <span class="hljs-keyword">in</span><br>        a) aflag=1<br>        ;;<br>        b) bflag=1<br>        bval=<span class="hljs-string">&quot;<span class="hljs-variable">$OPTARG</span>&quot;</span><br>        ;;<br>        ?) <span class="hljs-built_in">printf</span> <span class="hljs-string">&quot;Usage: %s: [-a] [-b value] args\n&quot;</span> <span class="hljs-variable">$&#123;0##*/&#125;</span> &gt;&amp;2<br>        <span class="hljs-built_in">exit</span> 2<br>        ;;<br>    <span class="hljs-keyword">esac</span><br><span class="hljs-keyword">done</span><br><br><span class="hljs-built_in">shift</span> $((<span class="hljs-variable">$OPTIND</span> - <span class="hljs-number">1</span>))<br><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$aflag</span>&quot;</span> ]<br><span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">printf</span> <span class="hljs-string">&quot;Option -a specified\n&quot;</span><br><span class="hljs-keyword">fi</span><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$bflag</span>&quot;</span> ]<br><span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;Option -b &quot;%s&quot; specified\n&#x27;</span> <span class="hljs-string">&quot;<span class="hljs-variable">$bval</span>&quot;</span><br><span class="hljs-keyword">fi</span><br><span class="hljs-built_in">printf</span> <span class="hljs-string">&quot;Remaining arguments are: %s\n&quot;</span> <span class="hljs-string">&quot;$*&quot;</span><br><br>myscript -a -b alt plow harvest reap<br><span class="hljs-comment">## 这里解析完选项后 $OPTIND 为 4, 因此$OPTIND - 1，丢弃解析过的选项，剩余的参数为 plow harvest reap</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>如果想让脚本输出自己自定义的错误信息，需要在 <code>getopts</code> 选项列表前加上<code>:</code>, 如<code>:ab:c</code> 使<code>getopts</code>不输出错误消息 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/usr/bin/env bash</span><br><span class="hljs-comment"># 实例文件：getopts_custom</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># 解析参数时使用自定义错误消息</span><br><span class="hljs-comment">#</span><br>aflag=<br>bflag=<br><span class="hljs-keyword">while</span> <span class="hljs-built_in">getopts</span> :ab: FOUND<br><span class="hljs-keyword">do</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-variable">$FOUND</span> <span class="hljs-keyword">in</span><br>        a) aflag=1<br>        ;;<br>        b) bflag=1<br>        bval=<span class="hljs-string">&quot;<span class="hljs-variable">$OPTARG</span>&quot;</span><br>            ;;<br>        <span class="hljs-comment"># 缺少参数返回 :</span><br>        \:) <span class="hljs-built_in">printf</span> <span class="hljs-string">&quot;argument missing from -%s option\n&quot;</span> <span class="hljs-variable">$OPTARG</span><br>            <span class="hljs-built_in">printf</span> <span class="hljs-string">&quot;Usage: %s: [-a] [-b value] args\n&quot;</span> <span class="hljs-variable">$&#123;0##*/&#125;</span><br>            <span class="hljs-built_in">exit</span> 2<br>            ;;<br>        <span class="hljs-comment"># 不支持的选项返回 ?</span><br>        \?) <span class="hljs-built_in">printf</span> <span class="hljs-string">&quot;unknown option: -%s\n&quot;</span> <span class="hljs-variable">$OPTARG</span><br>            <span class="hljs-built_in">printf</span> <span class="hljs-string">&quot;Usage: %s: [-a] [-b value] args\n&quot;</span> <span class="hljs-variable">$&#123;0##*/&#125;</span><br>            <span class="hljs-built_in">exit</span> 2<br>            ;;<br>        <span class="hljs-keyword">esac</span> &gt;&amp;2<br>    <span class="hljs-keyword">done</span><br><span class="hljs-built_in">shift</span> $((<span class="hljs-variable">$OPTIND</span> - <span class="hljs-number">1</span>))<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>用read解析文本</strong></p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/usr/bin/env bash</span><br><span class="hljs-comment"># 实例文件：parseViaRead</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># 用read语句解析ls -l的输出</span><br><span class="hljs-comment"># ls -l的输出类似于以下这样：</span><br><span class="hljs-comment"># -rw-r--r--  1 albing users 126 2006-10-10 22:50 fnsize</span><br><br><span class="hljs-built_in">ls</span> -l <span class="hljs-string">&quot;<span class="hljs-variable">$1</span>&quot;</span> | &#123; <span class="hljs-built_in">read</span> PERMS LCOUNT OWNER GROUP SIZE CRDATE CRTIME FILE ;<br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$FILE</span> has <span class="hljs-variable">$LCOUNT</span> <span class="hljs-string">&#x27;link(s)&#x27;</span> and is <span class="hljs-variable">$SIZE</span> bytes long. ;<br>&#125;<br><br><span class="hljs-comment"># read 将各单词读入数组变量</span><br><span class="hljs-built_in">read</span> -a MYRAY<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>读取整个文件</strong></p>
+<blockquote>
+<p>mapfile 和 readarray</p>
+<p>能够将整个文件读入数组，每个数组元素对应文件中的一行</p>
+</blockquote>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mapfile</span> -t -s 1 -n 1500 -C showprg -c 100 BIGDATA &lt; /tmp/myfile.data<br><span class="hljs-comment"># -s 1 跳过第一行输入</span><br><span class="hljs-comment"># -n 1500 读取 1500行</span><br><span class="hljs-comment"># -t 删除每行行尾的换行符</span><br><span class="hljs-comment"># -c 100 每读取 100行调用一次用户自定义函数 showprg, 默认每 5000行调用一次</span><br><span class="hljs-comment"># 结果放进数组 BIGDATA</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>每次提取一个字符</strong></p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/usr/bin/env bash</span><br><span class="hljs-comment"># 实例文件：onebyone</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># 从输入中一次解析一个字符</span><br><br><span class="hljs-keyword">while</span> <span class="hljs-built_in">read</span> ALINE<br><span class="hljs-keyword">do</span><br>    <span class="hljs-keyword">for</span> ((i=<span class="hljs-number">0</span>; i &lt; <span class="hljs-variable">$&#123;#ALINE&#125;</span>; i++))<br>    <span class="hljs-keyword">do</span><br>        ACHAR=<span class="hljs-variable">$&#123;ALINE:i:1&#125;</span><br>        <span class="hljs-comment"># 在这里执行某些操作，如echo $ACHAR</span><br>        <span class="hljs-built_in">echo</span> <span class="hljs-variable">$ACHAR</span><br>    <span class="hljs-keyword">done</span><br><span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure></li>
+<li><p><strong>提取数据中的特定字段</strong></p>
+<ul>
+<li><code>cut</code></li>
+<li><code>awk</code></li>
+<li><code>grep -o</code> 正则提取</li>
+</ul>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cut</span> -d: -f1,6,7 /etc/passwd<br><span class="hljs-built_in">cut</span> -d: -f1-3<br><br><span class="hljs-comment"># 默认输出分隔符是空格，通过 OFS变量修改</span><br>awk <span class="hljs-string">&#x27;BEGIN&#123;FS=&quot;:&quot;; OFS=&quot;\t&quot;&#125; &#123;print $1 $7 $6&#125;&#x27;</span> /etc/passwd<br><br><span class="hljs-comment">## ip地址提取</span><br>ip a | grep -oP <span class="hljs-string">&#x27;([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])&#x27;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>更新文件中的特定字段</strong></p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ grep csh /etc/passwd<br>root:*:0:0:Charlie &amp;:/root:/bin/csh<br><br>$ sed <span class="hljs-string">&#x27;s;/csh$;/sh;&#x27;</span> /etc/passwd | grep <span class="hljs-string">&#x27;^root&#x27;</span><br>root:*:0:0:Charlie &amp;:/root:/bin/sh<br><br><span class="hljs-comment"># 对字段进行运算或修改特定字段中的内容</span><br>$ <span class="hljs-built_in">cat</span> data_file<br>Line 1 ends<br>Line 2 ends<br>Line 3 ends<br>Line 4 ends<br>Line 5 ends<br><br>$ awk <span class="hljs-string">&#x27;&#123;print $1, $2+5, $3&#125;&#x27;</span> data_file<br>Line 6 ends<br>Line 7 ends<br>Line 8 ends<br>Line 9 ends<br>Line 10 ends<br><span class="hljs-comment"># 如果第2个字段中包含&#x27;3&#x27;，将其修改为&#x27;8&#x27;并做标记</span><br>$ awk <span class="hljs-string">&#x27;&#123; if ($2 == &quot;3&quot;) print $1, $2+5, $3, &quot;Tweaked&quot; ; else print $0; &#125;&#x27;</span> \<br>data_file<br>Line 1 ends<br>Line 2 ends<br>Line 8 ends Tweaked<br>Line 4 ends<br>Line 5 ends<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>修剪空白字符</strong></p>
+<ul>
+<li><code>shopt -s extglob</code> 开启扩展通配符匹配</li>
+<li>利用 <code>read</code>的设计方法</li>
+<li><code>$&#123;##&#125; 或 $&#123;%%&#125;</code> 变量字符串切割</li>
+</ul>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">shopt</span> -s extglob<br><span class="hljs-comment">## 开启后可以用 +(), 匹配多个空格符</span><br><span class="hljs-variable">$&#123;line##+([[:space:]])&#125;</span><br><span class="hljs-variable">$&#123;line%%+([[:space:]])&#125;</span><br><br><span class="hljs-built_in">shopt</span> -s extglob<br><br><span class="hljs-keyword">while</span> IFS= <span class="hljs-built_in">read</span> -r line; <span class="hljs-keyword">do</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;None: <span class="hljs-variable">$line</span>&quot;</span> <span class="hljs-comment"># 保留所有的空白字符</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Ld: <span class="hljs-variable">$&#123;line##+([[:space:]])&#125;</span>&quot;</span> <span class="hljs-comment"># 修剪行首空白字符</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Tr: <span class="hljs-variable">$&#123;line%%+([[:space:]])&#125;</span>&quot;</span> <span class="hljs-comment"># 修剪行尾空白字符</span><br>line=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;line##+([[:space:]])&#125;</span>&quot;</span> <span class="hljs-comment"># 修剪行首和……</span><br>line=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;line%%+([[:space:]])&#125;</span>&quot;</span> <span class="hljs-comment"># ……行尾的空白字符</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;All: <span class="hljs-variable">$line</span>&quot;</span> <span class="hljs-comment"># 显示修剪后的内容</span><br><span class="hljs-keyword">done</span> &lt; whitespace<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>编写安全的shell脚本</strong></p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/usr/bin/env bash</span><br><span class="hljs-comment"># 实例文件：security_template</span><br><br><span class="hljs-comment"># 设置合理的/安全的路径</span><br>PATH=<span class="hljs-string">&#x27;/usr/local/bin:/bin:/usr/bin&#x27;</span><br><span class="hljs-comment"># 确保导出$PATH</span><br>\<span class="hljs-built_in">export</span> PATH<br><br><span class="hljs-comment"># 清除所有别名。切记：开头的\用于禁止别名扩展</span><br>\<span class="hljs-built_in">unalias</span> -a<br><br><span class="hljs-comment"># 清除命令路径散列</span><br><span class="hljs-built_in">hash</span> -r<br><br><span class="hljs-comment"># 将硬性限制设置为0，关闭核心转储（core dumps）</span><br><span class="hljs-built_in">ulimit</span> -H -c 0 --<br><br><span class="hljs-comment"># 设置合理的/安全的IFS（注意，这里使用的语法仅适用于bash和ksh93，不具备可移植性！）</span><br>IFS=$<span class="hljs-string">&#x27; \t\n&#x27;</span><br><br><span class="hljs-comment"># 设置并使用合理的/安全的umask变量</span><br><span class="hljs-comment"># 注意，这不会影响已经在命令行上重定向的文件</span><br><span class="hljs-comment"># 022产生0755权限，077产生0700权限……</span><br>UMASK=022<br><span class="hljs-built_in">umask</span> <span class="hljs-variable">$UMASK</span><br><br><span class="hljs-keyword">until</span> [ -n <span class="hljs-string">&quot;<span class="hljs-variable">$temp_dir</span>&quot;</span> -a ! -d <span class="hljs-string">&quot;<span class="hljs-variable">$temp_dir</span>&quot;</span> ]; <span class="hljs-keyword">do</span><br>    temp_dir=<span class="hljs-string">&quot;/tmp/meaningful_prefix.<span class="hljs-variable">$&#123;RANDOM&#125;</span><span class="hljs-variable">$&#123;RANDOM&#125;</span><span class="hljs-variable">$&#123;RANDOM&#125;</span>&quot;</span><br><span class="hljs-keyword">done</span><br><span class="hljs-built_in">mkdir</span> -p -m 0700 <span class="hljs-variable">$temp_dir</span> \<br>|| (<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;FATAL: Failed to create temp dir &#x27;<span class="hljs-variable">$temp_dir</span>&#x27;: $?&quot;</span>; <span class="hljs-built_in">exit</span> 100)<br><br><span class="hljs-comment"># 尽全力清除临时文件</span><br><span class="hljs-comment"># 注意，一定要先设置好$temp_dir，千万不要修改！</span><br>cleanup=<span class="hljs-string">&quot;rm -rf <span class="hljs-variable">$temp_dir</span>&quot;</span><br><span class="hljs-built_in">trap</span> <span class="hljs-string">&quot;<span class="hljs-variable">$cleanup</span>&quot;</span> ABRT EXIT HUP INT QUIT<br></code></pre></td></tr></table></figure></li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Shell 实用技巧（三）</div>
+      <div>https://piupiuxiupa.github.io/2024/08/15/shell-action-3/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>piupiuxiupa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年8月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/14/curl-action/" title="curl 基础用法">
+                        <span class="hidden-mobile">curl 基础用法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> <a href="https://piupiuxiupa.github.io/" target="_blank" rel="nofollow noopener"><span>piupiuxiupa</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -20,11 +20,11 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Shell 实用技巧（二）">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/08/07/shell-action-2/index.html">
-<meta property="og:site_name" content="piupiuxiupa&#39;s bolg">
+<meta property="og:site_name" content="piupiuxiupa&#39;s blog">
 <meta property="og:description" content="Shell 实用技巧 创建简单的菜单  12345678910111213141516171819202122#!&#x2F;usr&#x2F;bin&#x2F;env bash# 实例文件：dbinit.1### 修改提示符## PS1 命令行提示符## PS2 续行提示符## PS3 select提示符DBLIST&#x3D;$(sh .&#x2F;listdb | tail -n +2)PS3&#x3D;&quot;0 inits &gt;&amp;quot">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-08-07T12:58:11.000Z">
-<meta property="article:modified_time" content="2024-08-09T15:00:11.989Z">
+<meta property="article:modified_time" content="2024-08-15T02:54:46.753Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Shell 实用技巧（二） - piupiuxiupa&#39;s bolg</title>
+  <title>Shell 实用技巧（二） - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.3k 字
+          2.9k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          20 分钟
+          25 分钟
         
       </span>
     
@@ -396,7 +396,7 @@
 <li><p><strong>函数参数及返回值</strong></p>
 <ul>
 <li>向函数内部的变量赋值</li>
-<li>用<code>echo</code>或<code>printf</code>将输出发送到标准输出，并用<code>$()</code>调用函数<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 实例文件：func_max.1</span><br><br><span class="hljs-comment"># 定义函数：</span><br><span class="hljs-comment">## 函数内部没有用local声明的变量都是全局变量</span><br><span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">max</span></span> ()<br>&#123;<br>    <span class="hljs-built_in">local</span> HIDN<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$1</span> -gt <span class="hljs-variable">$2</span> ]<br>    <span class="hljs-keyword">then</span><br>        BIGR=<span class="hljs-variable">$1</span><br>    <span class="hljs-keyword">else</span><br>        BIGR=<span class="hljs-variable">$2</span><br>    <span class="hljs-keyword">fi</span><br>    HIDN=5<br>&#125;<br><br><span class="hljs-comment"># 实例文件：func_max.2</span><br><br><span class="hljs-comment"># 定义函数：</span><br><span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">max</span></span> ()<br>&#123;<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$1</span> -gt <span class="hljs-variable">$2</span> ]<br>    <span class="hljs-keyword">then</span><br>        <span class="hljs-built_in">echo</span> <span class="hljs-variable">$1</span><br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-built_in">echo</span> <span class="hljs-variable">$2</span><br>    <span class="hljs-keyword">fi</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<li>用<code>echo</code>或<code>printf</code>将输出发送到标准输出，并用<code>$()</code>或者<code>``</code>调用函数<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 实例文件：func_max.1</span><br><br><span class="hljs-comment"># 定义函数：</span><br><span class="hljs-comment">## 函数内部没有用local声明的变量都是全局变量</span><br><span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">max</span></span> ()<br>&#123;<br>    <span class="hljs-built_in">local</span> HIDN<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$1</span> -gt <span class="hljs-variable">$2</span> ]<br>    <span class="hljs-keyword">then</span><br>        BIGR=<span class="hljs-variable">$1</span><br>    <span class="hljs-keyword">else</span><br>        BIGR=<span class="hljs-variable">$2</span><br>    <span class="hljs-keyword">fi</span><br>    HIDN=5<br>&#125;<br><br><span class="hljs-comment"># 实例文件：func_max.2</span><br><br><span class="hljs-comment"># 定义函数：</span><br><span class="hljs-keyword">function</span> <span class="hljs-function"><span class="hljs-title">max</span></span> ()<br>&#123;<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$1</span> -gt <span class="hljs-variable">$2</span> ]<br>    <span class="hljs-keyword">then</span><br>        <span class="hljs-built_in">echo</span> <span class="hljs-variable">$1</span><br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-built_in">echo</span> <span class="hljs-variable">$2</span><br>    <span class="hljs-keyword">fi</span><br>&#125;<br><span class="hljs-comment"># 调用函数</span><br>max 10 20<br><span class="hljs-comment"># 调用函数并将结果赋值给变量</span><br>BIGR=$(max 10 20)<br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$BIGR</span><br><span class="hljs-comment"># 调用函数并将结果赋值给变量</span><br>BIGR=`max 10 20`<br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$BIGR</span><br></code></pre></td></tr></table></figure>
 <blockquote>
 <p>在函数中引用参数也是使用 $1、$2 等。但是，$0 保持不变，其中包含的还是所调用脚本的名称。</p>
 <p>$FUNCNAME 本身引用的是该数组的第 0 个元素，其中包含的是当前执行函数的名称。</p>
@@ -430,10 +430,49 @@
 </ul>
 </li>
 <li><p><strong>自定义文件描述符及重定向</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将标准输出定向到 out.log文件</span><br><span class="hljs-built_in">exec</span> 1&gt; out.log<br><span class="hljs-comment"># 将错误输出重定向标准输出</span><br><span class="hljs-built_in">exec</span> 2&gt;&amp;1<br><span class="hljs-comment"># 定义文件描述符 3 输出到other.log文件</span><br><span class="hljs-built_in">exec</span> 3&gt; other.log<br><span class="hljs-comment"># 关闭文件描述符 3</span><br><span class="hljs-built_in">exec</span> 3&gt;&amp;- <br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将标准输出定向到 out.log文件</span><br><span class="hljs-built_in">exec</span> 1&gt; out.log<br><span class="hljs-comment"># 将错误输出重定向标准输出</span><br><span class="hljs-built_in">exec</span> 2&gt;&amp;1<br><span class="hljs-comment"># 定义文件描述符 3 输出到other.log文件</span><br><span class="hljs-built_in">exec</span> 3&gt; other.log<br><span class="hljs-comment"># 关闭文件描述符 3</span><br><span class="hljs-built_in">exec</span> 3&gt;&amp;- <br><br><span class="hljs-comment">## 函数也可重定向输出</span><br><span class="hljs-comment"># 根据传进参数会分别进行输出，无需写迭代循环</span><br><span class="hljs-function"><span class="hljs-title">ERROUT</span></span>()&#123;<br>    <span class="hljs-built_in">printf</span> <span class="hljs-string">&quot;Error: %b\n&quot;</span> <span class="hljs-string">&quot;<span class="hljs-variable">$@</span>&quot;</span><br>&#125; &gt;&amp;2<br><span class="hljs-comment">## printf 小技巧</span><br><span class="hljs-built_in">test</span>=<span class="hljs-string">&quot;a b c&quot;</span><br><span class="hljs-built_in">printf</span> <span class="hljs-string">&quot;Print %b\n&quot;</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;test[@]&#125;</span>&quot;</span><br><span class="hljs-comment">## 会打印三条输出</span><br><br></code></pre></td></tr></table></figure>
 
 <p>重定向的顺序通常很重要</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 标准输出被重定向到文件 my.file，然后标准错误被重定向到和标准输出相同的地方。所有的输出都会出现在 my.file 中</span><br>somecmd &gt;my.file 2&gt;&amp;1<br><span class="hljs-comment"># 标准错误被重定向到标准输出（此时标准输出指向的是屏幕）​，然后标准输出被重定向到 my.file。因此，只有标准输出消息会出现在文件中，而错误消息仍旧会出现在屏幕上。</span><br>somecmd 2&gt;&amp;1 &gt;my.file<br><br>somecmd 2&gt;&amp;1 | othercmd<br><span class="hljs-comment"># bash 4.x 版本中的一种便捷语法可以同时将标准输出和标准错误连入管道。</span><br>somecmd |&amp; othercmd<br></code></pre></td></tr></table></figure></li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 标准输出被重定向到文件 my.file，然后标准错误被重定向到和标准输出相同的地方。所有的输出都会出现在 my.file 中</span><br>somecmd &gt;my.file 2&gt;&amp;1<br><span class="hljs-comment"># 标准错误被重定向到标准输出（此时标准输出指向的是屏幕）​，然后标准输出被重定向到 my.file。因此，只有标准输出消息会出现在文件中，而错误消息仍旧会出现在屏幕上。</span><br>somecmd 2&gt;&amp;1 &gt;my.file<br><br>somecmd 2&gt;&amp;1 | othercmd<br><span class="hljs-comment"># bash 4.x 版本中的一种便捷语法可以同时将标准输出和标准错误连入管道。</span><br>somecmd |&amp; othercmd<br></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>处理日期和时间</strong></p>
+<ul>
+<li><code>date</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将日期转为纪元秒格式</span><br><span class="hljs-built_in">date</span> -d <span class="hljs-string">&quot;20230113&quot;</span> <span class="hljs-string">&quot;+%s&quot;</span> <br><span class="hljs-comment"># 纪元秒格式转换需要加 @符号</span><br><span class="hljs-built_in">date</span> -d <span class="hljs-string">&quot;@1673000000&quot;</span><br><br><span class="hljs-comment"># 更多形式查阅其他文档</span><br><span class="hljs-built_in">date</span> <span class="hljs-string">&#x27;+%Y-%m-%d %H:%M:%S %z&#x27;</span><br><span class="hljs-built_in">date</span> -d <span class="hljs-string">&#x27;today&#x27;</span> <span class="hljs-string">&#x27;+%Y-%m-%d %H:%M:%S %z&#x27;</span><br><span class="hljs-built_in">date</span> -d <span class="hljs-string">&#x27;tomorrow&#x27;</span> <span class="hljs-string">&#x27;+%Y-%m-%d %H:%M:%S %z&#x27;</span><br><span class="hljs-built_in">date</span> -d <span class="hljs-string">&#x27;yesterday&#x27;</span> <span class="hljs-string">&#x27;+%Y-%m-%d %H:%M:%S %z&#x27;</span><br><span class="hljs-built_in">date</span> -d <span class="hljs-string">&#x27;1 day ago&#x27;</span> <span class="hljs-string">&#x27;+%Y-%m-%d %H:%M:%S %z&#x27;</span><br><span class="hljs-built_in">date</span> -d <span class="hljs-string">&#x27;-1 days&#x27;</span> <span class="hljs-string">&#x27;+%Y-%m-%d %H:</span><br><span class="hljs-string">%M:%S %z&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>printf</code><ul>
+<li><code>printf</code> 有一个二进制版本</li>
+<li>这里的<code>printf</code>指的是bash内建版本<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 输出日期</span><br><span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;%(%F %T)T\n&#x27;</span> <span class="hljs-string">&#x27;-1&#x27;</span><br><span class="hljs-comment"># 可以为变量赋值</span><br><span class="hljs-built_in">printf</span> -v today <span class="hljs-string">&#x27;%(%F)T&#x27;</span> <span class="hljs-string">&#x27;-1&#x27;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$today</span><br><span class="hljs-comment"># 有两个特殊的参数值可以使用：-1代表当前时间，-2 代表 shell 被调用的时间。</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>比较文件</strong></p>
+<ul>
+<li>比较纯文本文件</li>
+<li>比较二进制文件</li>
+</ul>
+<p>通用方法：<br>以上两种文件都可以通过计算sha值来确认是否相同。</p>
+<p>比较纯文本文件比较简单，直接使用 <code>diff</code> 命令即可。<br>diff 常用选项：</p>
+<ul>
+<li><code>-b</code> 忽略空白行</li>
+<li><code>-c</code> 显示差异的上下文</li>
+<li><code>-u</code> 显示差异的上下文，并且显示差异的行号</li>
+<li><code>-y</code> 显示差异的上下行</li>
+<li><code>-B</code> 忽略大小写</li>
+<li><code>-i</code> 忽略大小写</li>
+<li><code>-q</code> 不显示差异的上下文</li>
+<li><code>-r</code> 递归比较目录</li>
+</ul>
+<p>diff 比较二进制文件不会显示太多信息，只会告诉两个文件不一样，需要使用 <code>cmp</code> 命令。</p>
+<p>或者通过解压word文档，用解压出来的xml文件进行对比。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 此行 sed可以将每个&lt;&gt;替换为自身加上换行符，从而将包含内容的行独立出来</span><br>sed -e <span class="hljs-string">&#x27;s/&gt;/&gt;\</span><br><span class="hljs-string">/g; s/&lt;/\</span><br><span class="hljs-string">&lt;/g&#x27;</span> document.xml &gt; word.xml<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>word文档实际上是由里面的图片和xml文件压缩所得，可以尝试用zip解压出来看看</p>
+</blockquote>
+</li>
 </ol>
 
                 
