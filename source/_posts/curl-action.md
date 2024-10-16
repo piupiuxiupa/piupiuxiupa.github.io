@@ -30,3 +30,27 @@ curl 是一个很全面的命令行浏览器，功能丰富
 - -C 断点续传
 - -I 显示响应码及源码
 - -i 只显示响应码
+- -c 记录cookie或session
+- -b 请求时使用携带的cookie
+
+## 使用示例
+
+```bash
+# post请求携带参数
+curl -X POST -d "key=value" http://127.0.0.1
+
+# json 格式请求
+curl -X POST -d '{"key": "value"}' -H "Content-Type: application/json" http://127.0.0.1
+
+# 访问https时忽略证书 
+curl -sSfL -k https://127.0.0.1
+
+# 记录返回的cookie
+curl -c cookies.txt -X POST -d '{"key": "value"}' -H "Content-Type: application/json" http://127.0.0.1
+
+# 请求时携带文件中的cookie值
+curl -b cookies.txt -X POST -d '{"key": "value"}' -H "Content-Type: application/json" http://127.0.0.1
+
+# 如果请求返回是一个脚本，直接执行
+curl -s http://127.0.0.1 -O- | bash
+```
