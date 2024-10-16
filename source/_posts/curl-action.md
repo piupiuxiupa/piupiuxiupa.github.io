@@ -1,5 +1,5 @@
 ---
-title: curl 基础用法
+title: Linux curl 基础用法
 date: 2024-08-14 20:26:42
 tags: linux
 ---
@@ -42,7 +42,7 @@ curl -X POST -d "key=value" http://127.0.0.1
 # json 格式请求
 curl -X POST -d '{"key": "value"}' -H "Content-Type: application/json" http://127.0.0.1
 
-# 访问https时忽略证书 
+# 访问 https时忽略证书 
 curl -sSfL -k https://127.0.0.1
 
 # 记录返回的cookie
@@ -50,6 +50,9 @@ curl -c cookies.txt -X POST -d '{"key": "value"}' -H "Content-Type: application/
 
 # 请求时携带文件中的cookie值
 curl -b cookies.txt -X POST -d '{"key": "value"}' -H "Content-Type: application/json" http://127.0.0.1
+
+# 表单上传文件
+curl -X POST -F "files=@/path/to/local/file" http://127.0.0.1/upload-files
 
 # 如果请求返回是一个脚本，直接执行
 curl -s http://127.0.0.1 -O- | bash
