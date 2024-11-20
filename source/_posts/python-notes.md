@@ -1,5 +1,5 @@
 ---
-title: python_notes
+title: Python Notes
 date: 2024-11-20 12:13:47
 tags: python
 ---
