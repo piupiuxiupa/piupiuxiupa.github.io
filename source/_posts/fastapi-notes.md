@@ -56,6 +56,35 @@ uvicorn main:app --reload
 - http://127.0.0.1:8000/docs
 - http://127.0.0.1:8000/redoc
 
+### 查看文档显示空白问题
+
+因为fastapi的openapi包里的docs.py文件接口文档默认使用
+
+https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui.css
+
+https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui-bundle.js
+
+国外地址访问较慢，如果是纯内网环境也是如此。
+
+```python
+# 替换fastapi下openapi包内的docs.py文件的js和css参数的值
+# 将url替换为本地js和css文件
+# Lib/site-packages/fastapi/openapi/docs.py
+# 修改其中get_swagger_ui_html 函数
+# redoc则修改get_redoc_html函数
+swagger_js_url: str="/static/swagger-ui/swagger-ui-bundle.js",
+swagger_css_url: str="/static/swagger-ui/swagger-ui.css",
+swagger_favicon_url: str="/static/swagger-ui/favicon.png",
+
+redoc_js_url: str = "/static/redoc/bundles/redoc.standalone.js",
+redoc_favicon_url: str = "/static/redoc/favicon.png"
+
+# 修改完，然后挂载， directory 填本地路径
+app.mount('/static', StaticFiles(directory='static'),
+          name='static')	
+```
+
+
 ## FastAPI 参数
 
 > FastAPI 是直接从 Starlette 继承的类。
