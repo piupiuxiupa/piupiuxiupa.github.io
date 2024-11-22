@@ -215,3 +215,26 @@ logger.add("file_X.log", retention="10 days")  # 定期清理
 logger.add("file_Y.log", compression="zip")  # 压缩节省空间
 
 ```
+
+## set 操作
+
+集合是无序的，每次输出结果顺序不一样
+
+```python
+list1 = [1, 2, 3, 4]
+list2 = [3, 4, 5, 6]
+set1 = set(list1)
+set2 = set(list2)
+
+# - or difference : 求两集合差值
+set1.difference(set2)
+
+# & or intersection 计算集合重复元素 
+if set1 & set2:
+    print("两个列表有重复元素")
+else:
+    print("两个列表没有重复元素")
+
+# issubset 判断是否是子集
+set1.issubset(set2)
+```

@@ -16,31 +16,24 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Jenkins &amp; GitLab configure webhookGitLab version: community edition 10.4.2 Jenkins version: 2.426.3 Install GitLab plugins旧版本需要插件gitlab和gitlab-hook，但是gitlab-hook插件由于安全问题已经废弃。 具体见 https:&#x2F;&#x2F;www.jenki">
+    <meta name="description" content="k8s rbac &amp; jenkins containerk8s rbac configure apiversion: rbac.authorization.k8s.io&#x2F;v1 kind ClusterRoleBinding ServiceAccount ClusterRole   token 容器内：&#x2F;var&#x2F;run&#x2F;secrets&#x2F;kub">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Jenkins GitLab Webhook">
-<meta property="og:url" content="https://piupiuxiupa.github.io/2024/11/21/Jekins-GitLab-Webhook/index.html">
+<meta property="og:title" content="k8s rbac &amp; jenkins container">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2024/11/22/k8s-rbac-jenkins-container/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="Jenkins &amp; GitLab configure webhookGitLab version: community edition 10.4.2 Jenkins version: 2.426.3 Install GitLab plugins旧版本需要插件gitlab和gitlab-hook，但是gitlab-hook插件由于安全问题已经废弃。 具体见 https:&#x2F;&#x2F;www.jenki">
+<meta property="og:description" content="k8s rbac &amp; jenkins containerk8s rbac configure apiversion: rbac.authorization.k8s.io&#x2F;v1 kind ClusterRoleBinding ServiceAccount ClusterRole   token 容器内：&#x2F;var&#x2F;run&#x2F;secrets&#x2F;kub">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://piupiuxiupa.github.io/images/jenkins-webhook/install_plugins.png">
-<meta property="og:image" content="https://piupiuxiupa.github.io/images/jenkins-webhook/gitlab_credentials.png">
-<meta property="og:image" content="https://piupiuxiupa.github.io/images/jenkins-webhook/jenkins_webhook.png">
-<meta property="og:image" content="https://piupiuxiupa.github.io/images/jenkins-webhook/gen_token.png">
-<meta property="og:image" content="https://piupiuxiupa.github.io/images/jenkins-webhook/gitlab_webhook.png">
-<meta property="og:image" content="https://piupiuxiupa.github.io/images/jenkins-webhook/get_gitlab_token.png">
-<meta property="article:published_time" content="2024-11-21T04:34:36.000Z">
-<meta property="article:modified_time" content="2024-11-21T12:49:13.942Z">
+<meta property="article:published_time" content="2024-11-22T07:45:09.000Z">
+<meta property="article:modified_time" content="2024-11-22T08:14:55.585Z">
 <meta property="article:author" content="piupiuxiupa">
-<meta property="article:tag" content="tools">
+<meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://piupiuxiupa.github.io/images/jenkins-webhook/install_plugins.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Jenkins GitLab Webhook - piupiuxiupa&#39;s blog</title>
+  <title>k8s rbac &amp; jenkins container - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -206,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Jenkins GitLab Webhook"></span>
+            <span id="subtitle" data-typed-text="k8s rbac &amp; jenkins container"></span>
           
         </div>
 
@@ -217,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-11-21 12:34" pubdate>
-          2024年11月21日 下午
+        <time datetime="2024-11-22 15:45" pubdate>
+          2024年11月22日 下午
         </time>
       </span>
     
@@ -229,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          312 字
+          148 字
         
       </span>
     
@@ -240,7 +233,7 @@
         
         
         
-          3 分钟
+          2 分钟
         
       </span>
     
@@ -277,43 +270,42 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Jenkins GitLab Webhook</h1>
+            <h1 id="seo-header">k8s rbac &amp; jenkins container</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Jenkins-GitLab-configure-webhook"><a href="#Jenkins-GitLab-configure-webhook" class="headerlink" title="Jenkins &amp; GitLab configure webhook"></a>Jenkins &amp; GitLab configure webhook</h1><p>GitLab version: community edition 10.4.2</p>
-<p>Jenkins version: 2.426.3</p>
-<h2 id="Install-GitLab-plugins"><a href="#Install-GitLab-plugins" class="headerlink" title="Install GitLab plugins"></a>Install GitLab plugins</h2><p>旧版本需要插件gitlab和gitlab-hook，但是gitlab-hook插件由于安全问题已经废弃。</p>
-<p>具体见 <a target="_blank" rel="noopener" href="https://www.jenkins.io/blog/2021/12/22/deprecated-ruby-runtime/">https://www.jenkins.io/blog/2021/12/22/deprecated-ruby-runtime/</a></p>
-<p>所以只需要下载Gitlab插件及其相关依赖插件即可。</p>
-<p>Gitlab Plugin 这个插件允许GitLab在提交代码或打开&#x2F;更新合并请求时触发Jenkins中的构建。它还可以将构建状态发送回GitLab。</p>
-<p><img src="/../images/jenkins-webhook/install_plugins.png" srcset="/img/loading.gif" lazyload alt="安装插件"></p>
-<h2 id="Configure"><a href="#Configure" class="headerlink" title="Configure"></a>Configure</h2><h3 id="Jenkins"><a href="#Jenkins" class="headerlink" title="Jenkins"></a>Jenkins</h3><blockquote>
-<p>各版本界面可能不同</p>
-</blockquote>
-<ul>
-<li>创建GitLab凭证</li>
-<li>配置Git拉取代码用到的密钥凭证</li>
-<li>生成Jenkins Token</li>
+                <h1 id="k8s-rbac-jenkins-container"><a href="#k8s-rbac-jenkins-container" class="headerlink" title="k8s rbac &amp; jenkins container"></a>k8s rbac &amp; jenkins container</h1><h2 id="k8s-rbac-configure"><a href="#k8s-rbac-configure" class="headerlink" title="k8s rbac configure"></a>k8s rbac configure</h2><ul>
+<li>apiversion: rbac.authorization.k8s.io&#x2F;v1</li>
+<li>kind<ul>
+<li>ClusterRoleBinding</li>
+<li>ServiceAccount</li>
+<li>ClusterRole</li>
 </ul>
-<p><img src="/../images/jenkins-webhook/gitlab_credentials.png" srcset="/img/loading.gif" lazyload alt="创建GitLab凭证"></p>
-<p>此处APIToken在GitLab生成，仅生成时可看到，务必保管好。</p>
-<p>构建触发器选择 “Build when a change is pushed to GitLab” （记住后面的GitLab webhook URL 后面要填在gitlab的webhooks中），按照下面勾选</p>
-<p><img src="/../images/jenkins-webhook/jenkins_webhook.png" srcset="/img/loading.gif" lazyload alt="配置Jenkins Webhook"></p>
-<p>点 “Generate” 生成 token，这个 token 用于填写到 gitlab 的 webhook 里，gitlab 检测到代码提交，会通知 webhook 里填写的 Jenkins 生成的回调URL。</p>
-<p>注: 复制出 URL 和 token，后面配置 gitlab 的 webhook 会用到</p>
-<p><img src="/../images/jenkins-webhook/gen_token.png" srcset="/img/loading.gif" lazyload alt="生成token"></p>
-<h3 id="GitLab"><a href="#GitLab" class="headerlink" title="GitLab"></a>GitLab</h3><p>根据版本不同，webhook功能在不同位置。 </p>
-<p>当前使用这个版本在项目侧边栏：<code>Settings -&gt; Integrations</code>中。</p>
-<p>填写 URL和 Secret Token即可，保存后测试是否可以触发。</p>
-<p><img src="/../images/jenkins-webhook/gitlab_webhook.png" srcset="/img/loading.gif" lazyload alt="配置gitlab webhook"></p>
-<p><img src="/../images/jenkins-webhook/get_gitlab_token.png" srcset="/img/loading.gif" lazyload alt="获取gitlab token"></p>
-<blockquote>
-<p>Secret Token 来自Jenkins中。</p>
-<p>测试默认触发master分支，实际根据自己推送的分支进行触发。</p>
-</blockquote>
-
+</li>
+<li>token<ul>
+<li>容器内：&#x2F;var&#x2F;run&#x2F;secrets&#x2F;kubernetes.io&#x2F;serviceaccount&#x2F;token</li>
+</ul>
+</li>
+<li>部署pod spec中添加serviceAccountName: name</li>
+</ul>
+<h2 id="jenkins-configure-docker-runtime"><a href="#jenkins-configure-docker-runtime" class="headerlink" title="jenkins configure docker runtime"></a>jenkins configure docker runtime</h2><ul>
+<li>将宿主机的docker.sock挂载到容器内<ul>
+<li>路径：&#x2F;var&#x2F;run&#x2F;docker.sock</li>
+</ul>
+</li>
+<li>确保容器内有docker命令</li>
+</ul>
+<h2 id="jenkins-自动化部署完整流程"><a href="#jenkins-自动化部署完整流程" class="headerlink" title="jenkins 自动化部署完整流程"></a>jenkins 自动化部署完整流程</h2><p>如需操作k8s集群，需要kubectl命令</p>
+<p>自动化流程：</p>
+<ul>
+<li>配置jenkins流水线 - webhook 触发 push event</li>
+<li>git 拉取代码</li>
+<li>docker build 构建镜像</li>
+<li>docker push 推送镜像</li>
+<li>k8s 部署应用</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># token 是由rbac配置获取</span><br><span class="hljs-comment"># jenkins 中可通过构建环境中的 use secret text or file功能将token进行隐藏</span><br>kubectl --server https://xxx --insecure-skip-tls-verify=<span class="hljs-literal">true</span> --token xxx -n <span class="hljs-variable">$namespace</span> <span class="hljs-built_in">set</span> image deploy/<span class="hljs-variable">$deploy_name</span> <span class="hljs-variable">$container_name</span>=<span class="hljs-variable">$image_name</span><br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -325,7 +317,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/tools/" class="print-no-link">#tools</a>
+        <a href="/tags/k8s/" class="print-no-link">#k8s</a>
       
     </div>
   
@@ -337,8 +329,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Jenkins GitLab Webhook</div>
-      <div>https://piupiuxiupa.github.io/2024/11/21/Jekins-GitLab-Webhook/</div>
+      <div>k8s rbac &amp; jenkins container</div>
+      <div>https://piupiuxiupa.github.io/2024/11/22/k8s-rbac-jenkins-container/</div>
     </div>
     <div class="license-meta">
       
@@ -350,7 +342,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年11月21日</div>
+          <div>2024年11月22日</div>
         </div>
       
       
@@ -382,18 +374,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/11/22/k8s-rbac-jenkins-container/" title="k8s rbac &amp; jenkins container">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">k8s rbac &amp; jenkins container</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/11/20/fastapi-notes/" title="FastAPI Notes">
-                        <span class="hidden-mobile">FastAPI Notes</span>
+                      <a href="/2024/11/21/Jekins-GitLab-Webhook/" title="Jenkins GitLab Webhook">
+                        <span class="hidden-mobile">Jenkins GitLab Webhook</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

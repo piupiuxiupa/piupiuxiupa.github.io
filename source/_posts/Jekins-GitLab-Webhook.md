@@ -58,6 +58,8 @@ Gitlab Plugin 这个插件允许GitLab在提交代码或打开/更新合并请�
 
 ![配置gitlab webhook](../images/jenkins-webhook/gitlab_webhook.png)
 
+![获取gitlab token](../images/jenkins-webhook/get_gitlab_token.png)
+
 > Secret Token 来自Jenkins中。
 > 
 > 测试默认触发master分支，实际根据自己推送的分支进行触发。
