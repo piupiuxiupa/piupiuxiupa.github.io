@@ -19,7 +19,15 @@ docker run -d -p 5000:5000 --name registry registry:2
 
 # 内网环境
 # 下载对应镜像 tar包传入内网环境
+# 只有用save的镜像才能load导入，否则会报错
+docker save registry:2 -o registry.tar
 docker load -i registry.tar
+
+# 也可将运行容器导出
+docker export 容器ID > registry.tar
+# 将打包容器导入
+# 用export导出的容器，需要用import导入
+docker import registry.tar localhost/registry:2
 
 ## 验证是否安装成功
 ## 返回 {}表示成功

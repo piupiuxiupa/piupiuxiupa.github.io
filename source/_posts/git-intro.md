@@ -73,6 +73,8 @@ git log --graph --oneline --decorate --all
 ## merge
 
 ```bash
+# 先切换至main分支
+# 然后再执行如下命令合并develop分支到main分支
 git merge $branch
 ## 两个分支修改了同一个文件的同一处位置会产生冲突
 ## 查看冲突具体内容，修改文件中的冲突后再提交
@@ -93,3 +95,18 @@ git switch main
 git rebase dev
 ```
 
+## stash
+
+```bash
+# 暂存当前工作区的所有修改
+git stash
+
+# 查看stash列表
+git stash list
+
+# 恢复最近一次stash的内容
+git stash pop
+
+# 恢复指定的stash内容
+git stash apply stash@{0}
+```

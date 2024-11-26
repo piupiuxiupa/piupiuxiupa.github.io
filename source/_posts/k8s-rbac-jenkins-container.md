@@ -1,10 +1,10 @@
 ---
-title: k8s rbac & jenkins container
+title: k8s rbac & Jenkins container
 date: 2024-11-22 15:45:09
 tags: k8s
 ---
 
-# k8s rbac & jenkins container
+# Kubenetes rbac & Jenkins container
 
 ## k8s rbac configure
 
@@ -17,13 +17,13 @@ tags: k8s
   - 容器内：/var/run/secrets/kubernetes.io/serviceaccount/token
 - 部署pod spec中添加serviceAccountName: name
 
-## jenkins configure docker runtime
+## Jenkins configure docker runtime
 
 - 将宿主机的docker.sock挂载到容器内
   - 路径：/var/run/docker.sock
 - 确保容器内有docker命令
 
-## jenkins 自动化部署完整流程
+## Jenkins 自动化部署完整流程
 
 如需操作k8s集群，需要kubectl命令
 
@@ -36,6 +36,6 @@ tags: k8s
   
 ```bash
 # token 是由rbac配置获取
-# jenkins 中可通过构建环境中的 use secret text or file功能将token进行隐藏
+# Jenkins 中可通过构建环境中的 use secret text or file功能将token进行隐藏
 kubectl --server https://xxx --insecure-skip-tls-verify=true --token xxx -n $namespace set image deploy/$deploy_name $container_name=$image_name
 ```

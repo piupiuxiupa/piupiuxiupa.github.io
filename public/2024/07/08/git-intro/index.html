@@ -24,7 +24,7 @@
 <meta property="og:description" content="Git 基本用法 git的结构就像一棵树一样 main主干，dev，test，issue … 都是分支树杈  pull &amp; push12345678910111213141516## 初始化一个git仓git init git remote add $alias $urlgit branch -M master(main)## 查看远程仓库git remote -vgit push -u">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-07-08T05:33:02.000Z">
-<meta property="article:modified_time" content="2024-11-20T04:08:16.666Z">
+<meta property="article:modified_time" content="2024-11-25T07:52:25.443Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="tools">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          455 字
+          518 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          4 分钟
+          5 分钟
         
       </span>
     
@@ -285,11 +285,11 @@
 
 <h2 id="switch-checkout"><a href="#switch-checkout" class="headerlink" title="switch&#x2F;checkout"></a>switch&#x2F;checkout</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 创建一个分支</span><br>git branch <span class="hljs-variable">$branch</span> <br><span class="hljs-comment">## 可以切换分支也可以切换至某次提交或恢复某次提交的文件，如分支与文件名相同会产生冲突，默认是切换分支</span><br>git checkout <span class="hljs-variable">$branch</span>(<span class="hljs-variable">$commit</span>) <br><span class="hljs-comment">## 切换某分支的某次提交</span><br>git checkout -b <span class="hljs-variable">$branch</span> <span class="hljs-variable">$commit</span> <br><span class="hljs-comment">## 仅切换至某分支</span><br>git switch <span class="hljs-variable">$branch</span><br><span class="hljs-comment">## 误删除文件，还未add时</span><br><span class="hljs-comment">## 放弃所有修改，恢复全部</span><br>git checkout .<br>git checkout -- *<br><span class="hljs-comment">## 放弃某个文件，恢复某个文件</span><br>git checkout -- <span class="hljs-variable">$filename</span><br><span class="hljs-comment">## 如果一个分支提交过后可以用-d选项删掉分支，没有提交想删除需用-D强制删除分支</span><br>git branch -d <span class="hljs-variable">$branch</span><br>git branch -D <span class="hljs-variable">$branch</span><br><span class="hljs-comment">## 图表形式查看分支结构</span><br>git <span class="hljs-built_in">log</span> --graph --oneline --decorate --all<br></code></pre></td></tr></table></figure>
 
-<h2 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">git merge <span class="hljs-variable">$branch</span><br><span class="hljs-comment">## 两个分支修改了同一个文件的同一处位置会产生冲突</span><br><span class="hljs-comment">## 查看冲突具体内容，修改文件中的冲突后再提交</span><br>git diff<br><span class="hljs-comment">## 中止合并</span><br>git merge --abort<br></code></pre></td></tr></table></figure>
+<h2 id="merge"><a href="#merge" class="headerlink" title="merge"></a>merge</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 先切换至main分支</span><br><span class="hljs-comment"># 然后再执行如下命令合并develop分支到main分支</span><br>git merge <span class="hljs-variable">$branch</span><br><span class="hljs-comment">## 两个分支修改了同一个文件的同一处位置会产生冲突</span><br><span class="hljs-comment">## 查看冲突具体内容，修改文件中的冲突后再提交</span><br>git diff<br><span class="hljs-comment">## 中止合并</span><br>git merge --abort<br></code></pre></td></tr></table></figure>
 
 <h2 id="rebase"><a href="#rebase" class="headerlink" title="rebase"></a>rebase</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 如果当前有两个分支，main和dev</span><br><span class="hljs-comment">## 当前处在dev分支时，rebase会把dev分支接在main分支最新一次提交后</span><br>git switch dev<br>git rebase main<br><span class="hljs-comment">## 当前处在main分支时，rebase会把main分支接在dev分支最新一次提交后</span><br>git switch main<br>git rebase dev<br></code></pre></td></tr></table></figure>
 
-
+<h2 id="stash"><a href="#stash" class="headerlink" title="stash"></a>stash</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 暂存当前工作区的所有修改</span><br>git stash<br><br><span class="hljs-comment"># 查看stash列表</span><br>git stash list<br><br><span class="hljs-comment"># 恢复最近一次stash的内容</span><br>git stash pop<br><br><span class="hljs-comment"># 恢复指定的stash内容</span><br>git stash apply stash@&#123;0&#125;<br></code></pre></td></tr></table></figure>
                 
               </div>
             
