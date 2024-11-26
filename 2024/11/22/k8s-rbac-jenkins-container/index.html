@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="k8s rbac &amp; jenkins containerk8s rbac configure apiversion: rbac.authorization.k8s.io&#x2F;v1 kind ClusterRoleBinding ServiceAccount ClusterRole   token 容器内：&#x2F;var&#x2F;run&#x2F;secrets&#x2F;kub">
+    <meta name="description" content="Kubenetes rbac &amp; Jenkins containerk8s rbac configure apiversion: rbac.authorization.k8s.io&#x2F;v1 kind ClusterRoleBinding ServiceAccount ClusterRole   token 容器内：&#x2F;var&#x2F;run&#x2F;secrets&amp;#x">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k8s rbac &amp; jenkins container">
+<meta property="og:title" content="k8s rbac &amp; Jenkins container">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/11/22/k8s-rbac-jenkins-container/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="k8s rbac &amp; jenkins containerk8s rbac configure apiversion: rbac.authorization.k8s.io&#x2F;v1 kind ClusterRoleBinding ServiceAccount ClusterRole   token 容器内：&#x2F;var&#x2F;run&#x2F;secrets&#x2F;kub">
+<meta property="og:description" content="Kubenetes rbac &amp; Jenkins containerk8s rbac configure apiversion: rbac.authorization.k8s.io&#x2F;v1 kind ClusterRoleBinding ServiceAccount ClusterRole   token 容器内：&#x2F;var&#x2F;run&#x2F;secrets&amp;#x">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-22T07:45:09.000Z">
-<meta property="article:modified_time" content="2024-11-22T08:14:55.585Z">
+<meta property="article:modified_time" content="2024-11-22T08:22:17.236Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>k8s rbac &amp; jenkins container - piupiuxiupa&#39;s blog</title>
+  <title>k8s rbac &amp; Jenkins container - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="k8s rbac &amp; jenkins container"></span>
+            <span id="subtitle" data-typed-text="k8s rbac &amp; Jenkins container"></span>
           
         </div>
 
@@ -270,12 +270,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">k8s rbac &amp; jenkins container</h1>
+            <h1 id="seo-header">k8s rbac &amp; Jenkins container</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="k8s-rbac-jenkins-container"><a href="#k8s-rbac-jenkins-container" class="headerlink" title="k8s rbac &amp; jenkins container"></a>k8s rbac &amp; jenkins container</h1><h2 id="k8s-rbac-configure"><a href="#k8s-rbac-configure" class="headerlink" title="k8s rbac configure"></a>k8s rbac configure</h2><ul>
+                <h1 id="Kubenetes-rbac-Jenkins-container"><a href="#Kubenetes-rbac-Jenkins-container" class="headerlink" title="Kubenetes rbac &amp; Jenkins container"></a>Kubenetes rbac &amp; Jenkins container</h1><h2 id="k8s-rbac-configure"><a href="#k8s-rbac-configure" class="headerlink" title="k8s rbac configure"></a>k8s rbac configure</h2><ul>
 <li>apiversion: rbac.authorization.k8s.io&#x2F;v1</li>
 <li>kind<ul>
 <li>ClusterRoleBinding</li>
@@ -289,14 +289,14 @@
 </li>
 <li>部署pod spec中添加serviceAccountName: name</li>
 </ul>
-<h2 id="jenkins-configure-docker-runtime"><a href="#jenkins-configure-docker-runtime" class="headerlink" title="jenkins configure docker runtime"></a>jenkins configure docker runtime</h2><ul>
+<h2 id="Jenkins-configure-docker-runtime"><a href="#Jenkins-configure-docker-runtime" class="headerlink" title="Jenkins configure docker runtime"></a>Jenkins configure docker runtime</h2><ul>
 <li>将宿主机的docker.sock挂载到容器内<ul>
 <li>路径：&#x2F;var&#x2F;run&#x2F;docker.sock</li>
 </ul>
 </li>
 <li>确保容器内有docker命令</li>
 </ul>
-<h2 id="jenkins-自动化部署完整流程"><a href="#jenkins-自动化部署完整流程" class="headerlink" title="jenkins 自动化部署完整流程"></a>jenkins 自动化部署完整流程</h2><p>如需操作k8s集群，需要kubectl命令</p>
+<h2 id="Jenkins-自动化部署完整流程"><a href="#Jenkins-自动化部署完整流程" class="headerlink" title="Jenkins 自动化部署完整流程"></a>Jenkins 自动化部署完整流程</h2><p>如需操作k8s集群，需要kubectl命令</p>
 <p>自动化流程：</p>
 <ul>
 <li>配置jenkins流水线 - webhook 触发 push event</li>
@@ -305,7 +305,7 @@
 <li>docker push 推送镜像</li>
 <li>k8s 部署应用</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># token 是由rbac配置获取</span><br><span class="hljs-comment"># jenkins 中可通过构建环境中的 use secret text or file功能将token进行隐藏</span><br>kubectl --server https://xxx --insecure-skip-tls-verify=<span class="hljs-literal">true</span> --token xxx -n <span class="hljs-variable">$namespace</span> <span class="hljs-built_in">set</span> image deploy/<span class="hljs-variable">$deploy_name</span> <span class="hljs-variable">$container_name</span>=<span class="hljs-variable">$image_name</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># token 是由rbac配置获取</span><br><span class="hljs-comment"># Jenkins 中可通过构建环境中的 use secret text or file功能将token进行隐藏</span><br>kubectl --server https://xxx --insecure-skip-tls-verify=<span class="hljs-literal">true</span> --token xxx -n <span class="hljs-variable">$namespace</span> <span class="hljs-built_in">set</span> image deploy/<span class="hljs-variable">$deploy_name</span> <span class="hljs-variable">$container_name</span>=<span class="hljs-variable">$image_name</span><br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -329,7 +329,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>k8s rbac &amp; jenkins container</div>
+      <div>k8s rbac &amp; Jenkins container</div>
       <div>https://piupiuxiupa.github.io/2024/11/22/k8s-rbac-jenkins-container/</div>
     </div>
     <div class="license-meta">
