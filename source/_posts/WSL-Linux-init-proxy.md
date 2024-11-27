@@ -98,6 +98,14 @@ npm config set proxy=http://127.0.0.1:7890
 npm config set registry=http://registry.npmjs.org
 
 npm install -g hexo
+
+# 或设置代理
+npm config set proxy http://127.0.0.1:7890
+npm config set https-proxy http://127.0.0.1:7890
+npm config set strict-ssl false
+# 取消代理
+npm config delete proxy
+npm config delete https-proxy
 ```
 
 ## 配置 github加速
