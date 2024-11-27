@@ -24,7 +24,7 @@
 <meta property="og:description" content="搭建Docker本地仓库前提  安装 docker 熟悉 docker环境及基本操作  容器化部署12345678910111213141516171819# 联网环境下# 直接运行 registry镜像，本地没有会自动拉取docker run -d -p 5000:5000 --name registry registry:2# 内网环境# 下载对应镜像 tar包传入内网环境# 只有用save的">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-08-11T07:38:32.000Z">
-<meta property="article:modified_time" content="2024-11-26T10:20:08.497Z">
+<meta property="article:modified_time" content="2024-11-27T03:06:36.265Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          1.6k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          11 分钟
+          14 分钟
         
       </span>
     
@@ -330,6 +330,72 @@
 <p>api 返回的信息为 json格式，可以配合linux的 <code>jq</code>命令进行筛选查看</p>
 </blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 获取所有镜像的名称</span><br>curl -sSL -k http://localhost:5000/v2/_catalog | jq<br><br><span class="hljs-comment">## 返回输出</span><br>&#123;<br>  <span class="hljs-string">&quot;repositories&quot;</span>: [<br>    <span class="hljs-string">&quot;my-image1&quot;</span>,<br>    <span class="hljs-string">&quot;my-image2&quot;</span><br>  ]<br>&#125;<br><br><span class="hljs-comment">## 设置认证后需要修改为如下命令，配合 jq使用提取信息 </span><br>curl -sSL -k -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> http://127.0.0.1:5000/v2/_catalog |jq -r <span class="hljs-string">&quot;.repositories[]&quot;</span><br><br><span class="hljs-comment">## 获取每个镜像的标签</span><br>curl http://localhost:5000/v2/<span class="hljs-variable">$image</span>/tags/list<br>curl -sSL -k -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> http://127.0.0.1:5000/v2/<span class="hljs-variable">$image</span>/tags/list<br><br><span class="hljs-comment">## 镜像的新版本会靠前显示</span><br>&#123;<br>  <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;my-image1&quot;</span>,<br>  <span class="hljs-string">&quot;tags&quot;</span>: [<br>    <span class="hljs-string">&quot;latest&quot;</span>,<br>    <span class="hljs-string">&quot;v2.0&quot;</span>,<br>    <span class="hljs-string">&quot;v1.0&quot;</span><br>  ]<br>&#125;<br><br><span class="hljs-comment">## 获取 digest信息</span><br>curl -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> -sSL -H <span class="hljs-string">&quot;Accept: application/vnd.docker.distribution.manifest.v2+json&quot;</span> http://127.0.0.1:5000/v2/<span class="hljs-variable">$image</span>/manifests/<span class="hljs-variable">$tag</span> | jq -r <span class="hljs-string">&quot;.config.digest&quot;</span><br><br><span class="hljs-comment">## 通过delete方法删除对应镜像的 tag</span><br>curl -sSLf -k -X DELETE -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> http://127.0.0.1:5000/v2/<span class="hljs-variable">$image</span>/manifests/<span class="hljs-variable">$digest</span><br><br><span class="hljs-comment">## 清理未被引用的blobs</span><br>registry garbage-collect -m /etc/docker/registry/config.yml<br></code></pre></td></tr></table></figure>
+
+<h2 id="docker-save-和-export-区别"><a href="#docker-save-和-export-区别" class="headerlink" title="docker save 和 export 区别"></a>docker save 和 export 区别</h2><ol>
+<li>功能和用途</li>
+</ol>
+<ul>
+<li><p>docker export</p>
+<ul>
+<li>导出一个容器的文件系统。</li>
+<li>提取容器当前的文件系统快照，不包括镜像的历史层、元数据或启动命令等信息。</li>
+<li>通常用于备份或迁移容器的文件系统内容。</li>
+</ul>
+</li>
+<li><p>docker save</p>
+<ul>
+<li>保存一个镜像及其历史层和元数据。</li>
+<li>包括镜像的所有历史层、CMD、ENTRYPOINT、环境变量等配置。</li>
+<li>通常用于备份或迁移镜像（可以在目标环境中直接加载并运行）。</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>导出的内容</li>
+</ol>
+<ul>
+<li>docker export<ul>
+<li>导出的内容是容器的文件系统，形式是一个纯文件层，没有镜像的结构信息。</li>
+<li>不包括启动命令、环境变量等元数据。</li>
+</ul>
+</li>
+<li>docker save<ul>
+<li>导出的内容是镜像的完整结构，包括所有层和元数据。</li>
+<li>可直接用于加载到其他 Docker 实例中。</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>使用场景</li>
+</ol>
+<ul>
+<li>docker export<ul>
+<li>当您只需要容器文件系统中的文件，而不需要镜像信息时使用。</li>
+<li>用于容器数据备份或在不需要 Docker 环境的情况下提取文件。</li>
+</ul>
+</li>
+<li>docker save<ul>
+<li>用于迁移完整镜像，包括历史记录、配置和多层结构。</li>
+<li>常用于跨环境传输镜像，例如将镜像从开发环境迁移到生产环境。</li>
+</ul>
+</li>
+</ul>
+<ol start="4">
+<li>加载&#x2F;恢复方式</li>
+</ol>
+<ul>
+<li><p>docker export</p>
+<ul>
+<li>使用 tar 工具解压提取内容，或者通过 docker import 恢复为一个新镜像，但只包含文件系统，没有元数据。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker import container.tar &lt;new_image_name&gt;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>docker save</p>
+<ul>
+<li>使用 docker load 加载为完整镜像，可以直接运行。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker load -i image.tar <br></code></pre></td></tr></table></figure></li>
+</ul>
 
                 
               </div>
