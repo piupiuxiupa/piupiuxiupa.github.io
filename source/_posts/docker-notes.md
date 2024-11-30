@@ -86,8 +86,8 @@ tags: docker
     ```yaml
     services:
       your_service:
-      image: your_image
-      shm_size: 1g
+        image: your_image
+        shm_size: 1g
     ```
   
 
