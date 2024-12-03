@@ -150,3 +150,74 @@ gitlab-ctl status
 ## 重新加载配置
 gitlab-ctl reconfigure
 ```
+## gitlab 升级 14 版本迁移问题
+
+```bash
+## 迁移项目到新的存储路径
+gitlab-rake gitlab:storage:migrate_to_hashed
+## 使用之后会提示 Found 6 projects using Legacy Storage.
+## 查看使用 Legacy Storage 的项目数量 
+gitlab-rake gitlab:storage:legacy_projects
+## 查看这六个具体是什么项目
+## 查看使用旧版本的项目
+gitlab-rake gitlab:storage:list_legacy_projects
+```
+
+### read-only状态导致的迁移问题
+
+```ruby
+# 进入 Rails 控制台
+gitlab-rails console
+
+# 查询 项目 read-only 打开的 
+projects = Project.where(repository_read_only: true)
+
+# 关闭 项目的 read-only
+projects.each do |p|
+  p.update!(repository_read_only:nil)
+end
+```
+
+```bash
+# 存储库迁移
+gitlab-rake gitlab:storage:migrate_to_hashed
+
+# 查看所列出项目总数，与页面显示数量进行对比
+gitlab-rake gitlab:storage:hashed_projects
+
+# 查看，全部迁移成功以下两条命令应该为 0 
+gitlab-rake gitlab:storage:legacy_projects
+gitlab-rake gitlab:storage:legacy_attachments
+
+# 全部迁移成功，以下两条命令应该没有输出
+gitlab-rake gitlab:storage:list_legacy_projects
+gitlab-rake gitlab:storage:list_legacy_attachments
+```
+
+###  @hashed 目录迁移失败
+
+```bash
+# 查看具体哪些项目迁移失败
+gitlab-rake gitlab:storage:list_legacy_projects
+# 在日志中搜索该项目，查看具体路径
+grep 'xxxx' /var/log/gitlab/sidekiq/current
+# 发现报错Repository cannot be moved from '@hashed/b2/81/b281bcxxxxxxxx.wiki' to
+# 查看目录下是否有 xxx.wiki的目录
+ls -l /var/opt/gitlab/git-data/repositories/@hashed/98/96/
+# 发现有该目录，将其移动到 /tmp 目录下
+sudo mv /var/opt/gitlab/git-data/repositories/@hashed/b2/81/b281bcxxxxxxx /tmp/
+# 然后再执行迁移
+sudo gitlab-rake gitlab:storage:migrate_to_hashed
+```
+
+### 后台迁移任务没完成
+
+> https://archives.docs.gitlab.com/15.11/ee/update/background_migrations.html
+>
+> https://archives.docs.gitlab.com/15.11/ee/update/#upgrade-paths
+
+14版本后可在页面中看见后台迁移任务。
+在管理中心监控中后台迁移可看见未完成迁移任务。
+
+升级中可能因为Background Migration任务没有执行完，导致升级失败。
+需要等待任务执行完成后，再进行升级。

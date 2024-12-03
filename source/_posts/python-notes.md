@@ -238,3 +238,48 @@ else:
 # issubset 判断是否是子集
 set1.issubset(set2)
 ```
+
+## 生成器表达式
+
+生成器的本质：生成器是一个惰性求值的对象，它只在迭代时生成值。创建生成器时，Python 不会立即检查它是否有值可供生成。
+
+```python
+items = (item for item in range(5))
+
+## 获取生成器值
+## 1. 通过for 循环获取
+for item in items:
+    print(item)
+## 2. 通过next()函数获取
+print(next(items))
+## 但是当生成器值消耗殆尽时会引发StopIteration异常
+try:
+    print(next(items))
+except StopIteration:
+    print("生成器值已耗尽")
+
+## 3. 通过list()函数获取
+print(list(items))
+
+## 生成器本身始终被认为是“有值”的（即使它还没有产生任何实际值），所以直接使用 if not items 来检查生成器是否为空是不会生效的
+
+## 使用 next() 取值，如果生成器为空，会引发 StopIteration 异常
+items = (item for item in [])
+try:
+    item = next(items)
+    print("生成器不为空:", item)
+except StopIteration:
+    print("生成器为空")
+
+## 转为列表检查
+if list(items):
+    print("生成器不为空")
+
+## 使用 any() 检查
+## 如果只想判断生成器是否能生成至少一个值，可以使用 any()
+if any(items):
+    print("生成器不为空")
+```
+> 一旦生成器的值被消费（通过 for 循环、next() 或 list()），它将变为空，不能再次使用。
+> 
+> 使用 any() 或将生成器转为列表后，生成器的内容会被消费，之后不能再次使用这些值。

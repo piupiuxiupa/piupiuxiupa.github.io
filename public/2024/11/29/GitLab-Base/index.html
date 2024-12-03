@@ -24,7 +24,7 @@
 <meta property="og:description" content="GitLab Base修改密码12345678910gitlab-rails consoleuser &#x3D; User.find_by_username(&#x27;root&#x27;)user.password &#x3D; &#x27;NewSecurePassword&#x27;user.password_confirmation &#x3D; &#x27;NewSecurePassword&#x27;user.">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-29T01:49:00.000Z">
-<meta property="article:modified_time" content="2024-11-29T08:58:01.584Z">
+<meta property="article:modified_time" content="2024-12-03T08:10:02.629Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="tools">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          479 字
+          899 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          4 分钟
+          8 分钟
         
       </span>
     
@@ -349,6 +349,21 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 升级前请务必先备份</span><br><span class="hljs-comment">## 关闭selinux</span><br>setenforce 0<br><span class="hljs-comment">## 永久关闭selinux，并重启</span><br>sed -i <span class="hljs-string">&#x27;s/^SELINUX=enforcing/SELINUX=disabled/&#x27;</span> /etc/selinux/config<br>rpm -Uvh gitlab-ce-11.11.8-ce.0.el7.x86_64.rpm<br></code></pre></td></tr></table></figure>
 
 <h2 id="GitLab-基础操作"><a href="#GitLab-基础操作" class="headerlink" title="GitLab 基础操作"></a>GitLab 基础操作</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 获取 gitlab 版本信息</span><br>gitlab-rake gitlab:<span class="hljs-built_in">env</span>:info<br><span class="hljs-comment">## 查看 gitlab 运行状态</span><br>gitlab-ctl status<br><span class="hljs-comment">## 查看 gitlab 运行日志</span><br>gitlab-ctl <span class="hljs-built_in">tail</span><br><span class="hljs-comment">## 重启 gitlab</span><br>gitlab-ctl restart<br><span class="hljs-comment">## 备份 gitlab</span><br>gitlab-backup create<br><span class="hljs-comment">## 旧版本备份</span><br>gitlab-rake gitlab:backup:create<br><span class="hljs-comment">## 恢复备份</span><br>gitlab-backup restore BACKUP=timestamp<br>gitlab-rake gitlab:backup:restore BACKUP=TIMESTAMP<br><span class="hljs-comment">## 重新配置gitlab</span><br>gitlab-ctl reconfigure<br><span class="hljs-comment">## 检查 gitlab 是否正常运行</span><br>gitlab-rake gitlab:check<br><span class="hljs-comment">## 检查 gitlab 仓库是否正常运行</span><br>gitlab-rake gitlab:repos:check<br>gitlab-rake gitlab:check SANITIZE=<span class="hljs-literal">true</span><br><span class="hljs-comment">## 启用详细模式</span><br>gitlab-rake gitlab:check VERBOSE=<span class="hljs-literal">true</span><br>gitlab-ctl status<br><span class="hljs-comment">## 重新加载配置</span><br>gitlab-ctl reconfigure<br></code></pre></td></tr></table></figure>
+<h2 id="gitlab-升级-14-版本迁移问题"><a href="#gitlab-升级-14-版本迁移问题" class="headerlink" title="gitlab 升级 14 版本迁移问题"></a>gitlab 升级 14 版本迁移问题</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 迁移项目到新的存储路径</span><br>gitlab-rake gitlab:storage:migrate_to_hashed<br><span class="hljs-comment">## 使用之后会提示 Found 6 projects using Legacy Storage.</span><br><span class="hljs-comment">## 查看使用 Legacy Storage 的项目数量 </span><br>gitlab-rake gitlab:storage:legacy_projects<br><span class="hljs-comment">## 查看这六个具体是什么项目</span><br><span class="hljs-comment">## 查看使用旧版本的项目</span><br>gitlab-rake gitlab:storage:list_legacy_projects<br></code></pre></td></tr></table></figure>
+
+<h3 id="read-only状态导致的迁移问题"><a href="#read-only状态导致的迁移问题" class="headerlink" title="read-only状态导致的迁移问题"></a>read-only状态导致的迁移问题</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs ruby"><span class="hljs-comment"># 进入 Rails 控制台</span><br>gitlab-rails console<br><br><span class="hljs-comment"># 查询 项目 read-only 打开的 </span><br>projects = <span class="hljs-title class_">Project</span>.where(<span class="hljs-symbol">repository_read_only:</span> <span class="hljs-literal">true</span>)<br><br><span class="hljs-comment"># 关闭 项目的 read-only</span><br>projects.each <span class="hljs-keyword">do</span> |<span class="hljs-params">p</span>|<br>  p.update!(<span class="hljs-symbol">repository_read_only:</span><span class="hljs-literal">nil</span>)<br><span class="hljs-keyword">end</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 存储库迁移</span><br>gitlab-rake gitlab:storage:migrate_to_hashed<br><br><span class="hljs-comment"># 查看所列出项目总数，与页面显示数量进行对比</span><br>gitlab-rake gitlab:storage:hashed_projects<br><br><span class="hljs-comment"># 查看，全部迁移成功以下两条命令应该为 0 </span><br>gitlab-rake gitlab:storage:legacy_projects<br>gitlab-rake gitlab:storage:legacy_attachments<br><br><span class="hljs-comment"># 全部迁移成功，以下两条命令应该没有输出</span><br>gitlab-rake gitlab:storage:list_legacy_projects<br>gitlab-rake gitlab:storage:list_legacy_attachments<br></code></pre></td></tr></table></figure>
+
+<h3 id="hashed-目录迁移失败"><a href="#hashed-目录迁移失败" class="headerlink" title="@hashed 目录迁移失败"></a>@hashed 目录迁移失败</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看具体哪些项目迁移失败</span><br>gitlab-rake gitlab:storage:list_legacy_projects<br><span class="hljs-comment"># 在日志中搜索该项目，查看具体路径</span><br>grep <span class="hljs-string">&#x27;xxxx&#x27;</span> /var/log/gitlab/sidekiq/current<br><span class="hljs-comment"># 发现报错Repository cannot be moved from &#x27;@hashed/b2/81/b281bcxxxxxxxx.wiki&#x27; to</span><br><span class="hljs-comment"># 查看目录下是否有 xxx.wiki的目录</span><br><span class="hljs-built_in">ls</span> -l /var/opt/gitlab/git-data/repositories/@hashed/98/96/<br><span class="hljs-comment"># 发现有该目录，将其移动到 /tmp 目录下</span><br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">mv</span> /var/opt/gitlab/git-data/repositories/@hashed/b2/81/b281bcxxxxxxx /tmp/<br><span class="hljs-comment"># 然后再执行迁移</span><br><span class="hljs-built_in">sudo</span> gitlab-rake gitlab:storage:migrate_to_hashed<br></code></pre></td></tr></table></figure>
+
+<h3 id="后台迁移任务没完成"><a href="#后台迁移任务没完成" class="headerlink" title="后台迁移任务没完成"></a>后台迁移任务没完成</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://archives.docs.gitlab.com/15.11/ee/update/background_migrations.html">https://archives.docs.gitlab.com/15.11/ee/update/background_migrations.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://archives.docs.gitlab.com/15.11/ee/update/#upgrade-paths">https://archives.docs.gitlab.com/15.11/ee/update/#upgrade-paths</a></p>
+</blockquote>
+<p>14版本后可在页面中看见后台迁移任务。<br>在管理中心监控中后台迁移可看见未完成迁移任务。</p>
+<p>升级中可能因为Background Migration任务没有执行完，导致升级失败。<br>需要等待任务执行完成后，再进行升级。</p>
+
                 
               </div>
             
