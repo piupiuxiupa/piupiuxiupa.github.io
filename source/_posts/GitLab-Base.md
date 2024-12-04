@@ -118,6 +118,7 @@ setenforce 0
 sed -i 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 rpm -Uvh gitlab-ce-11.11.8-ce.0.el7.x86_64.rpm
 ```
+> https://gitlab.cn/support/toolbox/upgrade-path/
 
 ## GitLab 基础操作
 
@@ -221,3 +222,47 @@ sudo gitlab-rake gitlab:storage:migrate_to_hashed
 
 升级中可能因为Background Migration任务没有执行完，导致升级失败。
 需要等待任务执行完成后，再进行升级。
+
+## 升级 16 大版本配置项已废弃的问题
+如 gitlab_rails['gitlab_default_can_create_group'] has been deprecated since 15.5 and was removed in 16.0.
+
+解决方法：在 `gitlab.rb` 中将提示配置项删除或注释
+
+```bash
+# 修改完配置项后，重新配置，重启
+gitlab-ctl reconfigure
+gitlab-ctl restart
+```
+
+## 后台任务进度未知问题
+
+运行`gitlab-psql` 进入控制台
+
+```postgresql
+# 获取正在迁移的任务 ID
+SELECT
+ id,
+ job_class_name,
+ table_name,
+ column_name,
+ job_arguments
+FROM batched_background_migrations
+WHERE status NOT IN(3, 6);
+
+# 查看任务进度
+# 将 xx 替换为查询到的 ID
+# 多次运行查询如果没有新行添加说明完成或暂停
+# 有变化则仍在运行
+SELECT
+ started_at,
+ finished_at,
+ finished_at - started_at AS duration,
+ min_value,
+ max_value,
+ batch_size,
+ sub_batch_size
+FROM batched_background_migration_jobs
+WHERE batched_background_migration_id = XX
+ORDER BY id DESC
+limit 10;
+```
