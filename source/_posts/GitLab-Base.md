@@ -136,6 +136,7 @@ gitlab-backup create
 ## 旧版本备份
 gitlab-rake gitlab:backup:create
 ## 恢复备份
+## timestamp 填时间戳而不是文件名
 gitlab-backup restore BACKUP=timestamp
 gitlab-rake gitlab:backup:restore BACKUP=TIMESTAMP
 ## 重新配置gitlab
@@ -265,4 +266,40 @@ FROM batched_background_migration_jobs
 WHERE batched_background_migration_id = XX
 ORDER BY id DESC
 limit 10;
+```
+
+## 配置 ldap
+
+```rb
+gitlab_rails['ldap_enabled'] = true
+gitlab_rails['ldap_servers'] = YAML.load <<-EOS
+  main: # 可以配置多个 LDAP 服务器，这里是主服务器
+    label: 'LDAP' # 显示在登录页面的名称
+    host: 'ldap.example.com'
+    port: 389
+    uid: 'sAMAccountName' # 用于用户登录的属性，例如 AD 中的 sAMAccountName
+    bind_dn: 'cn=admin,dc=example,dc=com' # 用于绑定的服务账户
+    password: 'password' # 服务账户密码
+    encryption: 'plain' # 加密方式：plain、start_tls 或 simple_tls
+    verify_certificates: true
+    smartcard_auth: false
+    active_directory: true # 如果使用的是 Active Directory，设置为 true
+    allow_username_or_email_login: false
+    lowercase_usernames: false
+    block_auto_created_users: false
+    base: 'dc=example,dc=com' # 用户搜索的 Base DN
+    user_filter: '' # 额外的筛选条件，例如只允许特定组的用户访问
+    group_base: ''
+    admin_group: '' # 如果有管理员组，可以设置此项
+    sync_ssh_keys: false # 是否同步用户的 SSH 密钥
+EOS
+```
+
+```bash
+# 重新配置
+gitlab-ctl reconfigure
+# 重启
+gitlab-ctl restart
+# 测试，如果配置成功，输出会显示用户和组信息。
+gitlab-rake gitlab:ldap:check
 ```
