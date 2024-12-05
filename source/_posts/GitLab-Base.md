@@ -1,10 +1,10 @@
 ---
-title: GitLab Base
+title: GitLab 常用操作与问题记录
 date: 2024-11-29 09:49:00
 tags: tools
 ---
 
-# GitLab Base
+# GitLab 常用操作与问题记录
 
 ## 修改密码
 ```bash  
@@ -303,3 +303,29 @@ gitlab-ctl restart
 # 测试，如果配置成功，输出会显示用户和组信息。
 gitlab-rake gitlab:ldap:check
 ```
+
+## redis 开启RDB 导致 oom gitlab 崩溃
+
+公司使用了云存储 nas，磁盘性能不好，导致 gitlab 出现问题。
+
+gitlab 自带的 redis 配置默认开启 RDB 持久化，如果磁盘性能较差，可能导致 oom 崩溃问题。
+
+- Redis 在进行 RDB 持久化时，会创建一个子进程（通过 fork），父进程继续提供服务，子进程负责写入 RDB 文件。
+- 如果内存使用过高，fork 操作会耗费大量内存资源，因为操作系统需要复制父进程的页表。
+- 在生成 RDB 文件期间，如果 Redis 正在进行大量写操作，内存页面会频繁被修改，导致操作系统必须复制这些页面，增加了内存和 CPU 的开销。
+- 如果磁盘性能较差，RDB 文件的写入速度较慢，会让子进程占用更多时间，从而使父进程的 COW 操作被放大。
+
+```bash
+## 默认配置
+save 900 1
+save 300 10
+save 60 10000
+appendonly no
+
+## 修改配置
+save ""
+appendonly yes
+```
+> 最好的方法当然是换性能好的磁盘
+>
+> 而且磁盘性能不行会出现各种奇怪的问题
