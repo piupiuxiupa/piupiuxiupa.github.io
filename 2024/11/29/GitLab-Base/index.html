@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="GitLab Base修改密码12345678910gitlab-rails consoleuser &#x3D; User.find_by_username(&#x27;root&#x27;)user.password &#x3D; &#x27;NewSecurePassword&#x27;user.password_confirmation &#x3D; &#x27;NewSecurePassword&#x27;user.">
+    <meta name="description" content="GitLab 常用操作与问题记录修改密码12345678910gitlab-rails consoleuser &#x3D; User.find_by_username(&#x27;root&#x27;)user.password &#x3D; &#x27;NewSecurePassword&#x27;user.password_confirmation &#x3D; &#x27;NewSecurePassword&#x27;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="GitLab Base">
+<meta property="og:title" content="GitLab 常用操作与问题记录">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/11/29/GitLab-Base/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="GitLab Base修改密码12345678910gitlab-rails consoleuser &#x3D; User.find_by_username(&#x27;root&#x27;)user.password &#x3D; &#x27;NewSecurePassword&#x27;user.password_confirmation &#x3D; &#x27;NewSecurePassword&#x27;user.">
+<meta property="og:description" content="GitLab 常用操作与问题记录修改密码12345678910gitlab-rails consoleuser &#x3D; User.find_by_username(&#x27;root&#x27;)user.password &#x3D; &#x27;NewSecurePassword&#x27;user.password_confirmation &#x3D; &#x27;NewSecurePassword&#x27;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-29T01:49:00.000Z">
-<meta property="article:modified_time" content="2024-12-04T12:52:05.062Z">
+<meta property="article:modified_time" content="2024-12-05T06:41:36.724Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="tools">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>GitLab Base - piupiuxiupa&#39;s blog</title>
+  <title>GitLab 常用操作与问题记录 - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="GitLab Base"></span>
+            <span id="subtitle" data-typed-text="GitLab 常用操作与问题记录"></span>
           
         </div>
 
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          1.6k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          11 分钟
+          14 分钟
         
       </span>
     
@@ -270,12 +270,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">GitLab Base</h1>
+            <h1 id="seo-header">GitLab 常用操作与问题记录</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="GitLab-Base"><a href="#GitLab-Base" class="headerlink" title="GitLab Base"></a>GitLab Base</h1><h2 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a>修改密码</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><br>gitlab-rails console<br><br>user = User.find_by_username(<span class="hljs-string">&#x27;root&#x27;</span>)<br><br>user.password = <span class="hljs-string">&#x27;NewSecurePassword&#x27;</span><br><br>user.password_confirmation = <span class="hljs-string">&#x27;NewSecurePassword&#x27;</span><br><br>user.save!<br></code></pre></td></tr></table></figure>
+                <h1 id="GitLab-常用操作与问题记录"><a href="#GitLab-常用操作与问题记录" class="headerlink" title="GitLab 常用操作与问题记录"></a>GitLab 常用操作与问题记录</h1><h2 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a>修改密码</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><br>gitlab-rails console<br><br>user = User.find_by_username(<span class="hljs-string">&#x27;root&#x27;</span>)<br><br>user.password = <span class="hljs-string">&#x27;NewSecurePassword&#x27;</span><br><br>user.password_confirmation = <span class="hljs-string">&#x27;NewSecurePassword&#x27;</span><br><br>user.save!<br></code></pre></td></tr></table></figure>
 
 <h2 id="External-url"><a href="#External-url" class="headerlink" title="External url"></a>External url</h2><p>影响到点击克隆按钮显示的地址</p>
 <p>打开 GitLab 的主配置文件：&#x2F;etc&#x2F;gitlab&#x2F;gitlab.rb</p>
@@ -375,6 +375,21 @@
 <h2 id="配置-ldap"><a href="#配置-ldap" class="headerlink" title="配置 ldap"></a>配置 ldap</h2><figure class="highlight rb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs rb">gitlab_rails[<span class="hljs-string">&#x27;ldap_enabled&#x27;</span>] = <span class="hljs-literal">true</span><br>gitlab_rails[<span class="hljs-string">&#x27;ldap_servers&#x27;</span>] = <span class="hljs-variable constant_">YAML</span>.load <span class="hljs-string">&lt;&lt;-EOS</span><br><span class="hljs-string">  main: # 可以配置多个 LDAP 服务器，这里是主服务器</span><br><span class="hljs-string">    label: &#x27;LDAP&#x27; # 显示在登录页面的名称</span><br><span class="hljs-string">    host: &#x27;ldap.example.com&#x27;</span><br><span class="hljs-string">    port: 389</span><br><span class="hljs-string">    uid: &#x27;sAMAccountName&#x27; # 用于用户登录的属性，例如 AD 中的 sAMAccountName</span><br><span class="hljs-string">    bind_dn: &#x27;cn=admin,dc=example,dc=com&#x27; # 用于绑定的服务账户</span><br><span class="hljs-string">    password: &#x27;password&#x27; # 服务账户密码</span><br><span class="hljs-string">    encryption: &#x27;plain&#x27; # 加密方式：plain、start_tls 或 simple_tls</span><br><span class="hljs-string">    verify_certificates: true</span><br><span class="hljs-string">    smartcard_auth: false</span><br><span class="hljs-string">    active_directory: true # 如果使用的是 Active Directory，设置为 true</span><br><span class="hljs-string">    allow_username_or_email_login: false</span><br><span class="hljs-string">    lowercase_usernames: false</span><br><span class="hljs-string">    block_auto_created_users: false</span><br><span class="hljs-string">    base: &#x27;dc=example,dc=com&#x27; # 用户搜索的 Base DN</span><br><span class="hljs-string">    user_filter: &#x27;&#x27; # 额外的筛选条件，例如只允许特定组的用户访问</span><br><span class="hljs-string">    group_base: &#x27;&#x27;</span><br><span class="hljs-string">    admin_group: &#x27;&#x27; # 如果有管理员组，可以设置此项</span><br><span class="hljs-string">    sync_ssh_keys: false # 是否同步用户的 SSH 密钥</span><br><span class="hljs-string">EOS</span><br></code></pre></td></tr></table></figure>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 重新配置</span><br>gitlab-ctl reconfigure<br><span class="hljs-comment"># 重启</span><br>gitlab-ctl restart<br><span class="hljs-comment"># 测试，如果配置成功，输出会显示用户和组信息。</span><br>gitlab-rake gitlab:ldap:check<br></code></pre></td></tr></table></figure>
+
+<h2 id="redis-开启RDB-导致-oom-gitlab-崩溃"><a href="#redis-开启RDB-导致-oom-gitlab-崩溃" class="headerlink" title="redis 开启RDB 导致 oom gitlab 崩溃"></a>redis 开启RDB 导致 oom gitlab 崩溃</h2><p>公司使用了云存储 nas，磁盘性能不好，导致 gitlab 出现问题。</p>
+<p>gitlab 自带的 redis 配置默认开启 RDB 持久化，如果磁盘性能较差，可能导致 oom 崩溃问题。</p>
+<ul>
+<li>Redis 在进行 RDB 持久化时，会创建一个子进程（通过 fork），父进程继续提供服务，子进程负责写入 RDB 文件。</li>
+<li>如果内存使用过高，fork 操作会耗费大量内存资源，因为操作系统需要复制父进程的页表。</li>
+<li>在生成 RDB 文件期间，如果 Redis 正在进行大量写操作，内存页面会频繁被修改，导致操作系统必须复制这些页面，增加了内存和 CPU 的开销。</li>
+<li>如果磁盘性能较差，RDB 文件的写入速度较慢，会让子进程占用更多时间，从而使父进程的 COW 操作被放大。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 默认配置</span><br>save 900 1<br>save 300 10<br>save 60 10000<br>appendonly no<br><br><span class="hljs-comment">## 修改配置</span><br>save <span class="hljs-string">&quot;&quot;</span><br>appendonly <span class="hljs-built_in">yes</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>最好的方法当然是换性能好的磁盘</p>
+<p>而且磁盘性能不行会出现各种奇怪的问题</p>
+</blockquote>
+
                 
               </div>
             
@@ -398,7 +413,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>GitLab Base</div>
+      <div>GitLab 常用操作与问题记录</div>
       <div>https://piupiuxiupa.github.io/2024/11/29/GitLab-Base/</div>
     </div>
     <div class="license-meta">
