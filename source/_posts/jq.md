@@ -12,7 +12,9 @@ jq 是一个轻量级且功能强大的命令行 JSON 处理工具，允许用�
 
 > https://github.com/Kas-tle/java2bedrock.sh/blob/main/converter.sh
 >
-> 用到了大量 jq 命令，可以学习借鉴
+> 用到了大量 jq 命令，可以学习借鉴。
+>
+> Top 10 open source and public projects attracting the most first-time contributors in 2024 on GitHub
 
 ## 基本语法
 
@@ -32,6 +34,9 @@ jq [选项] <过滤表达式> [文件名]
     ```bash
     # 提取 name字段值
     jq '.name' data.json
+    # 提取多个字段值
+    jq '.name, .age' data.json
+    jq '.[] | {name: .name, city: .city}' data.json
     ```
 
 3. 提取嵌套字段
