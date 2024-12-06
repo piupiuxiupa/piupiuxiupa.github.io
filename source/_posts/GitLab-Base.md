@@ -329,3 +329,16 @@ appendonly yes
 > 最好的方法当然是换性能好的磁盘
 >
 > 而且磁盘性能不行会出现各种奇怪的问题
+
+## 迁移后 webhooks 访问 500
+
+旧版本 webhook 与新版本不兼容导致
+
+1. 找到项目 id
+
+2. 在数据库中查询webhook的 id： `select id from web_hooks where project_id=2016;`
+
+3. 通过接口请求删除 webhooks
+    ```bash
+    curl --header "Private-Token: 4Yn1dffiTDpy5c2xvN8X" -X DELETE http://gitlab.com/api/v4/projects/<project_id>/hooks/<webhook_id>
+    ```
