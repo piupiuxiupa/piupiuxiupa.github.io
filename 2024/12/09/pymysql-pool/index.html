@@ -16,24 +16,24 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="jq 命令基本用法jq 是一个轻量级且功能强大的命令行 JSON 处理工具，允许用户灵活地解析、过滤、格式化和转换 JSON 数据。 随着微服务架构的兴起以及 JSON 数据格式的广泛使用，jq 命令的使用频率也在变高。  https:&#x2F;&#x2F;github.com&#x2F;Kas-tle&#x2F;java2bedrock.sh&#x2F;blob&#x2F;main&#x2F;converter.sh 用到了大量 jq 命令，可以学习借鉴。 To">
+    <meta name="description" content="pymysql 与连接池pymysql12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455import pymysql# 1. 连接到 MySQL 数据库connection &#x3D; pymysql.connect(    host&#x3D;&#x27;loca">
 <meta property="og:type" content="article">
-<meta property="og:title" content="jq 常用操作介绍">
-<meta property="og:url" content="https://piupiuxiupa.github.io/2024/12/06/jq/index.html">
+<meta property="og:title" content="pymysql与连接池">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2024/12/09/pymysql-pool/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="jq 命令基本用法jq 是一个轻量级且功能强大的命令行 JSON 处理工具，允许用户灵活地解析、过滤、格式化和转换 JSON 数据。 随着微服务架构的兴起以及 JSON 数据格式的广泛使用，jq 命令的使用频率也在变高。  https:&#x2F;&#x2F;github.com&#x2F;Kas-tle&#x2F;java2bedrock.sh&#x2F;blob&#x2F;main&#x2F;converter.sh 用到了大量 jq 命令，可以学习借鉴。 To">
+<meta property="og:description" content="pymysql 与连接池pymysql12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455import pymysql# 1. 连接到 MySQL 数据库connection &#x3D; pymysql.connect(    host&#x3D;&#x27;loca">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-12-06T03:04:35.000Z">
-<meta property="article:modified_time" content="2024-12-06T05:50:47.468Z">
+<meta property="article:published_time" content="2024-12-09T12:11:33.000Z">
+<meta property="article:modified_time" content="2024-12-09T12:13:21.381Z">
 <meta property="article:author" content="piupiuxiupa">
-<meta property="article:tag" content="tools">
+<meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>jq 常用操作介绍 - piupiuxiupa&#39;s blog</title>
+  <title>pymysql与连接池 - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="jq 常用操作介绍"></span>
+            <span id="subtitle" data-typed-text="pymysql与连接池"></span>
           
         </div>
 
@@ -210,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-12-06 11:04" pubdate>
-          2024年12月6日 上午
+        <time datetime="2024-12-09 20:11" pubdate>
+          2024年12月9日 晚上
         </time>
       </span>
     
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          394 字
+          764 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          4 分钟
+          7 分钟
         
       </span>
     
@@ -270,58 +270,49 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">jq 常用操作介绍</h1>
+            <h1 id="seo-header">pymysql与连接池</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="jq-命令基本用法"><a href="#jq-命令基本用法" class="headerlink" title="jq 命令基本用法"></a>jq 命令基本用法</h1><p>jq 是一个轻量级且功能强大的命令行 JSON 处理工具，允许用户灵活地解析、过滤、格式化和转换 JSON 数据。</p>
-<p>随着微服务架构的兴起以及 JSON 数据格式的广泛使用，jq 命令的使用频率也在变高。</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://github.com/Kas-tle/java2bedrock.sh/blob/main/converter.sh">https://github.com/Kas-tle/java2bedrock.sh/blob/main/converter.sh</a></p>
-<p>用到了大量 jq 命令，可以学习借鉴。</p>
-<p>Top 10 open source and public projects attracting the most first-time contributors in 2024 on GitHub</p>
-</blockquote>
-<h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><p>jq [选项] &lt;过滤表达式&gt; [文件名]</p>
-<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><ol>
-<li><p>格式化输出</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 格式化 JSON 数据为可读格式 </span><br>jq <span class="hljs-string">&#x27;.&#x27;</span> data.json<br></code></pre></td></tr></table></figure>
+                <h1 id="pymysql-与连接池"><a href="#pymysql-与连接池" class="headerlink" title="pymysql 与连接池"></a>pymysql 与连接池</h1><h2 id="pymysql"><a href="#pymysql" class="headerlink" title="pymysql"></a>pymysql</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> pymysql<br><br><span class="hljs-comment"># 1. 连接到 MySQL 数据库</span><br>connection = pymysql.connect(<br>    host=<span class="hljs-string">&#x27;localhost&#x27;</span>,         <span class="hljs-comment"># 数据库地址</span><br>    user=<span class="hljs-string">&#x27;root&#x27;</span>,              <span class="hljs-comment"># 数据库用户名</span><br>    password=<span class="hljs-string">&#x27;your_password&#x27;</span>, <span class="hljs-comment"># 数据库密码</span><br>    database=<span class="hljs-string">&#x27;test_db&#x27;</span>,       <span class="hljs-comment"># 数据库名称（需事先创建好）</span><br>    charset=<span class="hljs-string">&#x27;utf8mb4&#x27;</span>,        <span class="hljs-comment"># 设置字符集</span><br>    cursorclass=pymysql.cursors.DictCursor  <span class="hljs-comment"># 返回结果为字典格式</span><br>)<br><br><span class="hljs-keyword">try</span>:<br>    <span class="hljs-comment"># 2. 创建游标对象</span><br>    <span class="hljs-keyword">with</span> connection.cursor() <span class="hljs-keyword">as</span> cursor:<br>        <span class="hljs-comment"># 创建表</span><br>        create_table_query = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        CREATE TABLE IF NOT EXISTS users (</span><br><span class="hljs-string">            id INT AUTO_INCREMENT PRIMARY KEY,</span><br><span class="hljs-string">            name VARCHAR(100) NOT NULL,</span><br><span class="hljs-string">            age INT NOT NULL,</span><br><span class="hljs-string">            email VARCHAR(100)</span><br><span class="hljs-string">        );</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        cursor.execute(create_table_query)<br><br>        <span class="hljs-comment"># 插入数据</span><br>        insert_query = <span class="hljs-string">&quot;INSERT INTO users (name, age, email) VALUES (%s, %s, %s)&quot;</span><br>        cursor.execute(insert_query, (<span class="hljs-string">&quot;Alice&quot;</span>, <span class="hljs-number">25</span>, <span class="hljs-string">&quot;alice@example.com&quot;</span>))<br>        cursor.execute(insert_query, (<span class="hljs-string">&quot;Bob&quot;</span>, <span class="hljs-number">30</span>, <span class="hljs-string">&quot;bob@example.com&quot;</span>))<br><br>        <span class="hljs-comment"># 提交事务</span><br>        connection.commit()<br><br>        <span class="hljs-comment"># 查询数据</span><br>        select_query = <span class="hljs-string">&quot;SELECT * FROM users&quot;</span><br>        cursor.execute(select_query)<br>        results = cursor.fetchall()<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;查询结果:&quot;</span>)<br>        <span class="hljs-keyword">for</span> row <span class="hljs-keyword">in</span> results:<br>            <span class="hljs-built_in">print</span>(row)<br><br>        <span class="hljs-comment"># 更新数据</span><br>        update_query = <span class="hljs-string">&quot;UPDATE users SET age = %s WHERE name = %s&quot;</span><br>        cursor.execute(update_query, (<span class="hljs-number">28</span>, <span class="hljs-string">&quot;Alice&quot;</span>))<br>        connection.commit()<br><br>        <span class="hljs-comment"># 删除数据</span><br>        delete_query = <span class="hljs-string">&quot;DELETE FROM users WHERE name = %s&quot;</span><br>        cursor.execute(delete_query, (<span class="hljs-string">&quot;Bob&quot;</span>,))<br>        connection.commit()<br><br><span class="hljs-keyword">finally</span>:<br>    <span class="hljs-comment"># 3. 关闭数据库连接</span><br>    connection.close()<br></code></pre></td></tr></table></figure>
+
+<h2 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a>连接池</h2><p>在使用 pymysql 连接 MySQL 时，可以通过引入 连接池 来提高数据库操作效率，避免频繁建立和关闭连接带来的开销。</p>
+<ol>
+<li><p>安装依赖</p>
+<p> 为了使用连接池，可以通过 DBUtils 库的 PooledDB 模块实现连接池管理。</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install DBUtils<br></code></pre></td></tr></table></figure>
 </li>
-<li><p>提取字段值</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 提取 name字段值</span><br>jq <span class="hljs-string">&#x27;.name&#x27;</span> data.json<br><span class="hljs-comment"># 提取多个字段值</span><br>jq <span class="hljs-string">&#x27;.name, .age&#x27;</span> data.json<br>jq <span class="hljs-string">&#x27;.[] | &#123;name: .name, city: .city&#125;&#x27;</span> data.json<br></code></pre></td></tr></table></figure>
+<li><p>使用 DBUtils.PooledDB 实现连接池</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> DBUtils.PooledDB <span class="hljs-keyword">import</span> PooledDB<br><span class="hljs-keyword">import</span> pymysql<br><br><span class="hljs-comment"># 创建连接池</span><br>pool = PooledDB(<br>    creator=pymysql,          <span class="hljs-comment"># 使用 pymysql 作为连接器</span><br>    maxconnections=<span class="hljs-number">5</span>,         <span class="hljs-comment"># 最大连接数</span><br>    mincached=<span class="hljs-number">2</span>,              <span class="hljs-comment"># 初始化时创建的连接数</span><br>    maxcached=<span class="hljs-number">3</span>,              <span class="hljs-comment"># 连接池中最多可缓存的连接数</span><br>    blocking=<span class="hljs-literal">True</span>,            <span class="hljs-comment"># 达到最大连接数后是否阻塞，True 为阻塞</span><br>    ping=<span class="hljs-number">0</span>,                   <span class="hljs-comment"># 检测连接是否可用，0 表示从不检测</span><br>    host=<span class="hljs-string">&quot;localhost&quot;</span>,         <span class="hljs-comment"># MySQL 主机地址</span><br>    user=<span class="hljs-string">&quot;root&quot;</span>,              <span class="hljs-comment"># 用户名</span><br>    password=<span class="hljs-string">&quot;your_password&quot;</span>, <span class="hljs-comment"># 密码</span><br>    database=<span class="hljs-string">&quot;test_db&quot;</span>,       <span class="hljs-comment"># 数据库名</span><br>    charset=<span class="hljs-string">&quot;utf8mb4&quot;</span>         <span class="hljs-comment"># 字符集</span><br>)<br><br><span class="hljs-comment"># 从连接池获取连接</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_connection</span>():<br>    <span class="hljs-keyword">return</span> pool.connection()<br><br><span class="hljs-comment"># 使用连接池连接数据库</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">execute_query</span>(<span class="hljs-params">query, params=<span class="hljs-literal">None</span></span>):<br>    conn = get_connection()   <span class="hljs-comment"># 从连接池获取连接</span><br>    <span class="hljs-keyword">try</span>:<br>        <span class="hljs-keyword">with</span> conn.cursor() <span class="hljs-keyword">as</span> cursor:<br>            cursor.execute(query, params)<br>            <span class="hljs-keyword">if</span> query.strip().upper().startswith(<span class="hljs-string">&quot;SELECT&quot;</span>):<br>                result = cursor.fetchall()  <span class="hljs-comment"># 查询语句，返回结果</span><br>                <span class="hljs-keyword">return</span> result<br>            <span class="hljs-keyword">else</span>:<br>                conn.commit()  <span class="hljs-comment"># 非查询语句，提交事务</span><br>    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Error:&quot;</span>, e)<br>        conn.rollback()  <span class="hljs-comment"># 回滚事务</span><br>    <span class="hljs-keyword">finally</span>:<br>        conn.close()  <span class="hljs-comment"># 将连接返回到连接池</span><br><br><span class="hljs-comment"># 示例：插入数据</span><br>execute_query(<br>    <span class="hljs-string">&quot;INSERT INTO users (name, age, email) VALUES (%s, %s, %s)&quot;</span>,<br>    (<span class="hljs-string">&quot;Alice&quot;</span>, <span class="hljs-number">25</span>, <span class="hljs-string">&quot;alice@example.com&quot;</span>)<br>)<br><br><span class="hljs-comment"># 示例：查询数据</span><br>results = execute_query(<span class="hljs-string">&quot;SELECT * FROM users&quot;</span>)<br><span class="hljs-built_in">print</span>(results)<br></code></pre></td></tr></table></figure>
 </li>
-<li><p>提取嵌套字段</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 提取 skills 数组的第一个值</span><br>jq <span class="hljs-string">&#x27;.skills[0]&#x27;</span> data.json<br></code></pre></td></tr></table></figure>
-</li>
-<li><p>过滤数组</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 输出数组中的所有值。</span><br>jq <span class="hljs-string">&#x27;.skills[]&#x27;</span> data.json<br></code></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="复杂操作"><a href="#复杂操作" class="headerlink" title="复杂操作"></a>复杂操作</h2><ol>
-<li><p>条件筛选</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 输出 age 大于 25 的数据</span><br>jq <span class="hljs-string">&#x27;select(.age &gt; 25)&#x27;</span> data.json<br></code></pre></td></tr></table></figure>
-</li>
-<li><p>计算字段</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 计算 age 字段的两倍</span><br>jq <span class="hljs-string">&#x27;.age * 2&#x27;</span> data.json<br></code></pre></td></tr></table></figure>
-</li>
-<li><p>修改 JSON 数据</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将 age 字段的值修改为 35</span><br>jq <span class="hljs-string">&#x27;.age = 35&#x27;</span> data.json<br></code></pre></td></tr></table></figure>
-</li>
-<li><p>添加新字段</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 给 JSON 数据添加 city 字段</span><br>jq <span class="hljs-string">&#x27;. + &#123;city: &quot;New York&quot;&#125;&#x27;</span> data.json<br></code></pre></td></tr></table></figure>
-</li>
-<li><p>结合管道命令</p>
+<li><p>参数说明</p>
+<p> 连接池参数</p>
 <ul>
-<li>从命令行获取数据并处理：</li>
+<li>creator：指定使用的数据库连接模块，这里为 pymysql。</li>
+<li>maxconnections：连接池允许的最大连接数，0 表示不限制连接数。</li>
+<li>mincached：初始化时创建的连接数。</li>
+<li>maxcached：池中允许的最大空闲连接数。</li>
+<li>blocking：如果连接数已达到最大值，是否阻塞等待可用连接。True 表示阻塞。</li>
+<li>ping：控制是否在获取连接时检查连接的可用性<ul>
+<li>0：从不检查；</li>
+<li>1：执行 ping 检测；</li>
+<li>2：检查 socket；</li>
+<li>4：检查断开情况；</li>
+<li>可以组合值如 3 表示 ping + socket 检查</li>
 </ul>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 作用：从 API 获取数据并筛选价格大于 100 的项目</span><br>curl -s https://api.example.com/data | jq <span class="hljs-string">&#x27;.items[] | select(.price &gt; 100)&#x27;</span><br></code></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="常用选项"><a href="#常用选项" class="headerlink" title="常用选项"></a>常用选项</h2><ul>
-<li><p>-r：去掉输出中的引号</p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">jq -r <span class="hljs-string">&#x27;.name&#x27;</span> data.json<br></code></pre></td></tr></table></figure>
 </li>
-<li><p>-c：压缩格式输出</p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">jq -c <span class="hljs-string">&#x27;.&#x27;</span> data.json<br></code></pre></td></tr></table></figure></li>
 </ul>
+<p> MySQL 连接参数</p>
+<ul>
+<li>host：MySQL 数据库地址（例如 localhost 或 IP 地址）。</li>
+<li>user：MySQL 用户名。</li>
+<li>password：MySQL 密码。</li>
+<li>database：指定连接的数据库名。</li>
+<li>charset：设置字符集，推荐使用 utf8mb4。</li>
+</ul>
+</li>
+</ol>
 
                 
               </div>
@@ -334,7 +325,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/tools/" class="print-no-link">#tools</a>
+        <a href="/tags/python/" class="print-no-link">#python</a>
       
     </div>
   
@@ -346,8 +337,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>jq 常用操作介绍</div>
-      <div>https://piupiuxiupa.github.io/2024/12/06/jq/</div>
+      <div>pymysql与连接池</div>
+      <div>https://piupiuxiupa.github.io/2024/12/09/pymysql-pool/</div>
     </div>
     <div class="license-meta">
       
@@ -359,7 +350,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年12月6日</div>
+          <div>2024年12月9日</div>
         </div>
       
       
@@ -391,18 +382,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/12/09/openpyxl/" title="openpyxl">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">openpyxl</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/11/29/GitLab-Base/" title="GitLab 常用操作与问题记录">
-                        <span class="hidden-mobile">GitLab 常用操作与问题记录</span>
+                      <a href="/2024/12/09/openpyxl/" title="openpyxl">
+                        <span class="hidden-mobile">openpyxl</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
