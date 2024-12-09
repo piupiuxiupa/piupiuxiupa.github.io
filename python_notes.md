@@ -174,3 +174,38 @@ def log_decorator(func):
         return result
     return wrapper
 ```
+
+## loguru
+
+```python
+from loguru import logger
+
+logger.debug("这是一条调试信息")
+logger.info("这是一条普通信息")
+logger.warning("这是一条警告信息")
+logger.error("这是一条错误信息")
+
+logger.add("app.log")
+logger.info("这条信息会同时输出到控制台和app.log文件中")
+
+log_format="{time: YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line}: {message}"
+logger.add("app.log", format=log_format, level="INFO", rotation="1 day", encoding="utf-8")
+
+logger.debug("这条调试信息不会被记录到文件中，因为级别设置为INFO")
+logger.info("这条信息会按照指定格式记录到文件中")
+
+"""
+循环，rotation，达到指定大小后建新日志。
+保留，retention，定期清理。
+压缩，compression，压缩节省空间。
+"""
+
+logger.add("file_1.log", rotation="500 MB")  # 自动循环过大的文件
+logger.add("file_2.log", rotation="12:00")  # 每天中午创建新文件
+logger.add("file_3.log", rotation="1 week")  # 一旦文件太旧进行循环
+
+logger.add("file_X.log", retention="10 days")  # 定期清理
+
+logger.add("file_Y.log", compression="zip")  # 压缩节省空间
+
+```
