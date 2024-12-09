@@ -226,6 +226,86 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2024/10/17/wsl-migrate/" target="_self">
+          WSL 切换存储路径
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/10/17/wsl-migrate/" target="_self">
+        <div>
+          WSL 切换存储路径 WSL默认安装在C盘，使用过程中容易撑满C盘  12345678910111213141516171819# 查看容器信息wsl -l -v # 如果安装了docker则执行# 先在任务栏把docker-desktop退出wsl --export docker-desktop-data &quot;D:\wsl\docker-desktop-data.tar&quot;wsl
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-10-17 17:08" pubdate>
+              2024-10-17
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/tools/">#tools</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/10/15/svn-gitlab-backup/" target="_self">
+          SVN GitLab 备份与还原
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/10/15/svn-gitlab-backup/" target="_self">
+        <div>
+          SVN &amp; GitLab 备份与还原svn 热备 通过svn的hook达到热备效果 svnsync   冷备 通过 svnadmin dump 导出备份数据 rsync或scp 传输备份数据到其他机器    svnsync热备创建svn 仓库12# 接创建路径svnadmin create /home/svn 修改svn配置文件123456# svnserver.conf# 取消如下配置注
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-10-15 11:09" pubdate>
+              2024-10-15
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/tools/">#tools</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2024/09/27/ansible-action/" target="_self">
           Ansible Playbook 规范
         </a>
@@ -540,91 +620,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/08/05/deploy-hexo/" target="_self">
-          Hexo部署GitHub个人博客
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/08/05/deploy-hexo/" target="_self">
-        <div>
-          Hexo部署GitHub个人博客1. 安装Hexo安装Hexo需要  nodejs npm  12345# 注意nodejs版本# 需要 ubuntu noble版本apt install nodejs npm# npm 下载慢需要跟换国内源，或者添加代理npm install -g hexo  2. Hexo 常用命令1234567891011121314# 需要一点时间hexo init $p
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-08-05 10:42" pubdate>
-              2024-08-05
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/tools/">#tools</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/08/04/WSL-Linux-init-proxy/" target="_self">
-          WSL启动Linux并初始化及代理配置
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/08/04/WSL-Linux-init-proxy/" target="_self">
-        <div>
-          WSL 启动 Ubuntu由于22.04 jammy不支持高版本nodejs，所以我们下载24.04 noble版本的Ubuntu。 1234## 查看可下载的发行版wsl -l -owsl --install -d Ubuntu-24.04    等待下载完成就会自动进入。 配置 apt阿里源123456789101112131415cp /etc/apt/sources.list /etc/a
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-08-04 19:45" pubdate>
-              2024-08-04
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/tools/">#tools</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

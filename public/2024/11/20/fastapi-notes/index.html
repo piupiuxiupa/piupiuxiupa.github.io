@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="FastAPI Notes FastAPI 具有python的一些新特性，比如类型提示，异步支持，以及自动生成文档。  模块 fastapi FastAPI Path Query Body Cookie   pydantic BaseModel   typing Annotated Union Optional List Set   starlette RedirectResponse    简单">
+    <meta name="description" content="FastAPI Notes FastAPI 具有python的一些新特性，比如类型提示，异步支持，以及自动生成文档。  模块 fastapi FastAPI Path Query Body Cookie   pydantic BaseModel   typing Annotated Union Optional List Set   starlette RedirectResponse    目录">
 <meta property="og:type" content="article">
 <meta property="og:title" content="FastAPI Notes">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/11/20/fastapi-notes/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="FastAPI Notes FastAPI 具有python的一些新特性，比如类型提示，异步支持，以及自动生成文档。  模块 fastapi FastAPI Path Query Body Cookie   pydantic BaseModel   typing Annotated Union Optional List Set   starlette RedirectResponse    简单">
+<meta property="og:description" content="FastAPI Notes FastAPI 具有python的一些新特性，比如类型提示，异步支持，以及自动生成文档。  模块 fastapi FastAPI Path Query Body Cookie   pydantic BaseModel   typing Annotated Union Optional List Set   starlette RedirectResponse    目录">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-20T08:36:58.000Z">
-<meta property="article:modified_time" content="2024-11-21T01:17:39.155Z">
+<meta property="article:modified_time" content="2024-12-09T01:50:07.589Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          2.1k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          16 分钟
+          18 分钟
         
       </span>
     
@@ -304,6 +304,8 @@
 </ul>
 </li>
 </ul>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs bash">project_name/<br>├── app/<br>│   ├── __init__.py<br>│   ├── main.py          <span class="hljs-comment"># 应用入口文件，包含 FastAPI 实例和路由加载</span><br>│   ├── config.py        <span class="hljs-comment"># 配置文件（如数据库连接、环境变量等）</span><br>│   ├── routers/         <span class="hljs-comment"># 路由模块</span><br>│   │   ├── __init__.py<br>│   │   ├── users.py     <span class="hljs-comment"># 用户相关路由</span><br>│   │   ├── items.py     <span class="hljs-comment"># 物品相关路由</span><br>│   ├── models/          <span class="hljs-comment"># 数据模型</span><br>│   │   ├── __init__.py<br>│   │   ├── user.py      <span class="hljs-comment"># 用户表模型</span><br>│   │   ├── item.py      <span class="hljs-comment"># 物品表模型</span><br>│   ├── schemas/         <span class="hljs-comment"># Pydantic 模式，用于数据验证</span><br>│   │   ├── __init__.py<br>│   │   ├── user.py      <span class="hljs-comment"># 用户数据模式</span><br>│   │   ├── item.py      <span class="hljs-comment"># 物品数据模式</span><br>│   ├── crud/            <span class="hljs-comment"># 数据库操作封装</span><br>│   │   ├── __init__.py<br>│   │   ├── user.py      <span class="hljs-comment"># 用户相关数据库操作</span><br>│   │   ├── item.py      <span class="hljs-comment"># 物品相关数据库操作</span><br>│   ├── db.py            <span class="hljs-comment"># 数据库连接和会话管理</span><br>│   ├── dependencies.py  <span class="hljs-comment"># 依赖项（如权限验证）</span><br>│   ├── utils.py         <span class="hljs-comment"># 通用工具函数</span><br>│<br>├── tests/               <span class="hljs-comment"># 测试文件夹</span><br>│   ├── __init__.py<br>│   ├── test_users.py    <span class="hljs-comment"># 用户相关测试</span><br>│   ├── test_items.py    <span class="hljs-comment"># 物品相关测试</span><br>│<br>├── .<span class="hljs-built_in">env</span>                 <span class="hljs-comment"># 环境变量配置</span><br>├── requirements.txt     <span class="hljs-comment"># Python 依赖包列表</span><br>├── Dockerfile           <span class="hljs-comment"># Docker 镜像配置（可选）</span><br>├── README.md            <span class="hljs-comment"># 项目说明文件</span><br></code></pre></td></tr></table></figure>
+
 <h2 id="简单例子"><a href="#简单例子" class="headerlink" title="简单例子"></a>简单例子</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> fastapi <span class="hljs-keyword">import</span> FastAPI<br><br>app = FastAPI()<br><br><br><span class="hljs-meta">@app.get(<span class="hljs-params"><span class="hljs-string">&quot;/&quot;</span></span>)</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">root</span>():<br>    <span class="hljs-keyword">return</span> &#123;<span class="hljs-string">&quot;message&quot;</span>: <span class="hljs-string">&quot;Hello World&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
 
 <h2 id="启动命令"><a href="#启动命令" class="headerlink" title="启动命令"></a>启动命令</h2><p>uvicorn main:app 命令含义如下:</p>

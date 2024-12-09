@@ -26,6 +26,45 @@ tags: python
 - starlette
   - RedirectResponse
 
+## 目录结构
+
+```bash
+project_name/
+├── app/
+│   ├── __init__.py
+│   ├── main.py          # 应用入口文件，包含 FastAPI 实例和路由加载
+│   ├── config.py        # 配置文件（如数据库连接、环境变量等）
+│   ├── routers/         # 路由模块
+│   │   ├── __init__.py
+│   │   ├── users.py     # 用户相关路由
+│   │   ├── items.py     # 物品相关路由
+│   ├── models/          # 数据模型
+│   │   ├── __init__.py
+│   │   ├── user.py      # 用户表模型
+│   │   ├── item.py      # 物品表模型
+│   ├── schemas/         # Pydantic 模式，用于数据验证
+│   │   ├── __init__.py
+│   │   ├── user.py      # 用户数据模式
+│   │   ├── item.py      # 物品数据模式
+│   ├── crud/            # 数据库操作封装
+│   │   ├── __init__.py
+│   │   ├── user.py      # 用户相关数据库操作
+│   │   ├── item.py      # 物品相关数据库操作
+│   ├── db.py            # 数据库连接和会话管理
+│   ├── dependencies.py  # 依赖项（如权限验证）
+│   ├── utils.py         # 通用工具函数
+│
+├── tests/               # 测试文件夹
+│   ├── __init__.py
+│   ├── test_users.py    # 用户相关测试
+│   ├── test_items.py    # 物品相关测试
+│
+├── .env                 # 环境变量配置
+├── requirements.txt     # Python 依赖包列表
+├── Dockerfile           # Docker 镜像配置（可选）
+├── README.md            # 项目说明文件
+```
+
 ## 简单例子
 
 ```python
@@ -39,7 +78,7 @@ async def root():
     return {"message": "Hello World"}
 ```
 
-##  启动命令
+## 启动命令
 
 uvicorn main:app 命令含义如下:
 
