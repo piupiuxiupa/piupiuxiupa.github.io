@@ -283,3 +283,36 @@ if any(items):
 > 一旦生成器的值被消费（通过 for 循环、next() 或 list()），它将变为空，不能再次使用。
 > 
 > 使用 any() 或将生成器转为列表后，生成器的内容会被消费，之后不能再次使用这些值。
+
+## requests 上传文件
+
+```python
+import requests
+
+# 定义上传的目标 URL
+url = "https://example.com/upload"
+
+# 打开文件并将其包含在文件字典中
+file_path = "path/to/your/file.txt"
+files = {
+    'file': open(file_path, 'rb')  # 'file' 是服务器设定的接收字段名
+}
+
+# 其他表单字段（如果有）
+data = {
+    'key1': 'value1',
+    'key2': 'value2'
+}
+
+# 发送 POST 请求
+response = requests.post(url, files=files, data=data)
+
+# 打印响应
+if response.status_code == 200:
+    print("上传成功:", response.text)
+else:
+    print("上传失败:", response.status_code, response.text)
+
+# 记得关闭文件
+files['file'].close()
+```
