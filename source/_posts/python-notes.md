@@ -316,3 +316,34 @@ else:
 # 记得关闭文件
 files['file'].close()
 ```
+
+## paramiko 连接服务器
+
+```python
+import paramiko
+import io
+
+## 从文件中获取
+pkey = paramiko.RSAKey.from_private_key_file('/path/to/your/private_key')
+
+# 假设这是你的私钥字符串
+private_key_str = "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA...（此处省略中间部分）.../k=\n-----END RSA PRIVATE KEY-----"
+# 使用 io.StringIO 将字符串转换为文件对象
+pkey_str_io = io.StringIO(private_key_str)
+pkey = paramiko.RSAKey.from_private_key(pkey_str_io)
+
+ssh_client = paramiko.SSHClient()
+ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+try:
+    ssh_client.connect(hostname='your_host', port=22, username='your_username', pkey=pkey)
+    stdin, stdout, stderr = ssh_client.exec_command('ls -l')
+    print(stdout.read().decode('utf-8'))
+except paramiko.AuthenticationException as e:
+    print("认证失败:", e)
+except paramiko.SSHException as e:
+    print("SSH连接错误:", e)
+except Exception as e:
+    print("其他错误:", e)
+finally:
+    ssh_client.close()
+```

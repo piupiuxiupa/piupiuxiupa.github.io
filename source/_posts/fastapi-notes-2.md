@@ -252,3 +252,45 @@ def get_settings():
     load_dotenv()
     return Settings()
 ```
+
+## 中间件记录请求日志
+
+```python
+from fastapi import FastAPI, Request
+import time
+
+app = FastAPI()
+
+# 定义中间件函数
+async def log_request_info(request: Request, call_next):
+    start_time = time.time()
+    # 获取客户端IP地址（考虑反向代理情况）
+    x_forwarded_for = request.headers.get("X-Forwarded-For")
+    if x_forwarded_for:
+        client_ip = x_forwarded_for.split(",")[0].strip()
+    else:
+        client_ip = request.client.host
+
+    # 获取请求方法（如GET、POST等）
+    request_method = request.method
+    # 获取请求路径
+    request_path = request.url.path
+    # 获取用户代理信息
+    user_agent = request.headers.get("user-agent")
+
+    try:
+        response = await call_next(request)
+    finally:
+        process_time = (time.time() - start_time) * 1000
+        print(f"[Request Log] - IP: {client_ip}, Method: {request_method}, Path: {request_path}, User-Agent: {user_agent}, Process Time: {process_time:.2f}ms")
+
+    return response
+
+# 添加中间件到应用
+app.middleware("http")(log_request_info)
+
+# 定义一个简单的路由用于测试
+@app.get("/")
+async def read_root():
+    return {"message": "Hello, World!"}
+```
