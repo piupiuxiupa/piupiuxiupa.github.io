@@ -45,6 +45,13 @@ Created symlink /etc/systemd/system/default.target.wants/ollama.service → /etc
 
 此时访问`127.0.0.1:11434`显示`Ollama is running`，则部署成功。
 
+容器形式:
+
+```bash
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+```
+
+
 ## 2. 选择模型
 
 https://ollama.com/ 官网右上角 model
@@ -132,3 +139,20 @@ sudo zypper ar https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-co
 sudo zypper --gpg-auto-import-keys install -y nvidia-container-toolkit
 ```
 
+## Others
+
+### mac 环境下部署
+
+Docker Desktop 在 macOS 上运行时，会通过一个轻量级的虚拟机（如 colima 或基于 HyperKit 的虚拟机）来运行 Docker 容器。这种方式确保容器运行在一个 Linux 内核上，而不是 macOS 的内核。因此，/var/lib/docker 实际上存在于虚拟机内，而不是 macOS 本地文件系统中。
+
+进入 Docker Desktop 的虚拟机
+
+```bash
+docker context use default
+docker run --rm -it --privileged --pid=host justincormack/nsenter1
+```
+
+数据位置通常在:  `~/Library/Containers/com.docker.docker/Data/vms/0/`
+
+调整 Docker Desktop 虚拟机的磁盘大小:
+`settings -> resuorces -> advanced -> Disk usage limit`

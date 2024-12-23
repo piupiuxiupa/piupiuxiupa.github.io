@@ -347,3 +347,87 @@ except Exception as e:
 finally:
     ssh_client.close()
 ```
+
+
+## 路径操作
+
+### 获取文件路径
+
+```python
+# 使用 os.path.dirname
+import os
+# 示例路径
+file_path = "/home/user/docs/file.txt"
+# 获取目录路径
+directory = os.path.dirname(file_path)
+print(directory)  # 输出: /home/user/docs
+
+
+# 使用 pathlib, python 3.4+
+from pathlib import Path
+# 示例路径
+file_path = "/home/user/docs/file.txt"
+# 获取目录路径
+directory = Path(file_path).parent
+print(directory)  # 输出: /home/user/docs
+
+# 通过 rsplit 分割路径
+directory = file_path.rsplit("/", 1)[0]
+print(directory)  # 输出: /home/user/docs
+```
+
+### 分割文件名和后缀
+
+```python
+import os
+# 示例路径
+file_path = "/home/user/docs/file.txt"
+# 获取文件名和后缀
+filename, file_extension = os.path.splitext(file_path)
+print(filename, file_extension)  
+
+
+from pathlib import Path
+file_path = "/home/user/docs/file.txt"
+path_obj = Path(file_path)
+# 获取根路径和扩展名
+root = path_obj.with_suffix("") # 去掉扩展名
+ext = path_obj.suffix  # 获取扩展名（包括 .）
+print(root)  # 输出: /home/user/docs/file
+print(ext)   # 输出: .txt
+```
+
+### 列出目录下的内容
+
+```python
+import os
+path = "/your/directory/path"
+
+# 列出路径下的所有文件和子目录
+files_and_dirs = os.listdir(path)
+print(files_and_dirs)  # 输出列表形式
+
+# 使用 os.scandir 只显示文件
+with os.scandir(path) as entries:
+    files = [entry.name for entry in entries if entry.is_file()]
+print(files)
+# 递归方式
+# 遍历路径及其子目录
+for root, dirs, files in os.walk(path):
+    for file in files:
+        print(os.path.join(root, file))  # 打印完整路径
+
+from pathlib import Path
+
+path = Path("/your/directory/path")
+
+# 列出路径下的所有文件
+files = [file.name for file in path.iterdir() if file.is_file()]
+print(files)
+
+# 递归方式
+# 遍历路径及其子目录的所有文件
+for file in path.rglob("*"):  # rglob("*") 匹配所有文件和目录
+    if file.is_file():
+        print(file)  # 打印完整路径
+```

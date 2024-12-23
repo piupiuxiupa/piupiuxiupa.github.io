@@ -294,3 +294,63 @@ app.middleware("http")(log_request_info)
 async def read_root():
     return {"message": "Hello, World!"}
 ```
+
+
+## 文件上传
+
+### UploadFile
+
+UploadFile 是一个异步对象，它的文件内容是通过 read() 方法逐步读取的。一旦你调用 read() 方法并读取文件内容，文件指针会被移动，后续的读取会发生错误或无法读取到任何内容。这意味着如果你在一个函数中调用了 read() 并读取了文件的内容，那么在另一个函数中调用 read() 时，文件指针已经到达文件的末尾，无法再次读取文件内容。
+
+因此可以使用变量对读取的内容进行保存来多次使用，而不是多次调用 read() 方法。
+
+
+### 接收文件上传
+
+```python
+from fastapi import FastAPI, File, UploadFile
+from typing import List
+
+app = FastAPI()
+
+@app.post("/upload-multiple/")
+async def upload_multiple_files(files: List[UploadFile] = File(...)):
+    file_details = []
+    for file in files:
+        content = await file.read()
+        print(f"Filename: {file.filename}, Content-Type: {file.content_type}")
+        file_details.append({"filename": file.filename, "content_type": file.content_type})
+    return {"files": file_details}
+
+## 保存上传的文件
+from fastapi import FastAPI, File, UploadFile
+
+app = FastAPI()
+
+@app.post("/save-file/")
+async def save_file(file: UploadFile = File(...)):
+    file_location = f"uploads/{file.filename}"  # 文件保存路径
+    with open(file_location, "wb") as buffer:
+        buffer.write(await file.read())  # 保存文件内容
+    return {"info": f"File '{file.filename}' saved at '{file_location}'"}
+```
+
+### 限制上传文件大小
+
+```python
+from fastapi import FastAPI, Request, HTTPException
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+from starlette.middleware.exceptions import ExceptionMiddleware
+from starlette.middleware.gzip import GZipMiddleware
+
+app = FastAPI()
+
+# 设置文件大小限制
+@app.middleware("http")
+async def limit_upload_size(request: Request, call_next):
+    max_size = 1024 * 1024  # 最大文件大小：1MB
+    content_length = request.headers.get("Content-Length")
+    if content_length and int(content_length) > max_size:
+        raise HTTPException(status_code=413, detail="File too large")
+    return await call_next(request)
+```
