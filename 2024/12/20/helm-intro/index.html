@@ -16,28 +16,24 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="本地大模型部署 Windows根据官网下载安装即可 Linux 官方安装步骤  1. 安装ollama12345678910111213## 可能会比较慢，需要magiccurl -fsSL https:&#x2F;&#x2F;ollama.com&#x2F;install.sh | sh## 也可先把ollama-linux-amd64下载到本地## 然后上传到linux## 修改安装脚本两处地方再安装curl -fsSL">
+    <meta name="description" content="helm 简介 https:&#x2F;&#x2F;helm.sh&#x2F;zh&#x2F;docs&#x2F;intro&#x2F;using_helm&#x2F;  三大概念Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。 Repository（仓库） 是用来存放和共">
 <meta property="og:type" content="article">
-<meta property="og:title" content="本地大模型部署">
-<meta property="og:url" content="https://piupiuxiupa.github.io/2024/08/04/local-llm-deploy/index.html">
+<meta property="og:title" content="helm intro">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2024/12/20/helm-intro/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="本地大模型部署 Windows根据官网下载安装即可 Linux 官方安装步骤  1. 安装ollama12345678910111213## 可能会比较慢，需要magiccurl -fsSL https:&#x2F;&#x2F;ollama.com&#x2F;install.sh | sh## 也可先把ollama-linux-amd64下载到本地## 然后上传到linux## 修改安装脚本两处地方再安装curl -fsSL">
+<meta property="og:description" content="helm 简介 https:&#x2F;&#x2F;helm.sh&#x2F;zh&#x2F;docs&#x2F;intro&#x2F;using_helm&#x2F;  三大概念Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。 Repository（仓库） 是用来存放和共">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://piupiuxiupa.github.io/images/local-llm-deploy/select-model.png">
-<meta property="og:image" content="https://piupiuxiupa.github.io/images/local-llm-deploy/qwen2.png">
-<meta property="og:image" content="https://piupiuxiupa.github.io/images/local-llm-deploy/open-webui.png">
-<meta property="article:published_time" content="2024-08-04T10:59:10.000Z">
-<meta property="article:modified_time" content="2024-12-23T02:29:19.542Z">
+<meta property="article:published_time" content="2024-12-20T08:32:38.000Z">
+<meta property="article:modified_time" content="2024-12-23T08:17:51.308Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="tools">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://piupiuxiupa.github.io/images/local-llm-deploy/select-model.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>本地大模型部署 - piupiuxiupa&#39;s blog</title>
+  <title>helm intro - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -203,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="本地大模型部署"></span>
+            <span id="subtitle" data-typed-text="helm intro"></span>
           
         </div>
 
@@ -214,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-08-04 18:59" pubdate>
-          2024年8月4日 晚上
+        <time datetime="2024-12-20 16:32" pubdate>
+          2024年12月20日 下午
         </time>
       </span>
     
@@ -226,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          882 字
+          427 字
         
       </span>
     
@@ -237,7 +233,7 @@
         
         
         
-          8 分钟
+          4 分钟
         
       </span>
     
@@ -274,56 +270,28 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">本地大模型部署</h1>
+            <h1 id="seo-header">helm intro</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="本地大模型部署"><a href="#本地大模型部署" class="headerlink" title="本地大模型部署"></a>本地大模型部署</h1><blockquote>
-<p>Windows根据官网下载安装即可</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/ollama/ollama/blob/main/docs/linux.md">Linux 官方安装步骤</a></p>
+                <h1 id="helm-简介"><a href="#helm-简介" class="headerlink" title="helm 简介"></a>helm 简介</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://helm.sh/zh/docs/intro/using_helm/">https://helm.sh/zh/docs/intro/using_helm/</a></p>
 </blockquote>
-<h2 id="1-安装ollama"><a href="#1-安装ollama" class="headerlink" title="1. 安装ollama"></a>1. 安装ollama</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 可能会比较慢，需要magic</span><br>curl -fsSL https://ollama.com/install.sh | sh<br><span class="hljs-comment">## 也可先把ollama-linux-amd64下载到本地</span><br><span class="hljs-comment">## 然后上传到linux</span><br><span class="hljs-comment">## 修改安装脚本两处地方再安装</span><br>curl -fsSL https://ollama.com/install.sh &gt;&gt; ollama_install.sh<br>sed -i.bak -e <span class="hljs-string">&#x27;/TEMP_DIR=/c TEMP_DIR=/tmp&#x27;</span> -e <span class="hljs-string">&#x27;/curl --fail.*-o/s/^/#/&#x27;</span> ollama_install.sh<br><span class="hljs-comment">## 将 ollama-linux-amd64放到tmp下，并重命名为ollama</span><br><span class="hljs-built_in">mv</span> ollama-linux-amd64 /tmp/ollama<br><span class="hljs-comment">## 运行ollama_install.sh即可</span><br>sh ollama_install.sh<br><span class="hljs-comment">## 查看ollama状态</span><br>systemctl status ollama<br></code></pre></td></tr></table></figure>
+<h2 id="三大概念"><a href="#三大概念" class="headerlink" title="三大概念"></a>三大概念</h2><p>Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。</p>
+<p>Repository（仓库） 是用来存放和共享 charts 的地方。它就像 Perl 的 CPAN 档案库网络 或是 Fedora 的 软件包仓库，只不过它是供 Kubernetes 包所使用的。</p>
+<p>Release 是运行在 Kubernetes 集群中的 chart 的实例。一个 chart 通常可以在同一个集群中安装多次。每一次安装都会创建一个新的 release。以 MySQL chart为例，如果你想在你的集群中运行两个数据库，你可以安装该chart两次。每一个数据库都会拥有它自己的 release 和 release name。</p>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看当前配置的仓库地址</span><br>helm repo list<br><span class="hljs-comment"># 删除默认仓库，默认在国外pull很慢</span><br>helm repo remove stable<br><span class="hljs-comment"># 添加几个常用的仓库,可自定义名字</span><br>helm repo add stable https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts<br>helm repo add kaiyuanshe http://mirror.kaiyuanshe.cn/kubernetes/charts<br>helm repo add azure http://mirror.azure.cn/kubernetes/charts<br>helm repo add dandydev https://dandydeveloper.github.io/charts<br>helm repo add bitnami https://charts.bitnami.com/bitnami<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight python-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python-repl">root@localhost:~/mp_mount/llm# sh ollama_install.sh<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Downloading ollama...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Installing ollama to /usr/local/<span class="hljs-built_in">bin</span>...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Creating ollama user...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Adding ollama user to render group...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Adding ollama user to video group...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Adding current user to ollama group...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Creating ollama systemd service...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Enabling <span class="hljs-keyword">and</span> starting ollama service...</span><br>Created symlink /etc/systemd/system/default.target.wants/ollama.service → /etc/systemd/system/ollama.service.<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">The Ollama API <span class="hljs-keyword">is</span> now available at <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">11434.</span></span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Install complete. Run <span class="hljs-string">&quot;ollama&quot;</span> <span class="hljs-keyword">from</span> the command line.</span><br></code></pre></td></tr></table></figure>
+<h2 id="搜索-chart"><a href="#搜索-chart" class="headerlink" title="搜索 chart"></a>搜索 chart</h2><p>Helm 可以从两种来源中进行搜索：</p>
+<p><code>helm search hub</code> 从 Artifact Hub 中查找并列出 helm charts。 Artifact Hub中存放了大量不同的仓库。</p>
+<p><code>helm search repo</code> 从你添加（使用 helm repo add）到本地 helm 客户端中的仓库中进行查找。该命令基于本地数据进行搜索，无需连接互联网。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">helm search hub wordpress<br><br>helm repo update <br>helm search repo redis<br><span class="hljs-comment"># 拉取chart包到本地</span><br>helm pull bitnami/redis-cluster --version 8.1.2<br></code></pre></td></tr></table></figure>
 
-<p>此时访问<code>127.0.0.1:11434</code>显示<code>Ollama is running</code>，则部署成功。</p>
-<p>容器形式:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama<br></code></pre></td></tr></table></figure>
+<h2 id="安装前修改配置"><a href="#安装前修改配置" class="headerlink" title="安装前修改配置"></a>安装前修改配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">helm show values bitnami/wordpress<br></code></pre></td></tr></table></figure>
 
+<h2 id="安装-helm-包"><a href="#安装-helm-包" class="headerlink" title="安装 helm 包"></a>安装 helm 包</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 安装redis-ha集群，取名redis-ha，需要指定持存储类</span><br>helm install redis-cluster bitnami/redis-cluster --<span class="hljs-built_in">set</span> global.storageClass=nfs,global.redis.password=xiagao --version 8.1.2<br><br><span class="hljs-comment"># 追踪 release 的状态，或是重新读取配置信息</span><br>helm status redis-cluster<br><br><span class="hljs-comment"># 卸载</span><br>helm uninstall redis-cluster<br></code></pre></td></tr></table></figure>
 
-<h2 id="2-选择模型"><a href="#2-选择模型" class="headerlink" title="2. 选择模型"></a>2. 选择模型</h2><p><a target="_blank" rel="noopener" href="https://ollama.com/">https://ollama.com/</a> 官网右上角 model</p>
-<p><img src="/../images/local-llm-deploy/select-model.png" srcset="/img/loading.gif" lazyload alt="select-model"></p>
-<p>这里模型我们选择阿里的千问2，复制命令<code>ollama run qwen2</code>在linux上运行即可，下载时间会有点长，耐心等待。</p>
-<p><img src="/../images/local-llm-deploy/qwen2.png" srcset="/img/loading.gif" lazyload alt="open-webui"></p>
-<h2 id="3-安装open-webui"><a href="#3-安装open-webui" class="headerlink" title="3. 安装open-webui"></a>3. 安装open-webui</h2><p><a target="_blank" rel="noopener" href="https://github.com/open-webui/open-webui">https://github.com/open-webui/open-webui</a></p>
-<p>通过容器化部署。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main<br></code></pre></td></tr></table></figure>
-
-<p><a target="_blank" rel="noopener" href="http://127.0.0.1:3000/">http://127.0.0.1:3000</a> 访问，需要注册，随便填写即可。</p>
-<p>登录后效果如图：</p>
-<p><img src="/../images/local-llm-deploy/open-webui.png" srcset="/img/loading.gif" lazyload alt="open-webui"></p>
-<p>至此，我们就成功部署了一个由CPU提供算力的大语言模型。</p>
-<p>由于CPU和GPU设计结构的不同，CPU在处理大模型语言时效果并不理想。</p>
-<p>根据前面部署完后，使用时会发现模型给出回复的时候反应很慢，且是一个字一个字蹦出来的。</p>
-<p>然而GPU驱动大模型能够显著提高其反应速度，回复也是一段一段显示。</p>
-<p>下面容器化部署一并介绍如何使用GPU提供算力。</p>
-<h2 id="4-容器化部署"><a href="#4-容器化部署" class="headerlink" title="4. 容器化部署"></a>4. 容器化部署</h2><p>使用Nvidia显卡需要下载驱动</p>
-<blockquote>
-<p>Nvidia 官网</p>
-<p><a target="_blank" rel="noopener" href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html">https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html</a></p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 配置apt包仓库地址</span><br>curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | <span class="hljs-built_in">sudo</span> gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \<br>  &amp;&amp; curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \<br>    sed <span class="hljs-string">&#x27;s#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g&#x27;</span> | \<br>    <span class="hljs-built_in">sudo</span> <span class="hljs-built_in">tee</span> /etc/apt/sources.list.d/nvidia-container-toolkit.list<br>    <br><span class="hljs-comment">## 更新仓库包列表</span><br><span class="hljs-built_in">sudo</span> apt-get update<br><br><span class="hljs-comment">## 安装工具</span><br><span class="hljs-built_in">sudo</span> apt-get install -y nvidia-container-toolkit<br><br><span class="hljs-comment">## 可使用该命令查看gpu</span><br>nvidia-smi<br><span class="hljs-comment">## 查看显卡列表</span><br>nvidia-smi -L<br><span class="hljs-comment">## 在使用过程中可观察gpu运行情况变化</span><br>watch -n 1 nvidia-smi<br><span class="hljs-comment"># 或</span><br>nvidia-smi -l<br><br><span class="hljs-comment">## 运行由gpu驱动的ollama，将大模型存放路径持久化，--gpus all将所有gpu设备加入容器</span><br>docker run --gpus all -d -v /opt/ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama<br><br><span class="hljs-comment">## 下载大模型</span><br>docker <span class="hljs-built_in">exec</span> -it ollama ollama pull qwen2:7b<br></code></pre></td></tr></table></figure>
-
-<p><strong>其他包管理工具配置</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## yum 地址</span><br>curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | \<br>  <span class="hljs-built_in">sudo</span> <span class="hljs-built_in">tee</span> /etc/yum.repos.d/nvidia-container-toolkit.repo<br>  <br><span class="hljs-comment">## zypper地址</span><br><span class="hljs-built_in">sudo</span> zypper ar https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo<br><span class="hljs-built_in">sudo</span> zypper --gpg-auto-import-keys install -y nvidia-container-toolkit<br></code></pre></td></tr></table></figure>
-
-<h2 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h2><h3 id="mac-环境下部署"><a href="#mac-环境下部署" class="headerlink" title="mac 环境下部署"></a>mac 环境下部署</h3><p>Docker Desktop 在 macOS 上运行时，会通过一个轻量级的虚拟机（如 colima 或基于 HyperKit 的虚拟机）来运行 Docker 容器。这种方式确保容器运行在一个 Linux 内核上，而不是 macOS 的内核。因此，&#x2F;var&#x2F;lib&#x2F;docker 实际上存在于虚拟机内，而不是 macOS 本地文件系统中。</p>
-<p>进入 Docker Desktop 的虚拟机</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker context use default<br>docker run --<span class="hljs-built_in">rm</span> -it --privileged --pid=host justincormack/nsenter1<br></code></pre></td></tr></table></figure>
-
-<p>数据位置通常在:  <code>~/Library/Containers/com.docker.docker/Data/vms/0/</code></p>
-<p>调整 Docker Desktop 虚拟机的磁盘大小:<br><code>settings -&gt; resuorces -&gt; advanced -&gt; Disk usage limit</code></p>
 
                 
               </div>
@@ -348,8 +316,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>本地大模型部署</div>
-      <div>https://piupiuxiupa.github.io/2024/08/04/local-llm-deploy/</div>
+      <div>helm intro</div>
+      <div>https://piupiuxiupa.github.io/2024/12/20/helm-intro/</div>
     </div>
     <div class="license-meta">
       
@@ -361,7 +329,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年8月4日</div>
+          <div>2024年12月20日</div>
         </div>
       
       
@@ -393,9 +361,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/08/04/WSL-Linux-init-proxy/" title="WSL启动Linux并初始化及代理配置">
+                      <a href="/2024/12/23/k8s-configmap/" title="k8s configmap">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">WSL启动Linux并初始化及代理配置</span>
+                        <span class="hidden-mobile">k8s configmap</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -403,8 +371,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/08/04/wsl-base/" title="WSL 基础用法">
-                        <span class="hidden-mobile">WSL 基础用法</span>
+                      <a href="/2024/12/11/fastapi-notes-2/" title="FastAPI Notes 2">
+                        <span class="hidden-mobile">FastAPI Notes 2</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
