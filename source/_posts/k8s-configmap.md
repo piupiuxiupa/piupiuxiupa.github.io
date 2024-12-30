@@ -1,10 +1,10 @@
 ---
-title: k8s configmap
+title: K8s ConfigMap
 date: 2024-12-23 10:44:10
 tags: k8s
 ---
 
-# Configmap
+# ConfigMap
 
 ## 基于一个目录来创建 ConfigMap
 

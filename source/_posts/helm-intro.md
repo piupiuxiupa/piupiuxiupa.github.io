@@ -1,10 +1,10 @@
 ---
-title: helm intro
+title: Helm 初探
 date: 2024-12-20 16:32:38
 tags: tools
 ---
 
-# helm 简介
+# helm 初探
 
 > https://helm.sh/zh/docs/intro/using_helm/
 

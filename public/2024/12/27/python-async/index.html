@@ -16,24 +16,24 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="helm 初探 https:&#x2F;&#x2F;helm.sh&#x2F;zh&#x2F;docs&#x2F;intro&#x2F;using_helm&#x2F;  三大概念Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。 Repository（仓库） 是用来存放和共">
+    <meta name="description" content="Python 异步编程使用 async 和 await 时，await 会使当前的协程暂停并等待异步操作完成。 12345678910111213import asyncioasync def async_task(i):    print(f&quot;Task &#123;i&#125; started&quot;)    await asyncio.sleep(1)    print(f&amp;q">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Helm 初探">
-<meta property="og:url" content="https://piupiuxiupa.github.io/2024/12/20/helm-intro/index.html">
+<meta property="og:title" content="python async">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2024/12/27/python-async/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="helm 初探 https:&#x2F;&#x2F;helm.sh&#x2F;zh&#x2F;docs&#x2F;intro&#x2F;using_helm&#x2F;  三大概念Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。 Repository（仓库） 是用来存放和共">
+<meta property="og:description" content="Python 异步编程使用 async 和 await 时，await 会使当前的协程暂停并等待异步操作完成。 12345678910111213import asyncioasync def async_task(i):    print(f&quot;Task &#123;i&#125; started&quot;)    await asyncio.sleep(1)    print(f&amp;q">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-12-20T08:32:38.000Z">
-<meta property="article:modified_time" content="2024-12-27T12:42:10.037Z">
+<meta property="article:published_time" content="2024-12-27T12:43:35.000Z">
+<meta property="article:modified_time" content="2024-12-30T09:02:18.719Z">
 <meta property="article:author" content="piupiuxiupa">
-<meta property="article:tag" content="tools">
+<meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Helm 初探 - piupiuxiupa&#39;s blog</title>
+  <title>python async - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Helm 初探"></span>
+            <span id="subtitle" data-typed-text="python async"></span>
           
         </div>
 
@@ -210,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-12-20 16:32" pubdate>
-          2024年12月20日 下午
+        <time datetime="2024-12-27 20:43" pubdate>
+          2024年12月27日 晚上
         </time>
       </span>
     
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          427 字
+          561 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          4 分钟
+          5 分钟
         
       </span>
     
@@ -270,27 +270,41 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Helm 初探</h1>
+            <h1 id="seo-header">python async</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="helm-初探"><a href="#helm-初探" class="headerlink" title="helm 初探"></a>helm 初探</h1><blockquote>
-<p><a target="_blank" rel="noopener" href="https://helm.sh/zh/docs/intro/using_helm/">https://helm.sh/zh/docs/intro/using_helm/</a></p>
+                <h1 id="Python-异步编程"><a href="#Python-异步编程" class="headerlink" title="Python 异步编程"></a>Python 异步编程</h1><p>使用 async 和 await 时，await 会使当前的协程暂停并等待异步操作完成。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">async_task</span>(<span class="hljs-params">i</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Task <span class="hljs-subst">&#123;i&#125;</span> started&quot;</span>)<br>    <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">1</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Task <span class="hljs-subst">&#123;i&#125;</span> completed&quot;</span>)<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):<br>        <span class="hljs-keyword">await</span> async_task(i)<br><br><span class="hljs-comment"># 运行协程</span><br>asyncio.run(main())<br></code></pre></td></tr></table></figure>
+
+<p>执行过程：</p>
+<ol>
+<li>Task 0 started 会打印出来。</li>
+<li>await asyncio.sleep(1) 会暂停当前协程 1 秒，并将控制权交回事件循环。</li>
+<li>在这 1 秒钟内，事件循环可能会运行其他任务（如果有的话）。</li>
+<li>1 秒后，Task 0 completed 会打印出来，然后循环进入下一次迭代，Task 1 开始。</li>
+</ol>
+<h2 id="异步并行任务"><a href="#异步并行任务" class="headerlink" title="异步并行任务"></a>异步并行任务</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    tasks = [async_task(i) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>)]<br>    <span class="hljs-keyword">await</span> asyncio.gather(*tasks)<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>返回值：每个异步任务的返回值会按任务的顺序排列在 gather() 返回的列表中。</li>
+<li>捕获异常：asyncio.gather() 默认会在某个任务抛出异常时取消其他任务的执行。如果想捕获所有任务的异常并继续执行，可以将 return_exceptions&#x3D;True 传递给 gather()。</li>
+</ol>
+<p>async def 定义的函数返回一个协程对象，只有通过 await 或通过事件循环运行它时，它才会开始执行。</p>
+<ul>
+<li>async_task(i) 返回一个协程对象，并没有立刻执行任务，只是生成了一个协程。</li>
+<li>await asyncio.gather(*tasks) 才是实际调度这些协程并开始执行它们的代码。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">async_task</span>(<span class="hljs-params">i</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Task <span class="hljs-subst">&#123;i&#125;</span> started&quot;</span>)<br>    <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">1</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;Result from Task <span class="hljs-subst">&#123;i&#125;</span>&quot;</span><br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-comment"># 创建协程对象列表，但这些协程对象并没有开始执行</span><br>    tasks = [async_task(i) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>)]<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Tasks created&quot;</span>)<br><br>    <span class="hljs-comment"># 通过 asyncio.gather 来运行所有协程对象并等待它们的结果</span><br>    results = <span class="hljs-keyword">await</span> asyncio.gather(*tasks)<br>    <br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;All results:&quot;</span>, results)<br><br><span class="hljs-comment"># 运行协程</span><br>asyncio.run(main())<br></code></pre></td></tr></table></figure>
+
+<h2 id="aiohttp"><a href="#aiohttp" class="headerlink" title="aiohttp"></a>aiohttp</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> aiohttp<br><span class="hljs-keyword">import</span> asyncio<br><br><span class="hljs-comment"># 异步函数，发送 HTTP 请求</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-params">url</span>):<br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> aiohttp.ClientSession() <span class="hljs-keyword">as</span> session:<br>        <span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> session.get(url) <span class="hljs-keyword">as</span> response:<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> response.text()<br><br><span class="hljs-comment"># 调用异步函数</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    url = <span class="hljs-string">&quot;https://jsonplaceholder.typicode.com/todos/1&quot;</span><br>    result = <span class="hljs-keyword">await</span> fetch(url)<br>    <span class="hljs-built_in">print</span>(result)<br><br><span class="hljs-comment"># 启动事件循环</span><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    asyncio.run(main())<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>aiohttp 的 headers、URL 参数、cookies 中的 键 必须是字符串类型</p>
+<p>aiohttp 不接受 None 类型的数据</p>
 </blockquote>
-<h2 id="三大概念"><a href="#三大概念" class="headerlink" title="三大概念"></a>三大概念</h2><p>Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。</p>
-<p>Repository（仓库） 是用来存放和共享 charts 的地方。它就像 Perl 的 CPAN 档案库网络 或是 Fedora 的 软件包仓库，只不过它是供 Kubernetes 包所使用的。</p>
-<p>Release 是运行在 Kubernetes 集群中的 chart 的实例。一个 chart 通常可以在同一个集群中安装多次。每一次安装都会创建一个新的 release。以 MySQL chart为例，如果你想在你的集群中运行两个数据库，你可以安装该chart两次。每一个数据库都会拥有它自己的 release 和 release name。</p>
-<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看当前配置的仓库地址</span><br>helm repo list<br><span class="hljs-comment"># 删除默认仓库，默认在国外pull很慢</span><br>helm repo remove stable<br><span class="hljs-comment"># 添加几个常用的仓库,可自定义名字</span><br>helm repo add stable https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts<br>helm repo add kaiyuanshe http://mirror.kaiyuanshe.cn/kubernetes/charts<br>helm repo add azure http://mirror.azure.cn/kubernetes/charts<br>helm repo add dandydev https://dandydeveloper.github.io/charts<br>helm repo add bitnami https://charts.bitnami.com/bitnami<br></code></pre></td></tr></table></figure>
-
-<h2 id="搜索-chart"><a href="#搜索-chart" class="headerlink" title="搜索 chart"></a>搜索 chart</h2><p>Helm 可以从两种来源中进行搜索：</p>
-<p><code>helm search hub</code> 从 Artifact Hub 中查找并列出 helm charts。 Artifact Hub中存放了大量不同的仓库。</p>
-<p><code>helm search repo</code> 从你添加（使用 helm repo add）到本地 helm 客户端中的仓库中进行查找。该命令基于本地数据进行搜索，无需连接互联网。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">helm search hub wordpress<br><br>helm repo update <br>helm search repo redis<br><span class="hljs-comment"># 拉取chart包到本地</span><br>helm pull bitnami/redis-cluster --version 8.1.2<br></code></pre></td></tr></table></figure>
-
-<h2 id="安装前修改配置"><a href="#安装前修改配置" class="headerlink" title="安装前修改配置"></a>安装前修改配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">helm show values bitnami/wordpress<br></code></pre></td></tr></table></figure>
-
-<h2 id="安装-helm-包"><a href="#安装-helm-包" class="headerlink" title="安装 helm 包"></a>安装 helm 包</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 安装redis-ha集群，取名redis-ha，需要指定持存储类</span><br>helm install redis-cluster bitnami/redis-cluster --<span class="hljs-built_in">set</span> global.storageClass=nfs,global.redis.password=xiagao --version 8.1.2<br><br><span class="hljs-comment"># 追踪 release 的状态，或是重新读取配置信息</span><br>helm status redis-cluster<br><br><span class="hljs-comment"># 卸载</span><br>helm uninstall redis-cluster<br></code></pre></td></tr></table></figure>
+<h2 id="aiofiles"><a href="#aiofiles" class="headerlink" title="aiofiles"></a>aiofiles</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> aiofiles<br><span class="hljs-keyword">import</span> asyncio<br><br><span class="hljs-comment"># 异步写文件</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">write_file</span>():<br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> aiofiles.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;example.txt&#x27;</span>, mode=<span class="hljs-string">&#x27;w&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>        <span class="hljs-keyword">await</span> f.write(<span class="hljs-string">&quot;Hello, aiofiles!&quot;</span>)<br><br><span class="hljs-comment"># 异步读文件</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">read_file</span>():<br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> aiofiles.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;example.txt&#x27;</span>, mode=<span class="hljs-string">&#x27;r&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>        content = <span class="hljs-keyword">await</span> f.read()<br>        <span class="hljs-built_in">print</span>(content)<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-keyword">await</span> write_file()  <span class="hljs-comment"># 写入文件</span><br>    <span class="hljs-keyword">await</span> read_file()   <span class="hljs-comment"># 读取文件</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    asyncio.run(main())<br></code></pre></td></tr></table></figure>
 
 
                 
@@ -304,7 +318,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/tools/" class="print-no-link">#tools</a>
+        <a href="/tags/python/" class="print-no-link">#python</a>
       
     </div>
   
@@ -316,8 +330,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Helm 初探</div>
-      <div>https://piupiuxiupa.github.io/2024/12/20/helm-intro/</div>
+      <div>python async</div>
+      <div>https://piupiuxiupa.github.io/2024/12/27/python-async/</div>
     </div>
     <div class="license-meta">
       
@@ -329,7 +343,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年12月20日</div>
+          <div>2024年12月27日</div>
         </div>
       
       
@@ -361,18 +375,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/12/23/k8s-configmap/" title="K8s ConfigMap">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">K8s ConfigMap</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/12/11/fastapi-notes-2/" title="FastAPI Notes 2">
-                        <span class="hidden-mobile">FastAPI Notes 2</span>
+                      <a href="/2024/12/23/k8s-configmap/" title="K8s ConfigMap">
+                        <span class="hidden-mobile">K8s ConfigMap</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
