@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Configmap基于一个目录来创建 ConfigMap基于目录来创建 ConfigMap 时，kubectl 识别目录下文件名可以作为合法键名的文件， 并将这些文件打包到新的 ConfigMap 中。普通文件之外的所有目录项都会被忽略 （例如：子目录、符号链接、设备、管道等等）。 1234567891011mkdir -p configure-pod-container&#x2F;configmap&#x2F;#">
+    <meta name="description" content="ConfigMap基于一个目录来创建 ConfigMap基于目录来创建 ConfigMap 时，kubectl 识别目录下文件名可以作为合法键名的文件， 并将这些文件打包到新的 ConfigMap 中。普通文件之外的所有目录项都会被忽略 （例如：子目录、符号链接、设备、管道等等）。 1234567891011mkdir -p configure-pod-container&#x2F;configmap&#x2F;#">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k8s configmap">
+<meta property="og:title" content="K8s ConfigMap">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/12/23/k8s-configmap/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="Configmap基于一个目录来创建 ConfigMap基于目录来创建 ConfigMap 时，kubectl 识别目录下文件名可以作为合法键名的文件， 并将这些文件打包到新的 ConfigMap 中。普通文件之外的所有目录项都会被忽略 （例如：子目录、符号链接、设备、管道等等）。 1234567891011mkdir -p configure-pod-container&#x2F;configmap&#x2F;#">
+<meta property="og:description" content="ConfigMap基于一个目录来创建 ConfigMap基于目录来创建 ConfigMap 时，kubectl 识别目录下文件名可以作为合法键名的文件， 并将这些文件打包到新的 ConfigMap 中。普通文件之外的所有目录项都会被忽略 （例如：子目录、符号链接、设备、管道等等）。 1234567891011mkdir -p configure-pod-container&#x2F;configmap&#x2F;#">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-12-23T02:44:10.000Z">
-<meta property="article:modified_time" content="2024-12-23T08:20:38.161Z">
+<meta property="article:modified_time" content="2024-12-27T12:42:41.368Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>k8s configmap - piupiuxiupa&#39;s blog</title>
+  <title>K8s ConfigMap - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="k8s configmap"></span>
+            <span id="subtitle" data-typed-text="K8s ConfigMap"></span>
           
         </div>
 
@@ -270,12 +270,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">k8s configmap</h1>
+            <h1 id="seo-header">K8s ConfigMap</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Configmap"><a href="#Configmap" class="headerlink" title="Configmap"></a>Configmap</h1><h2 id="基于一个目录来创建-ConfigMap"><a href="#基于一个目录来创建-ConfigMap" class="headerlink" title="基于一个目录来创建 ConfigMap"></a>基于一个目录来创建 ConfigMap</h2><p>基于目录来创建 ConfigMap 时，kubectl 识别目录下文件名可以作为合法键名的文件， 并将这些文件打包到新的 ConfigMap 中。普通文件之外的所有目录项都会被忽略 （例如：子目录、符号链接、设备、管道等等）。</p>
+                <h1 id="ConfigMap"><a href="#ConfigMap" class="headerlink" title="ConfigMap"></a>ConfigMap</h1><h2 id="基于一个目录来创建-ConfigMap"><a href="#基于一个目录来创建-ConfigMap" class="headerlink" title="基于一个目录来创建 ConfigMap"></a>基于一个目录来创建 ConfigMap</h2><p>基于目录来创建 ConfigMap 时，kubectl 识别目录下文件名可以作为合法键名的文件， 并将这些文件打包到新的 ConfigMap 中。普通文件之外的所有目录项都会被忽略 （例如：子目录、符号链接、设备、管道等等）。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p configure-pod-container/configmap/<br><br><span class="hljs-comment"># 将示例文件下载到 `configure-pod-container/configmap/` 目录</span><br>wget https://kubernetes.io/examples/configmap/game.properties -O configure-pod-container/configmap/game.properties<br>wget https://kubernetes.io/examples/configmap/ui.properties -O configure-pod-container/configmap/ui.properties<br><br><span class="hljs-comment"># 创建 ConfigMap</span><br>kubectl create configmap game-config --from-file=configure-pod-container/configmap/<br><br><span class="hljs-comment"># 查看 ConfigMap 详情</span><br>kubectl describe configmaps game-config<br></code></pre></td></tr></table></figure>
 
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ConfigMap</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">creationTimestamp:</span> <span class="hljs-number">2022-02-18T18:52:05Z</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">game-config</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">default</span><br>  <span class="hljs-attr">resourceVersion:</span> <span class="hljs-string">&quot;516&quot;</span><br>  <span class="hljs-attr">uid:</span> <span class="hljs-string">b4952dc3-d670-11e5-8cd0-68f728db1985</span><br><span class="hljs-attr">data:</span><br>  <span class="hljs-attr">game.properties:</span> <span class="hljs-string">|</span><br><span class="hljs-string">    enemies=aliens</span><br><span class="hljs-string">    lives=3</span><br><span class="hljs-string">    enemies.cheat=true</span><br><span class="hljs-string">    enemies.cheat.level=noGoodRotten</span><br><span class="hljs-string">    secret.code.passphrase=UUDDLRLRBABAS</span><br><span class="hljs-string">    secret.code.allowed=true</span><br><span class="hljs-string">    secret.code.lives=30    </span><br><span class="hljs-string"></span>  <span class="hljs-attr">ui.properties:</span> <span class="hljs-string">|</span><br><span class="hljs-string">    color.good=purple</span><br><span class="hljs-string">    color.bad=yellow</span><br><span class="hljs-string">    allow.textmode=true</span><br><span class="hljs-string">    how.nice.to.look=fairlyNice    </span><br></code></pre></td></tr></table></figure>
@@ -344,7 +344,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>k8s configmap</div>
+      <div>K8s ConfigMap</div>
       <div>https://piupiuxiupa.github.io/2024/12/23/k8s-configmap/</div>
     </div>
     <div class="license-meta">
@@ -389,12 +389,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2024/12/27/python-async/" title="python async">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">python async</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/12/20/helm-intro/" title="helm intro">
-                        <span class="hidden-mobile">helm intro</span>
+                      <a href="/2024/12/20/helm-intro/" title="Helm 初探">
+                        <span class="hidden-mobile">Helm 初探</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
