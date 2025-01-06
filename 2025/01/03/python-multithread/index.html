@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Python 异步编程使用 async 和 await 时，await 会使当前的协程暂停并等待异步操作完成。 12345678910111213import asyncioasync def async_task(i):    print(f&quot;Task &#123;i&#125; started&quot;)    await asyncio.sleep(1)    print(f&amp;q">
+    <meta name="description" content="Python 多线程编程线程分配公式concurrent.futures.ThreadPoolExecutor 默认线程数 min(32, (os.cpu_count() or 1) + 4)  计算密集型 线程数 ≈ CPU 核心数，避免过多线程增加上下文切换的开销   I&#x2F;O 密集型 线程数可以适当增大，具体根据任务类型（如网络请求、文件 I&#x2F;O）调整    1234fro">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python 异步">
-<meta property="og:url" content="https://piupiuxiupa.github.io/2024/12/27/python-async/index.html">
+<meta property="og:title" content="Python 多线程编程">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2025/01/03/python-multithread/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="Python 异步编程使用 async 和 await 时，await 会使当前的协程暂停并等待异步操作完成。 12345678910111213import asyncioasync def async_task(i):    print(f&quot;Task &#123;i&#125; started&quot;)    await asyncio.sleep(1)    print(f&amp;q">
+<meta property="og:description" content="Python 多线程编程线程分配公式concurrent.futures.ThreadPoolExecutor 默认线程数 min(32, (os.cpu_count() or 1) + 4)  计算密集型 线程数 ≈ CPU 核心数，避免过多线程增加上下文切换的开销   I&#x2F;O 密集型 线程数可以适当增大，具体根据任务类型（如网络请求、文件 I&#x2F;O）调整    1234fro">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-12-27T12:43:35.000Z">
-<meta property="article:modified_time" content="2024-12-31T00:37:53.931Z">
+<meta property="article:published_time" content="2025-01-03T07:15:32.000Z">
+<meta property="article:modified_time" content="2025-01-03T08:05:11.626Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Python 异步 - piupiuxiupa&#39;s blog</title>
+  <title>Python 多线程编程 - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Python 异步"></span>
+            <span id="subtitle" data-typed-text="Python 多线程编程"></span>
           
         </div>
 
@@ -210,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-12-27 20:43" pubdate>
-          2024年12月27日 晚上
+        <time datetime="2025-01-03 15:15" pubdate>
+          2025年1月3日 下午
         </time>
       </span>
     
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          561 字
+          521 字
         
       </span>
     
@@ -270,42 +270,29 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Python 异步</h1>
+            <h1 id="seo-header">Python 多线程编程</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Python-异步编程"><a href="#Python-异步编程" class="headerlink" title="Python 异步编程"></a>Python 异步编程</h1><p>使用 async 和 await 时，await 会使当前的协程暂停并等待异步操作完成。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">async_task</span>(<span class="hljs-params">i</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Task <span class="hljs-subst">&#123;i&#125;</span> started&quot;</span>)<br>    <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">1</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Task <span class="hljs-subst">&#123;i&#125;</span> completed&quot;</span>)<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):<br>        <span class="hljs-keyword">await</span> async_task(i)<br><br><span class="hljs-comment"># 运行协程</span><br>asyncio.run(main())<br></code></pre></td></tr></table></figure>
-
-<p>执行过程：</p>
-<ol>
-<li>Task 0 started 会打印出来。</li>
-<li>await asyncio.sleep(1) 会暂停当前协程 1 秒，并将控制权交回事件循环。</li>
-<li>在这 1 秒钟内，事件循环可能会运行其他任务（如果有的话）。</li>
-<li>1 秒后，Task 0 completed 会打印出来，然后循环进入下一次迭代，Task 1 开始。</li>
-</ol>
-<h2 id="异步并行任务"><a href="#异步并行任务" class="headerlink" title="异步并行任务"></a>异步并行任务</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    tasks = [async_task(i) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>)]<br>    <span class="hljs-keyword">await</span> asyncio.gather(*tasks)<br></code></pre></td></tr></table></figure>
-
-<ol>
-<li>返回值：每个异步任务的返回值会按任务的顺序排列在 gather() 返回的列表中。</li>
-<li>捕获异常：asyncio.gather() 默认会在某个任务抛出异常时取消其他任务的执行。如果想捕获所有任务的异常并继续执行，可以将 return_exceptions&#x3D;True 传递给 gather()。</li>
-</ol>
-<p>async def 定义的函数返回一个协程对象，只有通过 await 或通过事件循环运行它时，它才会开始执行。</p>
+                <h1 id="Python-多线程编程"><a href="#Python-多线程编程" class="headerlink" title="Python 多线程编程"></a>Python 多线程编程</h1><h2 id="线程分配公式"><a href="#线程分配公式" class="headerlink" title="线程分配公式"></a>线程分配公式</h2><p><code>concurrent.futures.ThreadPoolExecutor</code> 默认线程数 <code>min(32, (os.cpu_count() or 1) + 4)</code></p>
 <ul>
-<li>async_task(i) 返回一个协程对象，并没有立刻执行任务，只是生成了一个协程。</li>
-<li>await asyncio.gather(*tasks) 才是实际调度这些协程并开始执行它们的代码。</li>
+<li>计算密集型<ul>
+<li>线程数 ≈ CPU 核心数，避免过多线程增加上下文切换的开销</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> asyncio<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">async_task</span>(<span class="hljs-params">i</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Task <span class="hljs-subst">&#123;i&#125;</span> started&quot;</span>)<br>    <span class="hljs-keyword">await</span> asyncio.sleep(<span class="hljs-number">1</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;Result from Task <span class="hljs-subst">&#123;i&#125;</span>&quot;</span><br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-comment"># 创建协程对象列表，但这些协程对象并没有开始执行</span><br>    tasks = [async_task(i) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>)]<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Tasks created&quot;</span>)<br><br>    <span class="hljs-comment"># 通过 asyncio.gather 来运行所有协程对象并等待它们的结果</span><br>    results = <span class="hljs-keyword">await</span> asyncio.gather(*tasks)<br>    <br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;All results:&quot;</span>, results)<br><br><span class="hljs-comment"># 运行协程</span><br>asyncio.run(main())<br></code></pre></td></tr></table></figure>
+</li>
+<li>I&#x2F;O 密集型<ul>
+<li>线程数可以适当增大，具体根据任务类型（如网络请求、文件 I&#x2F;O）调整</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><span class="hljs-keyword">with</span> ThreadPoolExecutor() <span class="hljs-keyword">as</span> executor:<br>    <span class="hljs-built_in">print</span>(executor._max_workers)  <span class="hljs-comment"># 输出默认线程数</span><br></code></pre></td></tr></table></figure>
 
-<h2 id="aiohttp"><a href="#aiohttp" class="headerlink" title="aiohttp"></a>aiohttp</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> aiohttp<br><span class="hljs-keyword">import</span> asyncio<br><br><span class="hljs-comment"># 异步函数，发送 HTTP 请求</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-params">url</span>):<br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> aiohttp.ClientSession() <span class="hljs-keyword">as</span> session:<br>        <span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> session.get(url) <span class="hljs-keyword">as</span> response:<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">await</span> response.text()<br><br><span class="hljs-comment"># 调用异步函数</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    url = <span class="hljs-string">&quot;https://jsonplaceholder.typicode.com/todos/1&quot;</span><br>    result = <span class="hljs-keyword">await</span> fetch(url)<br>    <span class="hljs-built_in">print</span>(result)<br><br><span class="hljs-comment"># 启动事件循环</span><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    asyncio.run(main())<br></code></pre></td></tr></table></figure>
+<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><span class="hljs-keyword">with</span> ThreadPoolExecutor() <span class="hljs-keyword">as</span> executor:<br>    <span class="hljs-comment"># 提交任务</span><br>    future1 = executor.submit(<span class="hljs-built_in">pow</span>, <span class="hljs-number">323</span>, <span class="hljs-number">1235</span>)<br>    future2 = executor.submit(<span class="hljs-built_in">pow</span>, <span class="hljs-number">100</span>, <span class="hljs-number">2</span>)<br>    <span class="hljs-comment"># 获取任务结果</span><br>    <span class="hljs-built_in">print</span>(future1.result())<br>    <span class="hljs-built_in">print</span>(future2.result())<br><br>    <span class="hljs-comment"># 返回结果迭代器</span><br>    res = executor.<span class="hljs-built_in">map</span>(<span class="hljs-built_in">pow</span>, [<span class="hljs-number">323</span>, <span class="hljs-number">1235</span>], [<span class="hljs-number">1235</span>, <span class="hljs-number">1235</span>])<br></code></pre></td></tr></table></figure>
 
-<blockquote>
-<p>aiohttp 的 headers、URL 参数、cookies 中的 键 必须是字符串类型</p>
-<p>aiohttp 不接受 None 类型的数据</p>
-</blockquote>
-<h2 id="aiofiles"><a href="#aiofiles" class="headerlink" title="aiofiles"></a>aiofiles</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> aiofiles<br><span class="hljs-keyword">import</span> asyncio<br><br><span class="hljs-comment"># 异步写文件</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">write_file</span>():<br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> aiofiles.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;example.txt&#x27;</span>, mode=<span class="hljs-string">&#x27;w&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>        <span class="hljs-keyword">await</span> f.write(<span class="hljs-string">&quot;Hello, aiofiles!&quot;</span>)<br><br><span class="hljs-comment"># 异步读文件</span><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">read_file</span>():<br>    <span class="hljs-keyword">async</span> <span class="hljs-keyword">with</span> aiofiles.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;example.txt&#x27;</span>, mode=<span class="hljs-string">&#x27;r&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>        content = <span class="hljs-keyword">await</span> f.read()<br>        <span class="hljs-built_in">print</span>(content)<br><br><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():<br>    <span class="hljs-keyword">await</span> write_file()  <span class="hljs-comment"># 写入文件</span><br>    <span class="hljs-keyword">await</span> read_file()   <span class="hljs-comment"># 读取文件</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    asyncio.run(main())<br></code></pre></td></tr></table></figure>
+<h2 id="map-函数-lambda-函数"><a href="#map-函数-lambda-函数" class="headerlink" title="map 函数 &amp; lambda 函数"></a>map 函数 &amp; lambda 函数</h2><h3 id="lambda-函数"><a href="#lambda-函数" class="headerlink" title="lambda 函数"></a>lambda 函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 嵌套 lambda 函数</span><br><span class="hljs-comment"># lambda 函数解包参数</span><br><span class="hljs-keyword">lambda</span> item: (<span class="hljs-keyword">lambda</span> route, flag: func(<span class="hljs-string">&quot;&quot;</span>, route, flag))(*item)<br><br><span class="hljs-comment"># item也可以是字典等可迭代对象</span><br><span class="hljs-comment"># 示例：解包字典</span><br>kwargs = &#123;<span class="hljs-string">&quot;x&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;y&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">3</span>&#125;<br>result = (<span class="hljs-keyword">lambda</span> x, y, z: x + y + z)(**kwargs)  <span class="hljs-comment"># 使用 ** 解包字典</span><br><span class="hljs-built_in">print</span>(result)  <span class="hljs-comment"># 输出: 6</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">key1, key2</span>):<br>    <span class="hljs-keyword">return</span> key1 + key2<br>result = (<span class="hljs-keyword">lambda</span> key1, key2: func(key1, key2))(**item)<br><br><span class="hljs-comment"># 示例：同时解包列表和字典</span><br>args = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]<br>kwargs = &#123;<span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">3</span>&#125;<br>result = (<span class="hljs-keyword">lambda</span> x, y, z: x + y + z)(*args, **kwargs)<br><span class="hljs-built_in">print</span>(result)  <span class="hljs-comment"># 输出: 6</span><br><br><span class="hljs-comment"># 示例：嵌套解包</span><br>nested = [&#123;<span class="hljs-string">&quot;x&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;y&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">3</span>&#125;, &#123;<span class="hljs-string">&quot;x&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-string">&quot;y&quot;</span>: <span class="hljs-number">5</span>, <span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">6</span>&#125;]<br>result = <span class="hljs-built_in">list</span>(<span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> item: (<span class="hljs-keyword">lambda</span> x, y, z: x + y + z)(**item), nested))<br><span class="hljs-built_in">print</span>(result)  <span class="hljs-comment"># 输出: [6, 15]</span><br></code></pre></td></tr></table></figure>
 
+<h3 id="map-函数"><a href="#map-函数" class="headerlink" title="map 函数"></a>map 函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">map</span>(func, iterables)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">x, y</span>):<br>    <span class="hljs-keyword">return</span> x + y<br><br>list1 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br>list2 = [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]<br><br><span class="hljs-comment"># 使用 map 将两个列表中的元素传入 add 函数</span><br>result = <span class="hljs-built_in">map</span>(add, list1, list2)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [5, 7, 9]</span><br><br>list1 = [<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>]<br>list2 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br><br><span class="hljs-comment"># 使用 lambda 表达式直接传递两个值</span><br>result = <span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> x, y: x * y, list1, list2)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [10, 40, 90]</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">concat</span>(<span class="hljs-params">prefix, word</span>):<br>    <span class="hljs-keyword">return</span> prefix + word<br><br><span class="hljs-comment"># 第一个参数固定为 &quot;&quot;, 第二个参数是列表</span><br>words = [<span class="hljs-string">&quot;apple&quot;</span>, <span class="hljs-string">&quot;banana&quot;</span>, <span class="hljs-string">&quot;cherry&quot;</span>]<br><br><span class="hljs-comment"># 使用 map 函数</span><br>result = <span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> word: concat(<span class="hljs-string">&quot;&quot;</span>, word), words)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [&#x27;apple&#x27;, &#x27;banana&#x27;, &#x27;cherry&#x27;]</span><br><br><span class="hljs-comment"># 使用 itertools.repeat</span><br><span class="hljs-keyword">from</span> itertools <span class="hljs-keyword">import</span> repeat<br><br><span class="hljs-comment"># 定义列表</span><br>words = [<span class="hljs-string">&quot;apple&quot;</span>, <span class="hljs-string">&quot;banana&quot;</span>, <span class="hljs-string">&quot;cherry&quot;</span>]<br><br><span class="hljs-comment"># 使用 repeat 将 &quot;&quot; 作为固定值传递</span><br>result = <span class="hljs-built_in">map</span>(concat, repeat(<span class="hljs-string">&quot;&quot;</span>), words)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [&#x27;apple&#x27;, &#x27;banana&#x27;, &#x27;cherry&#x27;]</span><br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -330,8 +317,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Python 异步</div>
-      <div>https://piupiuxiupa.github.io/2024/12/27/python-async/</div>
+      <div>Python 多线程编程</div>
+      <div>https://piupiuxiupa.github.io/2025/01/03/python-multithread/</div>
     </div>
     <div class="license-meta">
       
@@ -343,7 +330,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年12月27日</div>
+          <div>2025年1月3日</div>
         </div>
       
       
@@ -375,18 +362,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/01/03/python-multithread/" title="Python 多线程编程">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Python 多线程编程</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/12/23/k8s-configmap/" title="K8s ConfigMap">
-                        <span class="hidden-mobile">K8s ConfigMap</span>
+                      <a href="/2024/12/27/python-async/" title="Python 异步">
+                        <span class="hidden-mobile">Python 异步</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
