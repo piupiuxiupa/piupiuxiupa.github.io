@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Python 多线程编程线程分配公式concurrent.futures.ThreadPoolExecutor 默认线程数 min(32, (os.cpu_count() or 1) + 4)  计算密集型 线程数 ≈ CPU 核心数，避免过多线程增加上下文切换的开销   I&#x2F;O 密集型 线程数可以适当增大，具体根据任务类型（如网络请求、文件 I&#x2F;O）调整    1234fro">
+    <meta name="description" content="jinjia2 模板引擎jinjia2 可用于生成 html、xml、yaml 等格式的文件 基本用法123from jinja2 import Templatetemplate &#x3D; Template(&#x27;Hello &#123;&#123; name &#125;&#125;!&#x27;)template.render(name&#x3D;&#x27;John Doe&#x27;)  基本结构模">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python 多线程编程">
-<meta property="og:url" content="https://piupiuxiupa.github.io/2025/01/03/python-multithread/index.html">
+<meta property="og:title" content="Python jinja2">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2025/03/05/python-jinja2/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="Python 多线程编程线程分配公式concurrent.futures.ThreadPoolExecutor 默认线程数 min(32, (os.cpu_count() or 1) + 4)  计算密集型 线程数 ≈ CPU 核心数，避免过多线程增加上下文切换的开销   I&#x2F;O 密集型 线程数可以适当增大，具体根据任务类型（如网络请求、文件 I&#x2F;O）调整    1234fro">
+<meta property="og:description" content="jinjia2 模板引擎jinjia2 可用于生成 html、xml、yaml 等格式的文件 基本用法123from jinja2 import Templatetemplate &#x3D; Template(&#x27;Hello &#123;&#123; name &#125;&#125;!&#x27;)template.render(name&#x3D;&#x27;John Doe&#x27;)  基本结构模">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-01-03T07:15:32.000Z">
-<meta property="article:modified_time" content="2025-01-03T08:05:11.626Z">
+<meta property="article:published_time" content="2025-03-05T06:10:03.000Z">
+<meta property="article:modified_time" content="2025-03-05T07:05:43.131Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Python 多线程编程 - piupiuxiupa&#39;s blog</title>
+  <title>Python jinja2 - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Python 多线程编程"></span>
+            <span id="subtitle" data-typed-text="Python jinja2"></span>
           
         </div>
 
@@ -210,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-01-03 15:15" pubdate>
-          2025年1月3日 下午
+        <time datetime="2025-03-05 14:10" pubdate>
+          2025年3月5日 下午
         </time>
       </span>
     
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          521 字
+          761 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          5 分钟
+          7 分钟
         
       </span>
     
@@ -270,29 +270,96 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Python 多线程编程</h1>
+            <h1 id="seo-header">Python jinja2</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Python-多线程编程"><a href="#Python-多线程编程" class="headerlink" title="Python 多线程编程"></a>Python 多线程编程</h1><h2 id="线程分配公式"><a href="#线程分配公式" class="headerlink" title="线程分配公式"></a>线程分配公式</h2><p><code>concurrent.futures.ThreadPoolExecutor</code> 默认线程数 <code>min(32, (os.cpu_count() or 1) + 4)</code></p>
+                <h1 id="jinjia2-模板引擎"><a href="#jinjia2-模板引擎" class="headerlink" title="jinjia2 模板引擎"></a>jinjia2 模板引擎</h1><p>jinjia2 可用于生成 html、xml、yaml 等格式的文件</p>
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> jinja2 <span class="hljs-keyword">import</span> Template<br>template = Template(<span class="hljs-string">&#x27;Hello &#123;&#123; name &#125;&#125;!&#x27;</span>)<br>template.render(name=<span class="hljs-string">&#x27;John Doe&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h2><p>模板包含<code>变量</code>或<code>表达式</code> ，这两者在模板求值的时候会被替换为值。模板中还有标签，控制模板的逻辑。模板语法的大量灵感来自于 Django 和 Python 。</p>
+<p>两类分隔符：</p>
 <ul>
-<li>计算密集型<ul>
-<li>线程数 ≈ CPU 核心数，避免过多线程增加上下文切换的开销</li>
+<li><code>&#123;&#123;  &#125;&#125;</code></li>
+<li><code>&#123;%  %&#125;</code></li>
+<li>&#96;&#96;</li>
 </ul>
+<blockquote>
+<p>在前或后加上-可以用于去掉空格或空行，如 <code>&#123;&#123;- -&#125;&#125;</code> <code>&#123;&#123;%-  -%&#125;&#125;</code></p>
+</blockquote>
+<h2 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h2><ul>
+<li><p>safe 渲染时值不转义</p>
 </li>
-<li>I&#x2F;O 密集型<ul>
-<li>线程数可以适当增大，具体根据任务类型（如网络请求、文件 I&#x2F;O）调整</li>
-</ul>
+<li><p>capitialize 把值的首字母转换成大写，其他字母转换为小写</p>
+</li>
+<li><p>lower 把值转换成小写形式</p>
+</li>
+<li><p>upper 把值转换成大写形式</p>
+</li>
+<li><p>title 把值中每个单词的首字母都转换成大写</p>
+</li>
+<li><p>trim 把值的首尾空格去掉</p>
+</li>
+<li><p>striptags 渲染之前把值中所有的HTML标签都删掉</p>
+</li>
+<li><p>join 拼接多个值为字符串</p>
+</li>
+<li><p>replace 替换字符串的值</p>
+</li>
+<li><p>round 默认对数字进行四舍五入，也可以用参数进行控制</p>
+</li>
+<li><p>int 把值转换成整型</p>
 </li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><span class="hljs-keyword">with</span> ThreadPoolExecutor() <span class="hljs-keyword">as</span> executor:<br>    <span class="hljs-built_in">print</span>(executor._max_workers)  <span class="hljs-comment"># 输出默认线程数</span><br></code></pre></td></tr></table></figure>
+<h2 id="模板继承"><a href="#模板继承" class="headerlink" title="模板继承"></a>模板继承</h2><h3 id="基础模板"><a href="#基础模板" class="headerlink" title="基础模板"></a>基础模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python">&lt;html lang=<span class="hljs-string">&quot;en&quot;</span>&gt;<br>&lt;html xmlns=<span class="hljs-string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;<br>&lt;head&gt;<br>    &#123;% block head %&#125;<br>    &lt;link rel=<span class="hljs-string">&quot;stylesheet&quot;</span> href=<span class="hljs-string">&quot;style.css&quot;</span> /&gt;<br>    &lt;title&gt;&#123;% block title %&#125;&#123;% endblock %&#125; - My Webpage&lt;/title&gt;<br>    &#123;% endblock %&#125;<br>&lt;/head&gt;<br>&lt;body&gt;<br>    &lt;div <span class="hljs-built_in">id</span>=<span class="hljs-string">&quot;content&quot;</span>&gt;&#123;% block content %&#125;&#123;% endblock %&#125;&lt;/div&gt;<br>    &lt;div <span class="hljs-built_in">id</span>=<span class="hljs-string">&quot;footer&quot;</span>&gt;<br>        &#123;% block footer %&#125;<br>        &amp;copy; Copyright <span class="hljs-number">2008</span> by &lt;a href=<span class="hljs-string">&quot;http://domain.invalid/&quot;</span>&gt;you&lt;/a&gt;.<br>        &#123;% endblock %&#125;<br>    &lt;/div&gt;<br>&lt;/body&gt;<br></code></pre></td></tr></table></figure>
 
-<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><span class="hljs-keyword">with</span> ThreadPoolExecutor() <span class="hljs-keyword">as</span> executor:<br>    <span class="hljs-comment"># 提交任务</span><br>    future1 = executor.submit(<span class="hljs-built_in">pow</span>, <span class="hljs-number">323</span>, <span class="hljs-number">1235</span>)<br>    future2 = executor.submit(<span class="hljs-built_in">pow</span>, <span class="hljs-number">100</span>, <span class="hljs-number">2</span>)<br>    <span class="hljs-comment"># 获取任务结果</span><br>    <span class="hljs-built_in">print</span>(future1.result())<br>    <span class="hljs-built_in">print</span>(future2.result())<br><br>    <span class="hljs-comment"># 返回结果迭代器</span><br>    res = executor.<span class="hljs-built_in">map</span>(<span class="hljs-built_in">pow</span>, [<span class="hljs-number">323</span>, <span class="hljs-number">1235</span>], [<span class="hljs-number">1235</span>, <span class="hljs-number">1235</span>])<br></code></pre></td></tr></table></figure>
+<h3 id="子模板"><a href="#子模板" class="headerlink" title="子模板"></a>子模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;% extends <span class="hljs-string">&quot;base.html&quot;</span> %&#125;<br>&#123;% block title %&#125;Index&#123;% endblock %&#125;<br>&#123;% block head %&#125;<br>    &#123;&#123; <span class="hljs-built_in">super</span>() &#125;&#125;<br>    &lt;style <span class="hljs-built_in">type</span>=<span class="hljs-string">&quot;text/css&quot;</span>&gt;<br>        .important &#123; color: <span class="hljs-comment">#336699; &#125;</span><br>    &lt;/style&gt;<br>&#123;% endblock %&#125;<br>&#123;% block content %&#125;<br>    &lt;h1&gt;Index&lt;/h1&gt;<br>    &lt;p <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;important&quot;</span>&gt;<br>      Welcome on my awesome homepage.<br>    &lt;/p&gt;<br>&#123;% endblock %&#125;<br></code></pre></td></tr></table></figure>
 
-<h2 id="map-函数-lambda-函数"><a href="#map-函数-lambda-函数" class="headerlink" title="map 函数 &amp; lambda 函数"></a>map 函数 &amp; lambda 函数</h2><h3 id="lambda-函数"><a href="#lambda-函数" class="headerlink" title="lambda 函数"></a>lambda 函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 嵌套 lambda 函数</span><br><span class="hljs-comment"># lambda 函数解包参数</span><br><span class="hljs-keyword">lambda</span> item: (<span class="hljs-keyword">lambda</span> route, flag: func(<span class="hljs-string">&quot;&quot;</span>, route, flag))(*item)<br><br><span class="hljs-comment"># item也可以是字典等可迭代对象</span><br><span class="hljs-comment"># 示例：解包字典</span><br>kwargs = &#123;<span class="hljs-string">&quot;x&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;y&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">3</span>&#125;<br>result = (<span class="hljs-keyword">lambda</span> x, y, z: x + y + z)(**kwargs)  <span class="hljs-comment"># 使用 ** 解包字典</span><br><span class="hljs-built_in">print</span>(result)  <span class="hljs-comment"># 输出: 6</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">key1, key2</span>):<br>    <span class="hljs-keyword">return</span> key1 + key2<br>result = (<span class="hljs-keyword">lambda</span> key1, key2: func(key1, key2))(**item)<br><br><span class="hljs-comment"># 示例：同时解包列表和字典</span><br>args = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]<br>kwargs = &#123;<span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">3</span>&#125;<br>result = (<span class="hljs-keyword">lambda</span> x, y, z: x + y + z)(*args, **kwargs)<br><span class="hljs-built_in">print</span>(result)  <span class="hljs-comment"># 输出: 6</span><br><br><span class="hljs-comment"># 示例：嵌套解包</span><br>nested = [&#123;<span class="hljs-string">&quot;x&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;y&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">3</span>&#125;, &#123;<span class="hljs-string">&quot;x&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-string">&quot;y&quot;</span>: <span class="hljs-number">5</span>, <span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">6</span>&#125;]<br>result = <span class="hljs-built_in">list</span>(<span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> item: (<span class="hljs-keyword">lambda</span> x, y, z: x + y + z)(**item), nested))<br><span class="hljs-built_in">print</span>(result)  <span class="hljs-comment"># 输出: [6, 15]</span><br></code></pre></td></tr></table></figure>
+<h2 id="控制结构"><a href="#控制结构" class="headerlink" title="控制结构"></a>控制结构</h2><h3 id="for-循环"><a href="#for-循环" class="headerlink" title="for 循环"></a>for 循环</h3><p>在一个 for 循环块中你可以访问这些特殊的变量:</p>
+<ul>
+<li><p>loop.index 当前循环迭代的次数（从 1 开始）</p>
+</li>
+<li><p>loop.index0 当前循环迭代的次数（从 0 开始）</p>
+</li>
+<li><p>loop.revindex 到循环结束需要迭代的次数（从 1 开始）</p>
+</li>
+<li><p>loop.revindex0 到循环结束需要迭代的次数（从 0 开始）</p>
+</li>
+<li><p>loop.first 如果是第一次迭代，为 True 。</p>
+</li>
+<li><p>loop.last 如果是最后一次迭代，为 True 。</p>
+</li>
+<li><p>loop.length 序列中的项目数。</p>
+</li>
+<li><p>loop.cycle 在一串序列间期取值的辅助函数。</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;% <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> <span class="hljs-built_in">list</span> %&#125;<br>    &#123;&#123; item &#125;&#125;<br>&#123;% endfor %&#125;<br></code></pre></td></tr></table></figure>
 
-<h3 id="map-函数"><a href="#map-函数" class="headerlink" title="map 函数"></a>map 函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">map</span>(func, iterables)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">x, y</span>):<br>    <span class="hljs-keyword">return</span> x + y<br><br>list1 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br>list2 = [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]<br><br><span class="hljs-comment"># 使用 map 将两个列表中的元素传入 add 函数</span><br>result = <span class="hljs-built_in">map</span>(add, list1, list2)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [5, 7, 9]</span><br><br>list1 = [<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>]<br>list2 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br><br><span class="hljs-comment"># 使用 lambda 表达式直接传递两个值</span><br>result = <span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> x, y: x * y, list1, list2)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [10, 40, 90]</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">concat</span>(<span class="hljs-params">prefix, word</span>):<br>    <span class="hljs-keyword">return</span> prefix + word<br><br><span class="hljs-comment"># 第一个参数固定为 &quot;&quot;, 第二个参数是列表</span><br>words = [<span class="hljs-string">&quot;apple&quot;</span>, <span class="hljs-string">&quot;banana&quot;</span>, <span class="hljs-string">&quot;cherry&quot;</span>]<br><br><span class="hljs-comment"># 使用 map 函数</span><br>result = <span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> word: concat(<span class="hljs-string">&quot;&quot;</span>, word), words)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [&#x27;apple&#x27;, &#x27;banana&#x27;, &#x27;cherry&#x27;]</span><br><br><span class="hljs-comment"># 使用 itertools.repeat</span><br><span class="hljs-keyword">from</span> itertools <span class="hljs-keyword">import</span> repeat<br><br><span class="hljs-comment"># 定义列表</span><br>words = [<span class="hljs-string">&quot;apple&quot;</span>, <span class="hljs-string">&quot;banana&quot;</span>, <span class="hljs-string">&quot;cherry&quot;</span>]<br><br><span class="hljs-comment"># 使用 repeat 将 &quot;&quot; 作为固定值传递</span><br>result = <span class="hljs-built_in">map</span>(concat, repeat(<span class="hljs-string">&quot;&quot;</span>), words)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [&#x27;apple&#x27;, &#x27;banana&#x27;, &#x27;cherry&#x27;]</span><br></code></pre></td></tr></table></figure>
+<h3 id="if-条件判断"><a href="#if-条件判断" class="headerlink" title="if 条件判断"></a>if 条件判断</h3><ul>
+<li><p><code>==</code> 比较两个对象是否相等。</p>
+</li>
+<li><p><code>!=</code> 比较两个对象的不等式。</p>
+</li>
+<li><p><code>&gt;</code> 如果左侧大于右侧，则为true。</p>
+</li>
+<li><p><code>&gt;=</code> 如果左侧大于或等于右侧，则为true。</p>
+</li>
+<li><p><code>&lt;</code> 如果左侧小于右侧，则为true。</p>
+</li>
+<li><p><code>&lt;=</code> 如果左侧小于或等于右侧，则为true</p>
+</li>
+<li><p>and 如果左右操作数为真，则返回true。</p>
+</li>
+<li><p>or 如果左操作数或右操作数为真，则返回true。</p>
+</li>
+<li><p>not 非，not x ：如果 x 为 True，返回 False 。如果 x 为 False，它返回 True。</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;% <span class="hljs-keyword">if</span> path != <span class="hljs-string">&quot;&quot;</span> <span class="hljs-keyword">and</span> path <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> none %&#125;<br>&#123;% endif %&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="宏"><a href="#宏" class="headerlink" title="宏"></a>宏</h2><p>可以看做 jinjia2 中的函数，用于取代重复的工作</p>
 
                 
               </div>
@@ -317,8 +384,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Python 多线程编程</div>
-      <div>https://piupiuxiupa.github.io/2025/01/03/python-multithread/</div>
+      <div>Python jinja2</div>
+      <div>https://piupiuxiupa.github.io/2025/03/05/python-jinja2/</div>
     </div>
     <div class="license-meta">
       
@@ -330,7 +397,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年1月3日</div>
+          <div>2025年3月5日</div>
         </div>
       
       
@@ -362,18 +429,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/03/05/shell-script-ssh/" title="Shell script ssh &amp; linux cmd tips">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Shell script ssh &amp; linux cmd tips</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/12/27/python-async/" title="Python 异步">
-                        <span class="hidden-mobile">Python 异步</span>
+                      <a href="/2025/03/05/shell-script-ssh/" title="Shell script ssh &amp; linux cmd tips">
+                        <span class="hidden-mobile">Shell script ssh &amp; linux cmd tips</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
