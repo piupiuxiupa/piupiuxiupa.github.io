@@ -16,24 +16,24 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Python 多线程编程线程分配公式concurrent.futures.ThreadPoolExecutor 默认线程数 min(32, (os.cpu_count() or 1) + 4)  计算密集型 线程数 ≈ CPU 核心数，避免过多线程增加上下文切换的开销   I&#x2F;O 密集型 线程数可以适当增大，具体根据任务类型（如网络请求、文件 I&#x2F;O）调整    1234fro">
+    <meta name="description" content="脚本批量ssh登录 可以通过 expect 实现 可以通过 sshpass 实现  expect 脚本后续补充 sshpass 脚本12345678#!&#x2F;bin&#x2F;bashwhile IFS&#x3D;&#x27;:&#x27; read -r ip uname passwddo    echo &quot;ssh $ip $uname $password&quot;    sshpass -p &quot;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python 多线程编程">
-<meta property="og:url" content="https://piupiuxiupa.github.io/2025/01/03/python-multithread/index.html">
+<meta property="og:title" content="Shell script ssh &amp; linux cmd tips">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2025/03/05/shell-script-ssh/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="Python 多线程编程线程分配公式concurrent.futures.ThreadPoolExecutor 默认线程数 min(32, (os.cpu_count() or 1) + 4)  计算密集型 线程数 ≈ CPU 核心数，避免过多线程增加上下文切换的开销   I&#x2F;O 密集型 线程数可以适当增大，具体根据任务类型（如网络请求、文件 I&#x2F;O）调整    1234fro">
+<meta property="og:description" content="脚本批量ssh登录 可以通过 expect 实现 可以通过 sshpass 实现  expect 脚本后续补充 sshpass 脚本12345678#!&#x2F;bin&#x2F;bashwhile IFS&#x3D;&#x27;:&#x27; read -r ip uname passwddo    echo &quot;ssh $ip $uname $password&quot;    sshpass -p &quot;">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-01-03T07:15:32.000Z">
-<meta property="article:modified_time" content="2025-01-03T08:05:11.626Z">
+<meta property="article:published_time" content="2025-03-05T05:22:54.000Z">
+<meta property="article:modified_time" content="2025-03-05T07:03:41.016Z">
 <meta property="article:author" content="piupiuxiupa">
-<meta property="article:tag" content="python">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Python 多线程编程 - piupiuxiupa&#39;s blog</title>
+  <title>Shell script ssh &amp; linux cmd tips - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Python 多线程编程"></span>
+            <span id="subtitle" data-typed-text="Shell script ssh &amp; linux cmd tips"></span>
           
         </div>
 
@@ -210,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-01-03 15:15" pubdate>
-          2025年1月3日 下午
+        <time datetime="2025-03-05 13:22" pubdate>
+          2025年3月5日 下午
         </time>
       </span>
     
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          521 字
+          289 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          5 分钟
+          3 分钟
         
       </span>
     
@@ -270,29 +270,24 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Python 多线程编程</h1>
+            <h1 id="seo-header">Shell script ssh &amp; linux cmd tips</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Python-多线程编程"><a href="#Python-多线程编程" class="headerlink" title="Python 多线程编程"></a>Python 多线程编程</h1><h2 id="线程分配公式"><a href="#线程分配公式" class="headerlink" title="线程分配公式"></a>线程分配公式</h2><p><code>concurrent.futures.ThreadPoolExecutor</code> 默认线程数 <code>min(32, (os.cpu_count() or 1) + 4)</code></p>
-<ul>
-<li>计算密集型<ul>
-<li>线程数 ≈ CPU 核心数，避免过多线程增加上下文切换的开销</li>
+                <h1 id="脚本批量ssh登录"><a href="#脚本批量ssh登录" class="headerlink" title="脚本批量ssh登录"></a>脚本批量ssh登录</h1><ul>
+<li>可以通过 expect 实现</li>
+<li>可以通过 sshpass 实现</li>
 </ul>
-</li>
-<li>I&#x2F;O 密集型<ul>
-<li>线程数可以适当增大，具体根据任务类型（如网络请求、文件 I&#x2F;O）调整</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><span class="hljs-keyword">with</span> ThreadPoolExecutor() <span class="hljs-keyword">as</span> executor:<br>    <span class="hljs-built_in">print</span>(executor._max_workers)  <span class="hljs-comment"># 输出默认线程数</span><br></code></pre></td></tr></table></figure>
+<h2 id="expect-脚本"><a href="#expect-脚本" class="headerlink" title="expect 脚本"></a>expect 脚本</h2><p>后续补充</p>
+<h2 id="sshpass-脚本"><a href="#sshpass-脚本" class="headerlink" title="sshpass 脚本"></a>sshpass 脚本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><br><span class="hljs-keyword">while</span> IFS=<span class="hljs-string">&#x27;:&#x27;</span> <span class="hljs-built_in">read</span> -r ip <span class="hljs-built_in">uname</span> passwd<br><span class="hljs-keyword">do</span><br>    <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;ssh <span class="hljs-variable">$ip</span> <span class="hljs-variable">$uname</span> <span class="hljs-variable">$password</span>&quot;</span><br>    sshpass -p <span class="hljs-string">&quot;<span class="hljs-variable">$passwd</span>&quot;</span> ssh -o StrictHostKeyChecking=no -n <span class="hljs-string">&quot;<span class="hljs-variable">$uname</span>@<span class="hljs-variable">$ip</span>&quot;</span> &lt; /dev/null<br>    <span class="hljs-built_in">sleep</span> 1<br><span class="hljs-keyword">done</span> &lt; info.txt<br></code></pre></td></tr></table></figure>
 
-<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> concurrent.futures <span class="hljs-keyword">import</span> ThreadPoolExecutor<br><br><span class="hljs-keyword">with</span> ThreadPoolExecutor() <span class="hljs-keyword">as</span> executor:<br>    <span class="hljs-comment"># 提交任务</span><br>    future1 = executor.submit(<span class="hljs-built_in">pow</span>, <span class="hljs-number">323</span>, <span class="hljs-number">1235</span>)<br>    future2 = executor.submit(<span class="hljs-built_in">pow</span>, <span class="hljs-number">100</span>, <span class="hljs-number">2</span>)<br>    <span class="hljs-comment"># 获取任务结果</span><br>    <span class="hljs-built_in">print</span>(future1.result())<br>    <span class="hljs-built_in">print</span>(future2.result())<br><br>    <span class="hljs-comment"># 返回结果迭代器</span><br>    res = executor.<span class="hljs-built_in">map</span>(<span class="hljs-built_in">pow</span>, [<span class="hljs-number">323</span>, <span class="hljs-number">1235</span>], [<span class="hljs-number">1235</span>, <span class="hljs-number">1235</span>])<br></code></pre></td></tr></table></figure>
-
-<h2 id="map-函数-lambda-函数"><a href="#map-函数-lambda-函数" class="headerlink" title="map 函数 &amp; lambda 函数"></a>map 函数 &amp; lambda 函数</h2><h3 id="lambda-函数"><a href="#lambda-函数" class="headerlink" title="lambda 函数"></a>lambda 函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 嵌套 lambda 函数</span><br><span class="hljs-comment"># lambda 函数解包参数</span><br><span class="hljs-keyword">lambda</span> item: (<span class="hljs-keyword">lambda</span> route, flag: func(<span class="hljs-string">&quot;&quot;</span>, route, flag))(*item)<br><br><span class="hljs-comment"># item也可以是字典等可迭代对象</span><br><span class="hljs-comment"># 示例：解包字典</span><br>kwargs = &#123;<span class="hljs-string">&quot;x&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;y&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">3</span>&#125;<br>result = (<span class="hljs-keyword">lambda</span> x, y, z: x + y + z)(**kwargs)  <span class="hljs-comment"># 使用 ** 解包字典</span><br><span class="hljs-built_in">print</span>(result)  <span class="hljs-comment"># 输出: 6</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">func</span>(<span class="hljs-params">key1, key2</span>):<br>    <span class="hljs-keyword">return</span> key1 + key2<br>result = (<span class="hljs-keyword">lambda</span> key1, key2: func(key1, key2))(**item)<br><br><span class="hljs-comment"># 示例：同时解包列表和字典</span><br>args = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]<br>kwargs = &#123;<span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">3</span>&#125;<br>result = (<span class="hljs-keyword">lambda</span> x, y, z: x + y + z)(*args, **kwargs)<br><span class="hljs-built_in">print</span>(result)  <span class="hljs-comment"># 输出: 6</span><br><br><span class="hljs-comment"># 示例：嵌套解包</span><br>nested = [&#123;<span class="hljs-string">&quot;x&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;y&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">3</span>&#125;, &#123;<span class="hljs-string">&quot;x&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-string">&quot;y&quot;</span>: <span class="hljs-number">5</span>, <span class="hljs-string">&quot;z&quot;</span>: <span class="hljs-number">6</span>&#125;]<br>result = <span class="hljs-built_in">list</span>(<span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> item: (<span class="hljs-keyword">lambda</span> x, y, z: x + y + z)(**item), nested))<br><span class="hljs-built_in">print</span>(result)  <span class="hljs-comment"># 输出: [6, 15]</span><br></code></pre></td></tr></table></figure>
-
-<h3 id="map-函数"><a href="#map-函数" class="headerlink" title="map 函数"></a>map 函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">map</span>(func, iterables)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">x, y</span>):<br>    <span class="hljs-keyword">return</span> x + y<br><br>list1 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br>list2 = [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]<br><br><span class="hljs-comment"># 使用 map 将两个列表中的元素传入 add 函数</span><br>result = <span class="hljs-built_in">map</span>(add, list1, list2)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [5, 7, 9]</span><br><br>list1 = [<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>]<br>list2 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br><br><span class="hljs-comment"># 使用 lambda 表达式直接传递两个值</span><br>result = <span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> x, y: x * y, list1, list2)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [10, 40, 90]</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">concat</span>(<span class="hljs-params">prefix, word</span>):<br>    <span class="hljs-keyword">return</span> prefix + word<br><br><span class="hljs-comment"># 第一个参数固定为 &quot;&quot;, 第二个参数是列表</span><br>words = [<span class="hljs-string">&quot;apple&quot;</span>, <span class="hljs-string">&quot;banana&quot;</span>, <span class="hljs-string">&quot;cherry&quot;</span>]<br><br><span class="hljs-comment"># 使用 map 函数</span><br>result = <span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> word: concat(<span class="hljs-string">&quot;&quot;</span>, word), words)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [&#x27;apple&#x27;, &#x27;banana&#x27;, &#x27;cherry&#x27;]</span><br><br><span class="hljs-comment"># 使用 itertools.repeat</span><br><span class="hljs-keyword">from</span> itertools <span class="hljs-keyword">import</span> repeat<br><br><span class="hljs-comment"># 定义列表</span><br>words = [<span class="hljs-string">&quot;apple&quot;</span>, <span class="hljs-string">&quot;banana&quot;</span>, <span class="hljs-string">&quot;cherry&quot;</span>]<br><br><span class="hljs-comment"># 使用 repeat 将 &quot;&quot; 作为固定值传递</span><br>result = <span class="hljs-built_in">map</span>(concat, repeat(<span class="hljs-string">&quot;&quot;</span>), words)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>(result))  <span class="hljs-comment"># 输出: [&#x27;apple&#x27;, &#x27;banana&#x27;, &#x27;cherry&#x27;]</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注意事项</strong></p>
+<p>ssh 会在登录后读取所有标准输入，因此会导致循环 read 后面的内容被 ssh 吞掉，导致只会登录一次</p>
+<p>因此需要用 ssh -n选项或者在最后使用 &lt; &#x2F;dev&#x2F;null</p>
+</blockquote>
+<h2 id="linux-command-tips"><a href="#linux-command-tips" class="headerlink" title="linux command tips"></a>linux command tips</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># rpm -q 只能按开头查询， 如 rpm -q zabbix-agent 只能查到zabbix-agent包，查不到 pcp-export-zabbix-agent这样的包</span><br>ps -Fu zabbix <span class="hljs-comment"># 按用户查找进程</span><br><span class="hljs-built_in">cp</span> /tmp/test.sh&#123;,.bak&#125; <span class="hljs-comment"># 复制文件并重命名，这样不用再多敲一段路径</span><br><br><span class="hljs-comment">## 这段sed基本囊括常用写法，-i.bak 修改的同时生成一个.bak后缀的未修改版文件，-e 后接 sed 表达式，\1表示第一个括号内匹配的内容</span><br>sed -i.bak -e <span class="hljs-string">&quot;s/\(Server=\|ServerActive=\)[^ ]*/\1192.168.4.4/g&quot;</span> \<br>    -e <span class="hljs-string">&quot;s/\(^Hostname=\)[^.]*/\1&quot;</span>$(ip a | grep inet | grep brd | awk <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span>| <span class="hljs-built_in">head</span> -1 | <span class="hljs-built_in">cut</span> -d/ -f1)<span class="hljs-string">&quot;/g&quot;</span> \<br>    -e <span class="hljs-string">&quot;/# HostMetadata=/a HostMetadata=Linux&quot;</span> \<br>    -e <span class="hljs-string">&quot;/# HostMetadataItem=/a HostMetadataItem=Linux&quot;</span> \<br>    /etc/zabbix/zabbix_agentd.conf<br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -305,7 +300,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/python/" class="print-no-link">#python</a>
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
       
     </div>
   
@@ -317,8 +312,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Python 多线程编程</div>
-      <div>https://piupiuxiupa.github.io/2025/01/03/python-multithread/</div>
+      <div>Shell script ssh &amp; linux cmd tips</div>
+      <div>https://piupiuxiupa.github.io/2025/03/05/shell-script-ssh/</div>
     </div>
     <div class="license-meta">
       
@@ -330,7 +325,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年1月3日</div>
+          <div>2025年3月5日</div>
         </div>
       
       
@@ -362,9 +357,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/03/05/shell-script-ssh/" title="Shell script ssh &amp; linux cmd tips">
+                      <a href="/2025/03/05/python-jinja2/" title="Python jinja2">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Shell script ssh &amp; linux cmd tips</span>
+                        <span class="hidden-mobile">Python jinja2</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -372,8 +367,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/12/27/python-async/" title="Python 异步">
-                        <span class="hidden-mobile">Python 异步</span>
+                      <a href="/2025/01/03/python-multithread/" title="Python 多线程编程">
+                        <span class="hidden-mobile">Python 多线程编程</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
