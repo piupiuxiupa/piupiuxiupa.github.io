@@ -16,24 +16,24 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="jinjia2 模板引擎jinjia2 可用于生成 html、xml、yaml 等格式的文件 基本用法123from jinja2 import Templatetemplate &#x3D; Template(&#x27;Hello &#123;&#123; name &#125;&#125;!&#x27;)template.render(name&#x3D;&#x27;John Doe&#x27;)  基本结构模">
+    <meta name="description" content="Gitlab 下载文件背景：有需求从 gitlab 下载文件，但是又不想下载整个项目，而是只想下载某个目录下的所有文件。     gitlab 上有些项目能达到几 G 到几十 G 不等，全部下载耗时。     内网办公环境下无权限传入三方开源工具，所以只能重复造轮子，写了个 shell 版的临时使用。 主要用到三个接口：  api&#x2F;v4&#x2F;projects?search&#x3D;$&#123;proj_na">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python jinja2">
-<meta property="og:url" content="https://piupiuxiupa.github.io/2025/03/05/python-jinja2/index.html">
+<meta property="og:title" content="Gitlab download files">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2025/03/06/gitlab-download-files/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="jinjia2 模板引擎jinjia2 可用于生成 html、xml、yaml 等格式的文件 基本用法123from jinja2 import Templatetemplate &#x3D; Template(&#x27;Hello &#123;&#123; name &#125;&#125;!&#x27;)template.render(name&#x3D;&#x27;John Doe&#x27;)  基本结构模">
+<meta property="og:description" content="Gitlab 下载文件背景：有需求从 gitlab 下载文件，但是又不想下载整个项目，而是只想下载某个目录下的所有文件。     gitlab 上有些项目能达到几 G 到几十 G 不等，全部下载耗时。     内网办公环境下无权限传入三方开源工具，所以只能重复造轮子，写了个 shell 版的临时使用。 主要用到三个接口：  api&#x2F;v4&#x2F;projects?search&#x3D;$&#123;proj_na">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-03-05T06:10:03.000Z">
-<meta property="article:modified_time" content="2025-03-05T07:11:56.680Z">
+<meta property="article:published_time" content="2025-03-06T10:11:46.000Z">
+<meta property="article:modified_time" content="2025-03-06T14:09:36.083Z">
 <meta property="article:author" content="piupiuxiupa">
-<meta property="article:tag" content="python">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Python jinja2 - piupiuxiupa&#39;s blog</title>
+  <title>Gitlab download files - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Python jinja2"></span>
+            <span id="subtitle" data-typed-text="Gitlab download files"></span>
           
         </div>
 
@@ -210,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-05 14:10" pubdate>
-          2025年3月5日 下午
+        <time datetime="2025-03-06 18:11" pubdate>
+          2025年3月6日 晚上
         </time>
       </span>
     
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          759 字
+          642 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          7 分钟
+          6 分钟
         
       </span>
     
@@ -270,96 +270,25 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Python jinja2</h1>
+            <h1 id="seo-header">Gitlab download files</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="jinjia2-模板引擎"><a href="#jinjia2-模板引擎" class="headerlink" title="jinjia2 模板引擎"></a>jinjia2 模板引擎</h1><p>jinjia2 可用于生成 html、xml、yaml 等格式的文件</p>
-<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> jinja2 <span class="hljs-keyword">import</span> Template<br>template = Template(<span class="hljs-string">&#x27;Hello &#123;&#123; name &#125;&#125;!&#x27;</span>)<br>template.render(name=<span class="hljs-string">&#x27;John Doe&#x27;</span>)<br></code></pre></td></tr></table></figure>
-
-<h2 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h2><p>模板包含<code>变量</code>或<code>表达式</code> ，这两者在模板求值的时候会被替换为值。模板中还有标签，控制模板的逻辑。模板语法的大量灵感来自于 Django 和 Python 。</p>
-<p>两类分隔符：</p>
+                <h1 id="Gitlab-下载文件"><a href="#Gitlab-下载文件" class="headerlink" title="Gitlab 下载文件"></a>Gitlab 下载文件</h1><p>背景：有需求从 gitlab 下载文件，但是又不想下载整个项目，而是只想下载某个目录下的所有文件。<br>     gitlab 上有些项目能达到几 G 到几十 G 不等，全部下载耗时。<br>     内网办公环境下无权限传入三方开源工具，所以只能重复造轮子，写了个 shell 版的临时使用。</p>
+<p>主要用到三个接口：</p>
 <ul>
-<li><code>&#123;&#123;  &#125;&#125;</code></li>
-<li><code>&#123;%  %&#125;</code></li>
+<li><code>api/v4/projects?search=$&#123;proj_name&#125;</code> 查询项目信息接口</li>
+<li><code>api/v4/projects/$&#123;proj_id&#125;/repository/tree?ref=$&#123;branch&#125;&amp;path=$&#123;path&#125;</code> 查询目录下文件信息接口</li>
+<li><code>api/v4/projects/$&#123;proj_id&#125;/repository/files/$&#123;path&#125;/raw?ref=$&#123;branch&#125;</code> 下载文件接口</li>
 </ul>
-<blockquote>
-<p>在前或后加上-可以用于去掉空格或空行，如 <code>&#123;&#123;- -&#125;&#125;</code> <code>&#123;&#123;%-  -%&#125;&#125;</code></p>
-</blockquote>
-<h2 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h2><ul>
-<li><p>safe 渲染时值不转义</p>
-</li>
-<li><p>capitialize 把值的首字母转换成大写，其他字母转换为小写</p>
-</li>
-<li><p>lower 把值转换成小写形式</p>
-</li>
-<li><p>upper 把值转换成大写形式</p>
-</li>
-<li><p>title 把值中每个单词的首字母都转换成大写</p>
-</li>
-<li><p>trim 把值的首尾空格去掉</p>
-</li>
-<li><p>striptags 渲染之前把值中所有的HTML标签都删掉</p>
-</li>
-<li><p>join 拼接多个值为字符串</p>
-</li>
-<li><p>replace 替换字符串的值</p>
-</li>
-<li><p>round 默认对数字进行四舍五入，也可以用参数进行控制</p>
-</li>
-<li><p>int 把值转换成整型</p>
-</li>
-</ul>
-<h2 id="模板继承"><a href="#模板继承" class="headerlink" title="模板继承"></a>模板继承</h2><h3 id="基础模板"><a href="#基础模板" class="headerlink" title="基础模板"></a>基础模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python">&lt;html lang=<span class="hljs-string">&quot;en&quot;</span>&gt;<br>&lt;html xmlns=<span class="hljs-string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;<br>&lt;head&gt;<br>    &#123;% block head %&#125;<br>    &lt;link rel=<span class="hljs-string">&quot;stylesheet&quot;</span> href=<span class="hljs-string">&quot;style.css&quot;</span> /&gt;<br>    &lt;title&gt;&#123;% block title %&#125;&#123;% endblock %&#125; - My Webpage&lt;/title&gt;<br>    &#123;% endblock %&#125;<br>&lt;/head&gt;<br>&lt;body&gt;<br>    &lt;div <span class="hljs-built_in">id</span>=<span class="hljs-string">&quot;content&quot;</span>&gt;&#123;% block content %&#125;&#123;% endblock %&#125;&lt;/div&gt;<br>    &lt;div <span class="hljs-built_in">id</span>=<span class="hljs-string">&quot;footer&quot;</span>&gt;<br>        &#123;% block footer %&#125;<br>        &amp;copy; Copyright <span class="hljs-number">2008</span> by &lt;a href=<span class="hljs-string">&quot;http://domain.invalid/&quot;</span>&gt;you&lt;/a&gt;.<br>        &#123;% endblock %&#125;<br>    &lt;/div&gt;<br>&lt;/body&gt;<br></code></pre></td></tr></table></figure>
-
-<h3 id="子模板"><a href="#子模板" class="headerlink" title="子模板"></a>子模板</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;% extends <span class="hljs-string">&quot;base.html&quot;</span> %&#125;<br>&#123;% block title %&#125;Index&#123;% endblock %&#125;<br>&#123;% block head %&#125;<br>    &#123;&#123; <span class="hljs-built_in">super</span>() &#125;&#125;<br>    &lt;style <span class="hljs-built_in">type</span>=<span class="hljs-string">&quot;text/css&quot;</span>&gt;<br>        .important &#123; color: <span class="hljs-comment">#336699; &#125;</span><br>    &lt;/style&gt;<br>&#123;% endblock %&#125;<br>&#123;% block content %&#125;<br>    &lt;h1&gt;Index&lt;/h1&gt;<br>    &lt;p <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;important&quot;</span>&gt;<br>      Welcome on my awesome homepage.<br>    &lt;/p&gt;<br>&#123;% endblock %&#125;<br></code></pre></td></tr></table></figure>
-
-<h2 id="控制结构"><a href="#控制结构" class="headerlink" title="控制结构"></a>控制结构</h2><h3 id="for-循环"><a href="#for-循环" class="headerlink" title="for 循环"></a>for 循环</h3><p>在一个 for 循环块中你可以访问这些特殊的变量:</p>
-<ul>
-<li><p>loop.index 当前循环迭代的次数（从 1 开始）</p>
-</li>
-<li><p>loop.index0 当前循环迭代的次数（从 0 开始）</p>
-</li>
-<li><p>loop.revindex 到循环结束需要迭代的次数（从 1 开始）</p>
-</li>
-<li><p>loop.revindex0 到循环结束需要迭代的次数（从 0 开始）</p>
-</li>
-<li><p>loop.first 如果是第一次迭代，为 True 。</p>
-</li>
-<li><p>loop.last 如果是最后一次迭代，为 True 。</p>
-</li>
-<li><p>loop.length 序列中的项目数。</p>
-</li>
-<li><p>loop.cycle 在一串序列间期取值的辅助函数。</p>
-</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;% <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> <span class="hljs-built_in">list</span> %&#125;<br>    &#123;&#123; item &#125;&#125;<br>&#123;% endfor %&#125;<br></code></pre></td></tr></table></figure>
-
-<h3 id="if-条件判断"><a href="#if-条件判断" class="headerlink" title="if 条件判断"></a>if 条件判断</h3><ul>
-<li><p><code>==</code> 比较两个对象是否相等。</p>
-</li>
-<li><p><code>!=</code> 比较两个对象的不等式。</p>
-</li>
-<li><p><code>&gt;</code> 如果左侧大于右侧，则为true。</p>
-</li>
-<li><p><code>&gt;=</code> 如果左侧大于或等于右侧，则为true。</p>
-</li>
-<li><p><code>&lt;</code> 如果左侧小于右侧，则为true。</p>
-</li>
-<li><p><code>&lt;=</code> 如果左侧小于或等于右侧，则为true</p>
-</li>
-<li><p>and 如果左右操作数为真，则返回true。</p>
-</li>
-<li><p>or 如果左操作数或右操作数为真，则返回true。</p>
-</li>
-<li><p>not 非，not x ：如果 x 为 True，返回 False 。如果 x 为 False，它返回 True。</p>
-</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;% <span class="hljs-keyword">if</span> path != <span class="hljs-string">&quot;&quot;</span> <span class="hljs-keyword">and</span> path <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> none %&#125;<br>&#123;% endif %&#125;<br></code></pre></td></tr></table></figure>
-
-<h2 id="宏"><a href="#宏" class="headerlink" title="宏"></a>宏</h2><p>可以看做 jinjia2 中的函数，用于取代重复的工作</p>
-
+<p>大概思路：</p>
+<ol>
+<li>先通过 <code>api/v4/projects?search=$&#123;proj_name&#125;</code> 查询项目信息接口，获取项目 id</li>
+<li>通过 <code>api/v4/projects/$&#123;proj_id&#125;/repository/tree?ref=$&#123;branch&#125;&amp;path=$&#123;path&#125;</code> 查询目录下文件信息接口，获取目录下所有文件路径</li>
+<li>遍历目录下所有文件路径，通过 <code>api/v4/projects/$&#123;proj_id&#125;/repository/files/$&#123;path&#125;/raw?ref=$&#123;branch&#125;</code> 下载文件</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><br>:&lt;&lt;<span class="hljs-string">&#x27;EOF&#x27;</span><br>API from gitlab version 17.4<br>EOF<br><br><span class="hljs-keyword">function</span> get_params &#123;<br>    proj_name=`<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$url</span>&quot;</span> | awk -F<span class="hljs-string">&#x27;/-/&#x27;</span> <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span> | xargs <span class="hljs-built_in">basename</span>`<br>    branch=`<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$url</span>&quot;</span> | awk -F<span class="hljs-string">&#x27;/-/&#x27;</span> <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span> | awk -F/ <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span>`<br>    version_path=`<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$url</span>&quot;</span> | awk -F<span class="hljs-string">&quot;/-/&quot;</span> <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span> | awk -F <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;branch&#125;</span>&quot;</span> <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span>`<br>    gitlab_url=`<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$url</span>&quot;</span> | sed -E <span class="hljs-string">&#x27;s|^(https?://[^/]+).*|\1|&#x27;</span>`<br>&#125;<br><br><span class="hljs-keyword">function</span> encode_to_url &#123;<br>    orl_name=<span class="hljs-variable">$&#123;1##*/&#125;</span><br>    file_name=<span class="hljs-variable">$&#123;orl_name%.*&#125;</span><br>    file_postfix=<span class="hljs-variable">$&#123;orl_name##*.&#125;</span><br><br>    <span class="hljs-built_in">test</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;file_postfix&#125;</span>&quot;</span> = <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;file_name&#125;</span>&quot;</span> &amp;&amp; file_postfix=<span class="hljs-string">&quot;&quot;</span><br><br>    file_name=`<span class="hljs-built_in">echo</span> -n <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;file_name&#125;</span>&quot;</span> | <span class="hljs-built_in">od</span> -An -tx1 | <span class="hljs-built_in">tr</span> <span class="hljs-string">&#x27; &#x27;</span> % | <span class="hljs-built_in">tr</span> -d <span class="hljs-string">&quot;\n&quot;</span>`<br><br>    <span class="hljs-built_in">test</span> -z <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;file_postfix&#125;</span>&quot;</span> &amp;&amp; file_name_plus=<span class="hljs-variable">$&#123;file_name&#125;</span> || file_name_plus=<span class="hljs-variable">$&#123;file_name&#125;</span>.<span class="hljs-variable">$&#123;file_postfix&#125;</span><br><br>&#125;<br><br><span class="hljs-keyword">function</span> get_files &#123;<br>    proj_id=$(curl -s -H <span class="hljs-string">&quot;PRIVATE-TOKEN: <span class="hljs-variable">$&#123;TOKEN&#125;</span>&quot;</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;gitlab_url&#125;</span>/api/v4/projects?search=<span class="hljs-variable">$&#123;proj_name&#125;</span>&quot;</span> \<br>        | jq -r --arg proj_name <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;proj_name&#125;</span>&quot;</span> <span class="hljs-string">&#x27;.[] | select(.name==$proj_name) | .id&#x27;</span>)<br><br>    path_list=$(curl -s -H <span class="hljs-string">&quot;PRIVATE-TOKEN: <span class="hljs-variable">$&#123;TOKEN&#125;</span>&quot;</span> \<br>        <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;gitlab_url&#125;</span>/api/v4/projects/<span class="hljs-variable">$&#123;proj_id&#125;</span>/repository/tree?ref=<span class="hljs-variable">$&#123;branch&#125;</span>&amp;path=<span class="hljs-variable">$&#123;version_path#/*&#125;</span>&quot;</span> | jq -r <span class="hljs-string">&quot;.[].path&quot;</span>)<br><br>    version_path=`<span class="hljs-built_in">echo</span> <span class="hljs-variable">$&#123;version_path#/*&#125;</span> | sed <span class="hljs-string">&#x27;s#/#%2F#g&#x27;</span>`<br>    IFS=$<span class="hljs-string">&#x27;\n&#x27;</span><br>    <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> <span class="hljs-variable">$&#123;path_list&#125;</span><br>    <span class="hljs-keyword">do</span><br>        encode_to_url <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;item&#125;</span>&quot;</span><br>        download_files<br>    <span class="hljs-keyword">done</span><br>&#125;<br><br><span class="hljs-keyword">function</span> download_files &#123;<br>    file_url=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;gitlab_url&#125;</span>/api/v4/projects/<span class="hljs-variable">$&#123;proj_id&#125;</span>/repository/files/<span class="hljs-variable">$&#123;version_path&#125;</span>%2F<span class="hljs-variable">$&#123;file_name_plus&#125;</span>/raw?ref=<span class="hljs-variable">$&#123;branch&#125;</span>&quot;</span><br>    curl -sSL -H <span class="hljs-string">&quot;PRIVATE-TOKEN: <span class="hljs-variable">$&#123;TOKEN&#125;</span>&quot;</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;file_url&#125;</span>&quot;</span> -o <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;orl_name&#125;</span>&quot;</span><br>&#125;<br><br><span class="hljs-keyword">function</span> options &#123;<br>    <span class="hljs-keyword">while</span> <span class="hljs-built_in">test</span> <span class="hljs-variable">$#</span> -gt 0<br>    <span class="hljs-keyword">do</span><br>        <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;<span class="hljs-variable">$1</span>&quot;</span> <span class="hljs-keyword">in</span><br>            -u|--url)<br>                url=<span class="hljs-string">&quot;<span class="hljs-variable">$2</span>&quot;</span><br>                ;;<br>            -t|--token)<br>                TOKEN=<span class="hljs-string">&quot;<span class="hljs-variable">$2</span>&quot;</span><br>                ;;<br>            *) Usage ;;<br>        <span class="hljs-keyword">esac</span><br>        <span class="hljs-built_in">shift</span> 2<br>    <span class="hljs-keyword">done</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">Usage</span></span>()&#123;<br>    <span class="hljs-built_in">cat</span> &lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">$&#123;0##*/&#125; in order to download files from gitlab</span><br><span class="hljs-string">    Usage:</span><br><span class="hljs-string">        -u|--url       gitlab url.</span><br><span class="hljs-string">        -t|--token     gitlab token.</span><br><span class="hljs-string">EOF</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">main</span></span>()&#123;<br>    TOKEN=<span class="hljs-string">&quot;&quot;</span><br>    options <span class="hljs-string">&quot;<span class="hljs-variable">$@</span>&quot;</span><br>    get_params<br>    get_files<br>&#125;<br><br>main <span class="hljs-string">&quot;<span class="hljs-variable">$@</span>&quot;</span><br><br><span class="hljs-built_in">exit</span> 0<br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -371,7 +300,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/python/" class="print-no-link">#python</a>
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
       
     </div>
   
@@ -383,8 +312,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Python jinja2</div>
-      <div>https://piupiuxiupa.github.io/2025/03/05/python-jinja2/</div>
+      <div>Gitlab download files</div>
+      <div>https://piupiuxiupa.github.io/2025/03/06/gitlab-download-files/</div>
     </div>
     <div class="license-meta">
       
@@ -396,7 +325,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月5日</div>
+          <div>2025年3月6日</div>
         </div>
       
       
@@ -428,18 +357,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/03/06/gitlab-download-files/" title="Gitlab download files">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Gitlab download files</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/03/05/shell-script-ssh/" title="Shell script ssh &amp; linux cmd tips">
-                        <span class="hidden-mobile">Shell script ssh &amp; linux cmd tips</span>
+                      <a href="/2025/03/05/python-jinja2/" title="Python jinja2">
+                        <span class="hidden-mobile">Python jinja2</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
