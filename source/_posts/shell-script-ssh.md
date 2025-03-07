@@ -44,4 +44,12 @@ sed -i.bak -e "s/\(Server=\|ServerActive=\)[^ ]*/\1192.168.4.4/g" \
     -e "/# HostMetadata=/a HostMetadata=Linux" \
     -e "/# HostMetadataItem=/a HostMetadataItem=Linux" \
     /etc/zabbix/zabbix_agentd.conf
+
+# test命令做逆判断会出现退出状态码为非0的情况，比如
+ls
+test $? -ne 0 && { echo "failed"; exit 1; } 
+# 由于ls命令执行成功，test $? -ne 0 为假，test命令本身返回非零值
+# 如果这个语句作为整个脚本的最后一句，会导致即使脚本实际执行成功，但最后脚本的退出码也为非0
+# 改成顺逻辑即可
+test $? -eq 0 || { echo "failed"; exit 1; }
 ```
