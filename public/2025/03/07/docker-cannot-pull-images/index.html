@@ -16,24 +16,24 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Gitlab 下载文件背景：有需求从 gitlab 下载文件，但是又不想下载整个项目，而是只想下载某个目录下的所有文件。     gitlab 上有些项目能达到几 G 到几十 G 不等，全部下载耗时。     内网办公环境下无权限传入三方开源工具，所以只能重复造轮子，写了个 shell 版的临时使用。 主要用到三个接口：  api&#x2F;v4&#x2F;projects?search&#x3D;$&#123;proj_na">
+    <meta name="description" content="Mac Docker 镜像网络问题国内环境无法拉取docker镜像，网上有很多方法。 有修改 docker镜像源的，有往配置文件加代理或者加dns的。 个人常用方法是用喵喵，以前也只需要挂喵喵即可，最近发现只用它也没用了。 不知道是因为换了mac有什么不同，还是因为某些wall的限制加强了。 然后尝试修改了dns解析，成功了，dns地址使用 Mac 终端配置代理12alias proxy&#x3D;&amp;#x2">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Gitlab download files">
-<meta property="og:url" content="https://piupiuxiupa.github.io/2025/03/06/gitlab-download-files/index.html">
+<meta property="og:title" content="Docker cannot pull images">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2025/03/07/docker-cannot-pull-images/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="Gitlab 下载文件背景：有需求从 gitlab 下载文件，但是又不想下载整个项目，而是只想下载某个目录下的所有文件。     gitlab 上有些项目能达到几 G 到几十 G 不等，全部下载耗时。     内网办公环境下无权限传入三方开源工具，所以只能重复造轮子，写了个 shell 版的临时使用。 主要用到三个接口：  api&#x2F;v4&#x2F;projects?search&#x3D;$&#123;proj_na">
+<meta property="og:description" content="Mac Docker 镜像网络问题国内环境无法拉取docker镜像，网上有很多方法。 有修改 docker镜像源的，有往配置文件加代理或者加dns的。 个人常用方法是用喵喵，以前也只需要挂喵喵即可，最近发现只用它也没用了。 不知道是因为换了mac有什么不同，还是因为某些wall的限制加强了。 然后尝试修改了dns解析，成功了，dns地址使用 Mac 终端配置代理12alias proxy&#x3D;&amp;#x2">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-03-06T10:11:46.000Z">
-<meta property="article:modified_time" content="2025-03-06T14:14:45.963Z">
+<meta property="article:published_time" content="2025-03-07T01:58:20.000Z">
+<meta property="article:modified_time" content="2025-03-07T02:38:33.898Z">
 <meta property="article:author" content="piupiuxiupa">
-<meta property="article:tag" content="linux">
+<meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Gitlab download files - piupiuxiupa&#39;s blog</title>
+  <title>Docker cannot pull images - piupiuxiupa&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Gitlab download files"></span>
+            <span id="subtitle" data-typed-text="Docker cannot pull images"></span>
           
         </div>
 
@@ -210,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-06 18:11" pubdate>
-          2025年3月6日 晚上
+        <time datetime="2025-03-07 09:58" pubdate>
+          2025年3月7日 上午
         </time>
       </span>
     
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          642 字
+          378 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          6 分钟
+          4 分钟
         
       </span>
     
@@ -270,25 +270,39 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Gitlab download files</h1>
+            <h1 id="seo-header">Docker cannot pull images</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="Gitlab-下载文件"><a href="#Gitlab-下载文件" class="headerlink" title="Gitlab 下载文件"></a>Gitlab 下载文件</h1><p>背景：有需求从 gitlab 下载文件，但是又不想下载整个项目，而是只想下载某个目录下的所有文件。<br>     gitlab 上有些项目能达到几 G 到几十 G 不等，全部下载耗时。<br>     内网办公环境下无权限传入三方开源工具，所以只能重复造轮子，写了个 shell 版的临时使用。</p>
-<p>主要用到三个接口：</p>
-<ul>
-<li><code>api/v4/projects?search=$&#123;proj_name&#125;</code> 查询项目信息接口</li>
-<li><code>api/v4/projects/$&#123;proj_id&#125;/repository/tree?ref=$&#123;branch&#125;&amp;path=$&#123;path&#125;</code> 查询目录下文件信息接口</li>
-<li><code>api/v4/projects/$&#123;proj_id&#125;/repository/files/$&#123;path&#125;/raw?ref=$&#123;branch&#125;</code> 下载文件接口</li>
+                <h1 id="Mac-Docker-镜像网络问题"><a href="#Mac-Docker-镜像网络问题" class="headerlink" title="Mac Docker 镜像网络问题"></a>Mac Docker 镜像网络问题</h1><p>国内环境无法拉取docker镜像，网上有很多方法。</p>
+<p>有修改 docker镜像源的，有往配置文件加代理或者加dns的。</p>
+<p>个人常用方法是用喵喵，以前也只需要挂喵喵即可，最近发现只用它也没用了。</p>
+<p>不知道是因为换了mac有什么不同，还是因为某些wall的限制加强了。</p>
+<p>然后尝试修改了dns解析，成功了，dns地址使用</p>
+<h2 id="Mac-终端配置代理"><a href="#Mac-终端配置代理" class="headerlink" title="Mac 终端配置代理"></a>Mac 终端配置代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">alias</span> proxy=<span class="hljs-string">&#x27;export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890&#x27;</span><br><span class="hljs-built_in">alias</span> unproxy=<span class="hljs-string">&#x27;unset https_proxy http_proxy all_proxy&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="Mac修改DNS"><a href="#Mac修改DNS" class="headerlink" title="Mac修改DNS"></a>Mac修改DNS</h2><ul>
+<li>可以通过mac界面的网络来修改</li>
+<li>也可以通过命令行修改</li>
 </ul>
-<p>大概思路：</p>
-<ol>
-<li>先通过 <code>api/v4/projects?search=$&#123;proj_name&#125;</code> 查询项目信息接口，获取项目 id</li>
-<li>通过 <code>api/v4/projects/$&#123;proj_id&#125;/repository/tree?ref=$&#123;branch&#125;&amp;path=$&#123;path&#125;</code> 查询目录下文件信息接口，获取目录下所有文件路径</li>
-<li>遍历目录下所有文件路径，通过 <code>api/v4/projects/$&#123;proj_id&#125;/repository/files/$&#123;path&#125;/raw?ref=$&#123;branch&#125;</code> 下载文件</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><br>:&lt;&lt;<span class="hljs-string">&#x27;EOF&#x27;</span><br>API from gitlab version 17.4<br>EOF<br><br><span class="hljs-keyword">function</span> get_params &#123;<br>    proj_name=`<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$url</span>&quot;</span> | awk -F<span class="hljs-string">&#x27;/-/&#x27;</span> <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span> | xargs <span class="hljs-built_in">basename</span>`<br>    branch=`<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$url</span>&quot;</span> | awk -F<span class="hljs-string">&#x27;/-/&#x27;</span> <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span> | awk -F/ <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span>`<br>    version_path=`<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$url</span>&quot;</span> | awk -F<span class="hljs-string">&quot;/-/&quot;</span> <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span> | awk -F <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;branch&#125;</span>&quot;</span> <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span>`<br>    gitlab_url=`<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$url</span>&quot;</span> | sed -E <span class="hljs-string">&#x27;s|^(https?://[^/]+).*|\1|&#x27;</span>`<br>&#125;<br><br><span class="hljs-keyword">function</span> encode_to_url &#123;<br>    orl_name=<span class="hljs-variable">$&#123;1##*/&#125;</span><br>    file_name=<span class="hljs-variable">$&#123;orl_name%.*&#125;</span><br>    file_postfix=<span class="hljs-variable">$&#123;orl_name##*.&#125;</span><br><br>    <span class="hljs-built_in">test</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;file_postfix&#125;</span>&quot;</span> = <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;file_name&#125;</span>&quot;</span> &amp;&amp; file_postfix=<span class="hljs-string">&quot;&quot;</span><br><br>    file_name=`<span class="hljs-built_in">echo</span> -n <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;file_name&#125;</span>&quot;</span> | <span class="hljs-built_in">od</span> -An -tx1 | <span class="hljs-built_in">tr</span> <span class="hljs-string">&#x27; &#x27;</span> % | <span class="hljs-built_in">tr</span> -d <span class="hljs-string">&quot;\n&quot;</span>`<br><br>    <span class="hljs-built_in">test</span> -z <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;file_postfix&#125;</span>&quot;</span> &amp;&amp; file_name_plus=<span class="hljs-variable">$&#123;file_name&#125;</span> || file_name_plus=<span class="hljs-variable">$&#123;file_name&#125;</span>.<span class="hljs-variable">$&#123;file_postfix&#125;</span><br><br>&#125;<br><br><span class="hljs-keyword">function</span> get_files &#123;<br>    proj_id=$(curl -s -H <span class="hljs-string">&quot;PRIVATE-TOKEN: <span class="hljs-variable">$&#123;TOKEN&#125;</span>&quot;</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;gitlab_url&#125;</span>/api/v4/projects?search=<span class="hljs-variable">$&#123;proj_name&#125;</span>&quot;</span> \<br>        | jq -r --arg proj_name <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;proj_name&#125;</span>&quot;</span> <span class="hljs-string">&#x27;.[] | select(.name==$proj_name) | .id&#x27;</span>)<br><br>    path_list=$(curl -s -H <span class="hljs-string">&quot;PRIVATE-TOKEN: <span class="hljs-variable">$&#123;TOKEN&#125;</span>&quot;</span> \<br>        <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;gitlab_url&#125;</span>/api/v4/projects/<span class="hljs-variable">$&#123;proj_id&#125;</span>/repository/tree?ref=<span class="hljs-variable">$&#123;branch&#125;</span>&amp;path=<span class="hljs-variable">$&#123;version_path#/*&#125;</span>&quot;</span> | jq -r <span class="hljs-string">&quot;.[].path&quot;</span>)<br><br>    version_path=`<span class="hljs-built_in">echo</span> <span class="hljs-variable">$&#123;version_path#/*&#125;</span> | sed <span class="hljs-string">&#x27;s#/#%2F#g&#x27;</span>`<br>    IFS=$<span class="hljs-string">&#x27;\n&#x27;</span><br>    <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> <span class="hljs-variable">$&#123;path_list&#125;</span><br>    <span class="hljs-keyword">do</span><br>        encode_to_url <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;item&#125;</span>&quot;</span><br>        download_files<br>    <span class="hljs-keyword">done</span><br>&#125;<br><br><span class="hljs-keyword">function</span> download_files &#123;<br>    file_url=<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;gitlab_url&#125;</span>/api/v4/projects/<span class="hljs-variable">$&#123;proj_id&#125;</span>/repository/files/<span class="hljs-variable">$&#123;version_path&#125;</span>%2F<span class="hljs-variable">$&#123;file_name_plus&#125;</span>/raw?ref=<span class="hljs-variable">$&#123;branch&#125;</span>&quot;</span><br>    curl -sSL -H <span class="hljs-string">&quot;PRIVATE-TOKEN: <span class="hljs-variable">$&#123;TOKEN&#125;</span>&quot;</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;file_url&#125;</span>&quot;</span> -o <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;orl_name&#125;</span>&quot;</span><br>&#125;<br><br><span class="hljs-keyword">function</span> options &#123;<br>    <span class="hljs-keyword">while</span> <span class="hljs-built_in">test</span> <span class="hljs-variable">$#</span> -gt 0<br>    <span class="hljs-keyword">do</span><br>        <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;<span class="hljs-variable">$1</span>&quot;</span> <span class="hljs-keyword">in</span><br>            -u|--url)<br>                url=<span class="hljs-string">&quot;<span class="hljs-variable">$2</span>&quot;</span><br>                ;;<br>            -t|--token)<br>                TOKEN=<span class="hljs-string">&quot;<span class="hljs-variable">$2</span>&quot;</span><br>                ;;<br>            *) Usage ;;<br>        <span class="hljs-keyword">esac</span><br>        <span class="hljs-built_in">shift</span> 2<br>    <span class="hljs-keyword">done</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">Usage</span></span>()&#123;<br>    <span class="hljs-built_in">cat</span> &lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">$&#123;0##*/&#125; in order to download files from gitlab</span><br><span class="hljs-string">    Usage:</span><br><span class="hljs-string">        -u|--url       gitlab url.</span><br><span class="hljs-string">        -t|--token     gitlab token.</span><br><span class="hljs-string">EOF</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-title">main</span></span>()&#123;<br>    TOKEN=<span class="hljs-string">&quot;&quot;</span><br>    options <span class="hljs-string">&quot;<span class="hljs-variable">$@</span>&quot;</span><br>    get_params<br>    get_files<br>&#125;<br><br>main <span class="hljs-string">&quot;<span class="hljs-variable">$@</span>&quot;</span><br><br><span class="hljs-built_in">exit</span> 0<br></code></pre></td></tr></table></figure>
+<p>个人一般需要修改的场景只在terminal中，所以将命令做成alias来快捷使用。</p>
+<p>修改dns命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看网络接口</span><br>networksetup -listallnetworkservice<br><br>networksetup -setdnsservers Wi-Fi 8.8.8.8 114.114.114.114<br><br><span class="hljs-comment"># 查看wi-fi接口的dns配置</span><br>networksetup -getdnsservers Wi-Fi<br><br><span class="hljs-comment"># 或用scutil查看dns配置</span><br>scutil --dns<br><br><span class="hljs-comment"># 清空dns配置，即恢复默认</span><br>networksetup -setdnsservers Wi-Fi empty<br><br><span class="hljs-comment"># 刷新dns缓存</span><br>dscacheutil -flushcache<br></code></pre></td></tr></table></figure>
+
+<h2 id="DNS推荐"><a href="#DNS推荐" class="headerlink" title="DNS推荐"></a>DNS推荐</h2><p>谷歌DNS: 8.8.8.8  – 个人尝试下来比较推荐</p>
+<p>腾讯DNS : 119.29.29.29</p>
+<p>AliDNS 阿里<br>首选： 223.5.5.5 备用： 223.6.6.6</p>
+<p>114 DNS<br>常规公共 DNS (干净无劫持)</p>
+<p>首选： 114.114.114.114</p>
+<p>备选： 114.114.115.115</p>
+<p>拦截钓鱼病毒木马网站 (保护上网安全)</p>
+<p>首选： 114.114.114.119</p>
+<p>备用： 114.114.115.119</p>
+<p>拦截色情网站 (保护儿童)</p>
+<p>首选： 114.114.114.110</p>
+<p>备用： 114.114.115.110</p>
+
                 
               </div>
             
@@ -300,7 +314,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/linux/" class="print-no-link">#linux</a>
+        <a href="/tags/docker/" class="print-no-link">#docker</a>
       
     </div>
   
@@ -312,8 +326,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Gitlab download files</div>
-      <div>https://piupiuxiupa.github.io/2025/03/06/gitlab-download-files/</div>
+      <div>Docker cannot pull images</div>
+      <div>https://piupiuxiupa.github.io/2025/03/07/docker-cannot-pull-images/</div>
     </div>
     <div class="license-meta">
       
@@ -325,7 +339,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月6日</div>
+          <div>2025年3月7日</div>
         </div>
       
       
@@ -357,18 +371,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/03/07/docker-cannot-pull-images/" title="Docker cannot pull images">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Docker cannot pull images</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/03/05/python-jinja2/" title="Python jinja2">
-                        <span class="hidden-mobile">Python jinja2</span>
+                      <a href="/2025/03/06/gitlab-download-files/" title="Gitlab download files">
+                        <span class="hidden-mobile">Gitlab download files</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

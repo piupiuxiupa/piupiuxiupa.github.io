@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>Docker cannot pull images</title>
+    <link href="/2025/03/07/docker-cannot-pull-images/"/>
+    <url>/2025/03/07/docker-cannot-pull-images/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Mac-Docker-镜像网络问题"><a href="#Mac-Docker-镜像网络问题" class="headerlink" title="Mac Docker 镜像网络问题"></a>Mac Docker 镜像网络问题</h1><p>国内环境无法拉取docker镜像，网上有很多方法。</p><p>有修改 docker镜像源的，有往配置文件加代理或者加dns的。</p><p>个人常用方法是用喵喵，以前也只需要挂喵喵即可，最近发现只用它也没用了。</p><p>不知道是因为换了mac有什么不同，还是因为某些wall的限制加强了。</p><p>然后尝试修改了dns解析，成功了，dns地址使用</p><h2 id="Mac-终端配置代理"><a href="#Mac-终端配置代理" class="headerlink" title="Mac 终端配置代理"></a>Mac 终端配置代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">alias</span> proxy=<span class="hljs-string">&#x27;export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890&#x27;</span><br><span class="hljs-built_in">alias</span> unproxy=<span class="hljs-string">&#x27;unset https_proxy http_proxy all_proxy&#x27;</span><br></code></pre></td></tr></table></figure><h2 id="Mac修改DNS"><a href="#Mac修改DNS" class="headerlink" title="Mac修改DNS"></a>Mac修改DNS</h2><ul><li>可以通过mac界面的网络来修改</li><li>也可以通过命令行修改</li></ul><p>个人一般需要修改的场景只在terminal中，所以将命令做成alias来快捷使用。</p><p>修改dns命令如下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看网络接口</span><br>networksetup -listallnetworkservice<br><br>networksetup -setdnsservers Wi-Fi 8.8.8.8 114.114.114.114<br><br><span class="hljs-comment"># 查看wi-fi接口的dns配置</span><br>networksetup -getdnsservers Wi-Fi<br><br><span class="hljs-comment"># 或用scutil查看dns配置</span><br>scutil --dns<br><br><span class="hljs-comment"># 清空dns配置，即恢复默认</span><br>networksetup -setdnsservers Wi-Fi empty<br><br><span class="hljs-comment"># 刷新dns缓存</span><br>dscacheutil -flushcache<br></code></pre></td></tr></table></figure><h2 id="DNS推荐"><a href="#DNS推荐" class="headerlink" title="DNS推荐"></a>DNS推荐</h2><p>谷歌DNS: 8.8.8.8  – 个人尝试下来比较推荐</p><p>腾讯DNS : 119.29.29.29</p><p>AliDNS 阿里<br>首选： 223.5.5.5 备用： 223.6.6.6</p><p>114 DNS<br>常规公共 DNS (干净无劫持)</p><p>首选： 114.114.114.114</p><p>备选： 114.114.115.115</p><p>拦截钓鱼病毒木马网站 (保护上网安全)</p><p>首选： 114.114.114.119</p><p>备用： 114.114.115.119</p><p>拦截色情网站 (保护儿童)</p><p>首选： 114.114.114.110</p><p>备用： 114.114.115.110</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>docker</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Gitlab download files</title>
     <link href="/2025/03/06/gitlab-download-files/"/>
     <url>/2025/03/06/gitlab-download-files/</url>
