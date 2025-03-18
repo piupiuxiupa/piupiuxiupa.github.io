@@ -220,3 +220,29 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         status_code=exc.status_code,
         headers=exc.headers)
 ```
+
+## 设置和环境变量
+
+```ini
+# .env文件设置
+ADMIN_EMAIL="deadpool@example.com"
+APP_NAME="ChimichangApp"
+```
+
+```python
+from functools import lru_cache
+from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
+class Settings(BaseSettings):
+    app_name: str = "Awesome API"
+    admin_email: str
+    items_per_user: int = 50
+
+    class Config:
+        env_file = ".env"
+
+@lru_cache
+def get_settings():
+    load_dotenv()
+    return Settings()
+```
