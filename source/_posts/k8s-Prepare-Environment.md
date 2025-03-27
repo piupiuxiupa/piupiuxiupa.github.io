@@ -2,7 +2,7 @@
 title: '[K8s] Prepare Environment'
 date: 2024-07-08 13:26:38
 tags: k8s
-categories: posts
+categories: Posts
 ---
 
 # Prepare Environment

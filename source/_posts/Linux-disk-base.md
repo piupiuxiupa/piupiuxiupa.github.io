@@ -2,7 +2,7 @@
 title: Linux 磁盘基础
 date: 2024-07-17 10:53:47
 tags: linux
-categories: posts
+categories: Posts
 ---
 
 # Linux 磁盘基础

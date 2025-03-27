@@ -2,7 +2,7 @@
 title: Git 基本用法
 date: 2024-07-08 13:33:02
 tags: tools
-categories: posts
+categories: Posts
 ---
 
 # Git 基本用法

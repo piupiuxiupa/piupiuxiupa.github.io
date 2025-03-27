@@ -2,7 +2,7 @@
 title: Hexo部署GitHub个人博客
 date: 2024-08-05 10:42:50
 tags: tools
-categories: posts
+categories: Posts
 ---
 
 # Hexo部署GitHub个人博客

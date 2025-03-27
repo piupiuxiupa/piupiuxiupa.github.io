@@ -2,7 +2,7 @@
 title: Pandas Intro
 date: 2025-03-27 20:37:30
 tags: python
-categories: posts
+categories: Posts
 ---
 
 # Pandas 简介

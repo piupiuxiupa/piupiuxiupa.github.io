@@ -2,7 +2,7 @@
 title: Multipass 基本用法及常见问题
 date: 2024-07-08 11:02:11
 tags: tools
-categories: posts
+categories: Posts
 ---
 这是一份Multipass基本操作文档，以及包含一些常见问题的解决方法。
 

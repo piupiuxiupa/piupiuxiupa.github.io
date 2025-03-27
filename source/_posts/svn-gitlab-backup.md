@@ -2,7 +2,7 @@
 title: SVN GitLab 备份与还原
 date: 2024-10-15 11:09:29
 tags: tools
-categories: posts
+categories: Posts
 ---
 
 # SVN & GitLab 备份与还原

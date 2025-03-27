@@ -2,7 +2,7 @@
 title: Anaconda Install & Use
 date: 2025-03-27 20:33:41
 tags: tools
-categories: posts
+categories: Posts
 ---
 
 # Anaconda 安装

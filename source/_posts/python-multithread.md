@@ -2,7 +2,7 @@
 title: Python 多线程编程
 date: 2025-01-03 15:15:32
 tags: python
-categories: posts
+categories: Posts
 ---
 
 # Python 多线程编程

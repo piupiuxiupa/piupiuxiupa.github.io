@@ -2,7 +2,7 @@
 title: '[K8s] Kubernetes Install'
 date: 2024-07-08 13:30:02
 tags: k8s
-categories: posts
+categories: Posts
 ---
 
 # K8s Install

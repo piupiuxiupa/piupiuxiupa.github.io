@@ -2,7 +2,7 @@
 title: WSL启动Linux并初始化及代理配置
 date: 2024-08-04 19:45:05
 tags: tools
-categories: posts
+categories: Posts
 ---
 
 ## WSL 启动 Ubuntu

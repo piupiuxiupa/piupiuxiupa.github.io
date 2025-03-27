@@ -2,7 +2,7 @@
 title: Shell 实用技巧（一）
 date: 2024-08-06 20:06:47
 tags: linux
-categories: posts
+categories: Posts
 ---
 # Shell 实用技巧
 1. **保存多个命令的输出**

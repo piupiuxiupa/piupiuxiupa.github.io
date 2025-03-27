@@ -2,7 +2,7 @@
 title: Gitlab download files
 date: 2025-03-06 18:11:46
 tags: linux
-categories: posts
+categories: Posts
 ---
 
 # Gitlab 下载文件

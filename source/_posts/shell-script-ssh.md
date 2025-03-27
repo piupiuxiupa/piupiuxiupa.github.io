@@ -2,7 +2,7 @@
 title: Shell script ssh & linux cmd tips
 date: 2025-03-05 13:22:54
 tags: linux
-categories: posts
+categories: Posts
 ---
 # 脚本批量ssh登录
 

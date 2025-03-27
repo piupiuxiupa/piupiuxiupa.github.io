@@ -2,7 +2,7 @@
 title: Jenkins GitLab Webhook
 date: 2024-11-21 12:34:36
 tags: tools
-categories: posts
+categories: Posts
 ---
 
 # Jenkins & GitLab configure webhook

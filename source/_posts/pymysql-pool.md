@@ -2,7 +2,7 @@
 title: pymysql与连接池
 date: 2024-12-09 20:11:33
 tags: python
-categories: posts
+categories: Posts
 ---
 
 # pymysql 与连接池

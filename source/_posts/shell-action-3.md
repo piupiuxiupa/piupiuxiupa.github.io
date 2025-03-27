@@ -2,7 +2,7 @@
 title: Shell 实用技巧（三）
 date: 2024-08-15 10:53:19
 tags: linux
-categories: posts
+categories: Posts
 ---
 1. **getopts**
     - `getopts` 是一个内建命令，用于处理命令行选项。

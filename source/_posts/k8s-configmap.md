@@ -2,7 +2,7 @@
 title: K8s ConfigMap
 date: 2024-12-23 10:44:10
 tags: k8s
-categories: posts
+categories: Posts
 ---
 
 # ConfigMap

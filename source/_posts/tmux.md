@@ -2,7 +2,7 @@
 title: TMUX 基础操作
 date: 2024-07-11 15:20:11
 tags: tools
-categories: posts
+categories: Posts
 ---
 # TMUX
 

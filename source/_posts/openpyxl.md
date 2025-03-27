@@ -2,7 +2,7 @@
 title: openpyxl
 date: 2024-12-09 15:23:49
 tags: python
-categories: posts
+categories: Posts
 ---
 
 # openpyxl

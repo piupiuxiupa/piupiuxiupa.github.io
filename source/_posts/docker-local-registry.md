@@ -2,7 +2,7 @@
 title: 搭建Docker本地仓库
 date: 2024-08-11 15:38:32
 tags: docker
-categories: posts
+categories: Posts
 ---
 
 # 搭建Docker本地仓库
