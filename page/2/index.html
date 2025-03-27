@@ -226,6 +226,126 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2024/12/20/helm-intro/" target="_self">
+          Helm 初探
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/20/helm-intro/" target="_self">
+        <div>
+          helm 初探 https://helm.sh/zh/docs/intro/using_helm/  三大概念Chart 代表着 Helm 包。它包含在 Kubernetes 集群内部运行应用程序，工具或服务所需的所有资源定义。你可以把它看作是 Homebrew formula，Apt dpkg，或 Yum RPM 在Kubernetes 中的等价物。 Repository（仓库） 是用来存放和共
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-20 16:32" pubdate>
+              2024-12-20
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/tools/">#tools</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/12/11/fastapi-notes-2/" target="_self">
+          FastAPI Notes 2
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/11/fastapi-notes-2/" target="_self">
+        <div>
+          FastAPI Notes 2关闭交互式文档访问123456from fastapi import FastAPIapp = FastAPI(    docs_url=None,     redoc_url=None,    # 或直接设置    openapi_url=None)  全局异常错误捕获1234567891011121314from fastapi import FastAPIfro
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-11 16:25" pubdate>
+              2024-12-11
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/python/">#python</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/12/09/pymysql-pool/" target="_self">
+          pymysql与连接池
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/09/pymysql-pool/" target="_self">
+        <div>
+          pymysql 与连接池pymysql12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455import pymysql# 1. 连接到 MySQL 数据库connection = pymysql.connect(    host=&#x27;loca
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-09 20:11" pubdate>
+              2024-12-09
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/python/">#python</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2024/12/09/openpyxl/" target="_self">
           openpyxl
         </a>
@@ -493,119 +613,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/python/">#python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/11/20/oracle-notes/" target="_self">
-          Oracle Notes
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/11/20/oracle-notes/" target="_self">
-        <div>
-          oracle登录oracle1234su - oraclesqlplus / as sysdbasqlplus username/password@ip/instance_name  修改oracle密码策略1234567891011121314# 查看所有的PDBshow pdbs;# 切换到指定PDBalter session set contaniner=PDB_NAME;# 再次查看pdb
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-11-20 16:33" pubdate>
-              2024-11-20
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/11/20/python-notes/" target="_self">
-          Python Notes
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/11/20/python-notes/" target="_self">
-        <div>
-          Python Notesisinstance函数123456789101112131415161718# 判断类型if isinstance(url, str):  # 字符串转列表会把字符串打散成字母列表存放  # 可以如下方法转成列表存放  url = [url]  # 如果不传递任何分隔符给split()方法，且字符串中没有空格（默认分隔符）或其他空白字符  # 字符串将不会被拆分，而是作为
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-11-20 12:13" pubdate>
-              2024-11-20
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/python/">#python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/10/17/wsl-migrate/" target="_self">
-          WSL 切换存储路径
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/10/17/wsl-migrate/" target="_self">
-        <div>
-          WSL 切换存储路径 WSL默认安装在C盘，使用过程中容易撑满C盘  12345678910111213141516171819# 查看容器信息wsl -l -v # 如果安装了docker则执行# 先在任务栏把docker-desktop退出wsl --export docker-desktop-data &quot;D:\wsl\docker-desktop-data.tar&quot;wsl
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-10-17 17:08" pubdate>
-              2024-10-17
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/tools/">#tools</a>
             
           </div>
         
