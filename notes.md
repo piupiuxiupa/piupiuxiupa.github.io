@@ -44,3 +44,26 @@ Set-Item WSMan:\localhost\Client\TrustedHosts -Value "*" -Force
 # 打开防火墙端口
 New-NetFirewallRule -Name "WinRM" -DisplayName "WinRM" -Enabled True -Protocol TCP -Action Allow -LocalPort 5985
 ```
+
+## ansible
+
+ansible 执行 win分组下所有30.21的机器 -> `ansible 'win:&*.30.21' -m win_ping`
+
+比较两列不同
+
+ comm -3 <(sort -u list) <(sort -u list2)
+
+## mysql 授权远程登录及错误问题处理
+
+https://blog.csdn.net/hanhanwanghaha/article/details/105599321
+
+
+```bash
+echo "bind-address = 0.0.0.0" >> /etc/my.cnf
+service mysqld restart
+```
+```sql
+CREATE USER 'root'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+flush privileges;
+```
