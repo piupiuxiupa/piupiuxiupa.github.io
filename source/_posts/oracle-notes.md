@@ -2,6 +2,7 @@
 title: Oracle Notes
 date: 2024-11-20 16:33:11
 tags: 
+categories: posts
 ---
 
 # oracle

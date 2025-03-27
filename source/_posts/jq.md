@@ -2,6 +2,7 @@
 title: jq 常用操作介绍
 date: 2024-12-06 11:04:35
 tags: tools
+categories: posts
 ---
 
 # jq 命令基本用法

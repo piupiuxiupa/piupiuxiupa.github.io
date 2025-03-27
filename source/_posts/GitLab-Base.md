@@ -2,6 +2,7 @@
 title: GitLab 常用操作与问题记录
 date: 2024-11-29 09:49:00
 tags: tools
+categories: posts
 ---
 
 # GitLab 常用操作与问题记录

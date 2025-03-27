@@ -2,6 +2,7 @@
 title: Linux curl 基础用法
 date: 2024-08-14 20:26:42
 tags: linux
+categories: posts
 ---
 # Curl 基础用法
 

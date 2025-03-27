@@ -2,6 +2,7 @@
 title: 本地大模型部署
 date: 2024-08-04 18:59:10
 tags: tools
+categories: posts
 ---
 
 # 本地大模型部署

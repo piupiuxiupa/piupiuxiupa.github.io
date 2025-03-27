@@ -2,6 +2,7 @@
 title: Ansible 批量设置免密登录
 date: 2024-08-29 15:07:38
 tags: ansible
+categories: posts
 ---
 
 # Ansible 批量设置免密登录

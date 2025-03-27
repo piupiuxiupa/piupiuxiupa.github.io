@@ -2,6 +2,7 @@
 title: Ansible Inventory Intro
 date: 2024-07-12 13:35:03
 tags: ansible
+categories: posts
 ---
 # ansible inventory 文件基本介绍
 

@@ -2,6 +2,7 @@
 title: Ansible ad-hoc简介
 date: 2024-07-12 15:59:04
 tags: ansible
+categories: posts
 ---
 # Ansible Ad-Hoc
 Ad-Hoc形式应用场景主要在临时执行一些操作时会用到，更注重解决一些简单或临时任务，复杂操作会使用playbook来实现。

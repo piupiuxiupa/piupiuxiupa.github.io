@@ -2,6 +2,7 @@
 title: Docker cannot pull images
 date: 2025-03-07 09:58:20
 tags: docker
+categories: posts
 ---
 
 # Mac Docker 镜像网络问题

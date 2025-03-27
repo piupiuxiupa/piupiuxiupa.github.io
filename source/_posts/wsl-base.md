@@ -2,6 +2,7 @@
 title: WSL 基础用法
 date: 2024-08-04 14:40:41
 tags: tools
+categories: posts
 ---
 
 # WSL 基础用法

@@ -2,6 +2,7 @@
 title: FastAPI Notes 2
 date: 2024-12-11 16:25:20
 tags: python
+categories: posts
 ---
 
 # FastAPI Notes 2

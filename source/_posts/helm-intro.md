@@ -2,6 +2,7 @@
 title: Helm 初探
 date: 2024-12-20 16:32:38
 tags: tools
+categories: posts
 ---
 
 # helm 初探

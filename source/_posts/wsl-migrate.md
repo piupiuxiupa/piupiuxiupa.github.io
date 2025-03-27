@@ -2,6 +2,7 @@
 title: WSL 切换存储路径
 date: 2024-10-17 17:08:08
 tags: tools
+categories: posts
 ---
 
 # WSL 切换存储路径

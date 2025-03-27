@@ -2,11 +2,12 @@
 title: Anaconda Install & Use
 date: 2025-03-27 20:33:41
 tags: tools
+categories: posts
 ---
 
 # Anaconda 安装
 
-## install
+## Install
 
 ```bash
 wget https://repo.anaconda.com/archive/Anaconda3-2023.07-2-Linux-x86_64.sh

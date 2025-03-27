@@ -2,6 +2,7 @@
 title: K8s 基础操作与配置
 date: 2024-08-27 14:42:39
 tags: k8s
+categories: posts
 ---
 
 # K8s 基础

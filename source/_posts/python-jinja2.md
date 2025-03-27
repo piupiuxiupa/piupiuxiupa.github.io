@@ -2,6 +2,7 @@
 title: Python jinja2
 date: 2025-03-05 14:10:03
 tags: python
+categories: posts
 ---
 
 # jinjia2 模板引擎

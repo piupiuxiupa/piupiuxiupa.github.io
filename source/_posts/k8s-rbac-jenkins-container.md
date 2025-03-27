@@ -2,6 +2,7 @@
 title: k8s rbac & Jenkins container
 date: 2024-11-22 15:45:09
 tags: k8s
+categories: posts
 ---
 
 # Kubenetes rbac & Jenkins container
