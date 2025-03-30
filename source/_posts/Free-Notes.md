@@ -2,9 +2,8 @@
 title: Free Notes
 date: 2025-03-27 20:43:24
 categories: Notes
+excerpt: 个人的一些随记，待整理
 ---
-
-## Notes
 
 ## 收集cpu 磁盘信息
 

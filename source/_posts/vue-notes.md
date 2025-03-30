@@ -2,9 +2,8 @@
 title: Vue Notes
 date: 2025-03-30 16:49:47
 categories: Notes
+excerpt: Vue's notes
 ---
-
-# Vue Notes
 
 ## 变量
 

@@ -234,7 +234,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/08/11/docker-local-registry/" target="_self">
         <div>
-          搭建Docker本地仓库前提  安装 docker 熟悉 docker环境及基本操作  容器化部署12345678910111213141516171819# 联网环境下# 直接运行 registry镜像，本地没有会自动拉取docker run -d -p 5000:5000 --name registry registry:2# 内网环境# 下载对应镜像 tar包传入内网环境# 只有用save的
+          
         </div>
       </a>
 
@@ -295,7 +295,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/08/07/shell-action-2/" target="_self">
         <div>
-          Shell 实用技巧 创建简单的菜单  12345678910111213141516171819202122#!/usr/bin/env bash# 实例文件：dbinit.1### 修改提示符## PS1 命令行提示符## PS2 续行提示符## PS3 select提示符DBLIST=$(sh ./listdb | tail -n +2)PS3=&quot;0 inits &gt;&quot
+          
         </div>
       </a>
 
@@ -356,7 +356,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/08/06/shell-action/" target="_self">
         <div>
-          Shell 实用技巧 保存多个命令的输出  使用&#123;&#125;将命令组合在一起，然后重定向 花括号实际上是保留字，两侧必须有空白字符，闭合括号前面的命令的分号不能少   使用()将命令放入子shell重定向输出   用子shell的方式不会改变当前shell的环境，比如下面的命令组包含cd ..，在用花括号的方式中会切换当前路径，而子shell方式中不会切换当前shell的路径，所有的命
+          
         </div>
       </a>
 
@@ -417,7 +417,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/08/05/deploy-hexo/" target="_self">
         <div>
-          Hexo部署GitHub个人博客1. 安装Hexo安装Hexo需要  nodejs npm  12345# 注意nodejs版本# 需要 ubuntu noble版本apt install nodejs npm# npm 下载慢需要跟换国内源，或者添加代理npm install -g hexo  2. Hexo 常用命令1234567891011121314# 需要一点时间hexo init $p
+          
         </div>
       </a>
 
@@ -478,7 +478,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/08/04/WSL-Linux-init-proxy/" target="_self">
         <div>
-          WSL 启动 Ubuntu由于22.04 jammy不支持高版本nodejs，所以我们下载24.04 noble版本的Ubuntu。 1234## 查看可下载的发行版wsl -l -owsl --install -d Ubuntu-24.04    等待下载完成就会自动进入。 配置 apt阿里源123456789101112131415cp /etc/apt/sources.list /etc/a
+          
         </div>
       </a>
 
@@ -539,7 +539,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/08/04/local-llm-deploy/" target="_self">
         <div>
-          本地大模型部署 Windows根据官网下载安装即可 Linux 官方安装步骤  1. 安装ollama12345678910111213## 可能会比较慢，需要magiccurl -fsSL https://ollama.com/install.sh | sh## 也可先把ollama-linux-amd64下载到本地## 然后上传到linux## 修改安装脚本两处地方再安装curl -fsSL
+          
         </div>
       </a>
 
@@ -600,7 +600,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/08/04/wsl-base/" target="_self">
         <div>
-          WSL 基础用法检查 WSL是否安装12## 检查版本wsl --version   有输出如图则为已安装。 安装 WSL 旧版安装方式  安装 WSL 2 之前，必须启用“虚拟机平台”可选功能。 运行如下命令： 1dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart  必须运行 W
+          
         </div>
       </a>
 
@@ -661,7 +661,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/07/17/Linux-disk-base/" target="_self">
         <div>
-          Linux 磁盘基础先从如何使用开始  如何查磁盘占用大小及基本信息 将会用到的命令：  df lsblk du blkid   如何进行磁盘分区、制作逻辑卷、格式化、挂载 将会用到的命令：  fdisk gdisk parted pvcreate vgcreate lvcreate mkfs mount    然后简单了解磁盘分区的原理  MBR GPT  最后是操作磁盘时可能遇到的各种问题。例
+          
         </div>
       </a>
 
@@ -722,7 +722,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/07/12/ansible-ad-hoc/" target="_self">
         <div>
-          Ansible Ad-HocAd-Hoc形式应用场景主要在临时执行一些操作时会用到，更注重解决一些简单或临时任务，复杂操作会使用playbook来实现。比如想临时传一个文件到被控机上就可以使用ad-hoc形式来完成。 1ansible all -m copy -a &quot;src=/root/monitor.sh dest=/root/ backup=yes&quot; 常用选项1234567
+          
         </div>
       </a>
 
@@ -783,7 +783,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/07/12/Ansible-Inventory-Intro/" target="_self">
         <div>
-          ansible inventory 文件基本介绍 默认配置路径 /etc/ansible/hosts  定义主机和组ansible 支持将同一个主机同时归并到多个不同的组中 123456789101112131415# 可以直接写IP地址192.168.3.27# 支持hostnamentp.example.com# 支持:+port192.168.3.27:22ntp.example.com:2
+          
         </div>
       </a>
 

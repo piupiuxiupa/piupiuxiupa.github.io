@@ -3,9 +3,8 @@ title: Pandas Intro
 date: 2025-03-27 20:37:30
 tags: python
 categories: Posts
+excerpt: Pandas的一些简单使用方法介绍
 ---
-
-# Pandas 简介
 
 ## 安装
 
