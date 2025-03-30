@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Notes收集cpu 磁盘信息123456789101112131415lsblk -db -e 7 -o SIZE -n | awk &#x27;&#123;s+&#x3D;$1&#125; END&#123;printf &quot;%.1fTB&quot;, s&#x2F;1024&#x2F;1024&#x2F;1024&#x2F;1024&#125;&#x27;# CPU信息：Socket(s) 插槽数，Core(s) per socke">
+    <meta name="description" content="个人的一些随记，待整理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Free Notes">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2025/03/27/Free-Notes/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="Notes收集cpu 磁盘信息123456789101112131415lsblk -db -e 7 -o SIZE -n | awk &#x27;&#123;s+&#x3D;$1&#125; END&#123;printf &quot;%.1fTB&quot;, s&#x2F;1024&#x2F;1024&#x2F;1024&#x2F;1024&#125;&#x27;# CPU信息：Socket(s) 插槽数，Core(s) per socke">
+<meta property="og:description" content="个人的一些随记，待整理">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-27T12:43:24.000Z">
-<meta property="article:modified_time" content="2025-03-27T12:52:23.158Z">
+<meta property="article:modified_time" content="2025-03-30T09:14:56.304Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -274,7 +274,7 @@
             
               <div class="markdown-body">
                 
-                <h2 id="Notes"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</h2><h2 id="收集cpu-磁盘信息"><a href="#收集cpu-磁盘信息" class="headerlink" title="收集cpu 磁盘信息"></a>收集cpu 磁盘信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">lsblk -db -e 7 -o SIZE -n | awk <span class="hljs-string">&#x27;&#123;s+=$1&#125; END&#123;printf &quot;%.1fTB&quot;, s/1024/1024/1024/1024&#125;&#x27;</span><br><br><span class="hljs-comment"># CPU信息：Socket(s) 插槽数，Core(s) per socket 每个插槽核心数，Thread(s) per core 每个核心线程数</span><br><span class="hljs-comment"># CPU名：</span><br>lscpu | grep <span class="hljs-string">&#x27;Model name&#x27;</span><br><span class="hljs-comment"># 物理核心数：</span><br>lscpu | grep -i <span class="hljs-string">&#x27;socket&#x27;</span> | awk <span class="hljs-string">&#x27;&#123;print $NF&#125;&#x27;</span> | <span class="hljs-built_in">paste</span> -s -d <span class="hljs-string">&#x27;*&#x27;</span> | bc<br><span class="hljs-comment"># 总线程数（逻辑核心数）：</span><br>lscpu | grep  <span class="hljs-string">&#x27;^CPU(s):&#x27;</span>|awk <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span><br><br><span class="hljs-comment"># 查看网口信息</span><br>ethtool eth0 <br><br><span class="hljs-comment"># 查看GPU</span><br>lspci<br></code></pre></td></tr></table></figure>
+                <h2 id="收集cpu-磁盘信息"><a href="#收集cpu-磁盘信息" class="headerlink" title="收集cpu 磁盘信息"></a>收集cpu 磁盘信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">lsblk -db -e 7 -o SIZE -n | awk <span class="hljs-string">&#x27;&#123;s+=$1&#125; END&#123;printf &quot;%.1fTB&quot;, s/1024/1024/1024/1024&#125;&#x27;</span><br><br><span class="hljs-comment"># CPU信息：Socket(s) 插槽数，Core(s) per socket 每个插槽核心数，Thread(s) per core 每个核心线程数</span><br><span class="hljs-comment"># CPU名：</span><br>lscpu | grep <span class="hljs-string">&#x27;Model name&#x27;</span><br><span class="hljs-comment"># 物理核心数：</span><br>lscpu | grep -i <span class="hljs-string">&#x27;socket&#x27;</span> | awk <span class="hljs-string">&#x27;&#123;print $NF&#125;&#x27;</span> | <span class="hljs-built_in">paste</span> -s -d <span class="hljs-string">&#x27;*&#x27;</span> | bc<br><span class="hljs-comment"># 总线程数（逻辑核心数）：</span><br>lscpu | grep  <span class="hljs-string">&#x27;^CPU(s):&#x27;</span>|awk <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span><br><br><span class="hljs-comment"># 查看网口信息</span><br>ethtool eth0 <br><br><span class="hljs-comment"># 查看GPU</span><br>lspci<br></code></pre></td></tr></table></figure>
 
 <h2 id="windows-配置winrm"><a href="#windows-配置winrm" class="headerlink" title="windows 配置winrm"></a>windows 配置winrm</h2><ul>
 <li>python基础环境</li>
