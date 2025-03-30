@@ -2,7 +2,8 @@
 title: FastAPI Notes
 date: 2024-11-20 16:36:58
 tags: python
-categories: Posts
+categories: Notes
+excerpt: FastAPI学习笔记
 ---
 
 # FastAPI Notes

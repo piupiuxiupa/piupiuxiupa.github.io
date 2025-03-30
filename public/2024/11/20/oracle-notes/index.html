@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="oracle登录oracle1234su - oraclesqlplus &#x2F; as sysdbasqlplus username&#x2F;password@ip&#x2F;instance_name  修改oracle密码策略1234567891011121314# 查看所有的PDBshow pdbs;# 切换到指定PDBalter session set contaniner&#x3D;PDB_NAME;# 再次查看pdb">
+    <meta name="description" content="Oracle数据库的一些简单笔记">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Oracle Notes">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/11/20/oracle-notes/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="oracle登录oracle1234su - oraclesqlplus &#x2F; as sysdbasqlplus username&#x2F;password@ip&#x2F;instance_name  修改oracle密码策略1234567891011121314# 查看所有的PDBshow pdbs;# 切换到指定PDBalter session set contaniner&#x3D;PDB_NAME;# 再次查看pdb">
+<meta property="og:description" content="Oracle数据库的一些简单笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-20T08:33:11.000Z">
-<meta property="article:modified_time" content="2025-03-27T13:10:01.099Z">
+<meta property="article:modified_time" content="2025-03-30T09:31:59.003Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -277,6 +277,7 @@
                 <h1 id="oracle"><a href="#oracle" class="headerlink" title="oracle"></a>oracle</h1><h2 id="登录oracle"><a href="#登录oracle" class="headerlink" title="登录oracle"></a>登录oracle</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">su - oracle<br>sqlplus / as sysdba<br><br>sqlplus username/password@ip/instance_name<br></code></pre></td></tr></table></figure>
 
 <h2 id="修改oracle密码策略"><a href="#修改oracle密码策略" class="headerlink" title="修改oracle密码策略"></a>修改oracle密码策略</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 查看所有的PDB<br><span class="hljs-keyword">show</span> pdbs;<br># 切换到指定PDB<br><span class="hljs-keyword">alter</span> session <span class="hljs-keyword">set</span> contaniner<span class="hljs-operator">=</span>PDB_NAME;<br># 再次查看pdb，可以看到已经切换到指定PDB<br><br># 修改密码策略<br><span class="hljs-keyword">alter</span> profile <span class="hljs-keyword">default</span> limit FAILED_LOGIN_ATTEMPTS UNLIMITED;<br><span class="hljs-keyword">alter</span> profile <span class="hljs-keyword">default</span> limit PASSWORD_LIFE_TIME UNLIMITED;<br><span class="hljs-keyword">alter</span> profile <span class="hljs-keyword">default</span> limit PASSWORD_LOCK_TIME UNLIMITED;<br><span class="hljs-keyword">alter</span> profile <span class="hljs-keyword">default</span> limit PASSWORD_REUSE_TIME UNLIMITED;<br><span class="hljs-keyword">alter</span> profile <span class="hljs-keyword">default</span> limit PASSWORD_REUSE_MAX UNLIMITED;<br><span class="hljs-keyword">alter</span> profile <span class="hljs-keyword">default</span> limit PASSWORD_VERIFY_FUNCTION <span class="hljs-keyword">NULL</span>;<br><span class="hljs-keyword">alter</span> profile <span class="hljs-keyword">default</span> limit PASSWORD_GRACE_TIME UNLIMITED;<br></code></pre></td></tr></table></figure>
+
                 
               </div>
             
@@ -294,7 +295,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Posts/" class="category-chain-item">Posts</a>
+  <a href="/categories/Notes/" class="category-chain-item">Notes</a>
   
   
 

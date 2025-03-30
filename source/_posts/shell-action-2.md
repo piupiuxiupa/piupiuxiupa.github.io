@@ -2,7 +2,7 @@
 title: Shell 实用技巧（二）
 date: 2024-08-07 20:58:11
 tags: linux
-categories: Posts
+categories: Notes
 ---
 
 ## Shell 实用技巧

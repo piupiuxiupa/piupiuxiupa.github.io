@@ -2,7 +2,7 @@
 title: Docker Notes
 date: 2024-11-29 09:25:12
 tags: docker
-categories: Posts
+categories: Notes
 ---
 
 # Docker Notes

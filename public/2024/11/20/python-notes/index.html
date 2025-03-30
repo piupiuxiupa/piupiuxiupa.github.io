@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Python Notesisinstance函数123456789101112131415161718# 判断类型if isinstance(url, str):  # 字符串转列表会把字符串打散成字母列表存放  # 可以如下方法转成列表存放  url &#x3D; [url]  # 如果不传递任何分隔符给split()方法，且字符串中没有空格（默认分隔符）或其他空白字符  # 字符串将不会被拆分，而是作为">
+    <meta name="description" content="Python笔记">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python Notes">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/11/20/python-notes/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="Python Notesisinstance函数123456789101112131415161718# 判断类型if isinstance(url, str):  # 字符串转列表会把字符串打散成字母列表存放  # 可以如下方法转成列表存放  url &#x3D; [url]  # 如果不传递任何分隔符给split()方法，且字符串中没有空格（默认分隔符）或其他空白字符  # 字符串将不会被拆分，而是作为">
+<meta property="og:description" content="Python笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-20T04:13:47.000Z">
-<meta property="article:modified_time" content="2025-03-27T13:10:01.101Z">
+<meta property="article:modified_time" content="2025-03-30T09:30:58.153Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary_large_image">
@@ -325,6 +325,7 @@
 <h3 id="分割文件名和后缀"><a href="#分割文件名和后缀" class="headerlink" title="分割文件名和后缀"></a>分割文件名和后缀</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><span class="hljs-comment"># 示例路径</span><br>file_path = <span class="hljs-string">&quot;/home/user/docs/file.txt&quot;</span><br><span class="hljs-comment"># 获取文件名和后缀</span><br>filename, file_extension = os.path.splitext(file_path)<br><span class="hljs-built_in">print</span>(filename, file_extension)  <br><br><br><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br>file_path = <span class="hljs-string">&quot;/home/user/docs/file.txt&quot;</span><br>path_obj = Path(file_path)<br><span class="hljs-comment"># 获取根路径和扩展名</span><br>root = path_obj.with_suffix(<span class="hljs-string">&quot;&quot;</span>) <span class="hljs-comment"># 去掉扩展名</span><br>ext = path_obj.suffix  <span class="hljs-comment"># 获取扩展名（包括 .）</span><br><span class="hljs-built_in">print</span>(root)  <span class="hljs-comment"># 输出: /home/user/docs/file</span><br><span class="hljs-built_in">print</span>(ext)   <span class="hljs-comment"># 输出: .txt</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="列出目录下的内容"><a href="#列出目录下的内容" class="headerlink" title="列出目录下的内容"></a>列出目录下的内容</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br>path = <span class="hljs-string">&quot;/your/directory/path&quot;</span><br><br><span class="hljs-comment"># 列出路径下的所有文件和子目录</span><br>files_and_dirs = os.listdir(path)<br><span class="hljs-built_in">print</span>(files_and_dirs)  <span class="hljs-comment"># 输出列表形式</span><br><br><span class="hljs-comment"># 使用 os.scandir 只显示文件</span><br><span class="hljs-keyword">with</span> os.scandir(path) <span class="hljs-keyword">as</span> entries:<br>    files = [entry.name <span class="hljs-keyword">for</span> entry <span class="hljs-keyword">in</span> entries <span class="hljs-keyword">if</span> entry.is_file()]<br><span class="hljs-built_in">print</span>(files)<br><span class="hljs-comment"># 递归方式</span><br><span class="hljs-comment"># 遍历路径及其子目录</span><br><span class="hljs-keyword">for</span> root, dirs, files <span class="hljs-keyword">in</span> os.walk(path):<br>    <span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> files:<br>        <span class="hljs-built_in">print</span>(os.path.join(root, file))  <span class="hljs-comment"># 打印完整路径</span><br><br><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br><br>path = Path(<span class="hljs-string">&quot;/your/directory/path&quot;</span>)<br><br><span class="hljs-comment"># 列出路径下的所有文件</span><br>files = [file.name <span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> path.iterdir() <span class="hljs-keyword">if</span> file.is_file()]<br><span class="hljs-built_in">print</span>(files)<br><br><span class="hljs-comment"># 递归方式</span><br><span class="hljs-comment"># 遍历路径及其子目录的所有文件</span><br><span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> path.rglob(<span class="hljs-string">&quot;*&quot;</span>):  <span class="hljs-comment"># rglob(&quot;*&quot;) 匹配所有文件和目录</span><br>    <span class="hljs-keyword">if</span> file.is_file():<br>        <span class="hljs-built_in">print</span>(file)  <span class="hljs-comment"># 打印完整路径</span><br></code></pre></td></tr></table></figure>
+
                 
               </div>
             
@@ -342,7 +343,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Posts/" class="category-chain-item">Posts</a>
+  <a href="/categories/Notes/" class="category-chain-item">Notes</a>
   
   
 

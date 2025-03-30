@@ -2,7 +2,8 @@
 title: Python Notes
 date: 2024-11-20 12:13:47
 tags: python
-categories: Posts
+categories: Notes
+excerpt: Python笔记
 ---
 
 # Python Notes

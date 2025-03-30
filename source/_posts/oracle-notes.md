@@ -1,8 +1,8 @@
 ---
 title: Oracle Notes
 date: 2024-11-20 16:33:11
-tags: 
-categories: Posts
+categories: Notes
+excerpt: Oracle数据库的一些简单笔记
 ---
 
 # oracle
