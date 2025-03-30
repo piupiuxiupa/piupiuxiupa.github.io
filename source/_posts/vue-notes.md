@@ -8,7 +8,7 @@ categories: Notes
 
 ## 变量
 
-```vue
+```html
 <script setup>
 import { ref } from 'vue';
 
@@ -24,7 +24,7 @@ console.log(str.value) // 在script标签中可以直接使用
 
 ## 事件监听
 
-```vue
+```html
 
 <script setup>
 import { ref } from 'vue';
@@ -48,7 +48,7 @@ function add(){
 
 ## 双向绑定
 
-```vue
+```html
 <script setup>
 import { ref } from 'vue';
 const str = ref('hello world')
@@ -68,7 +68,7 @@ function add(){
 
 ## 动态绑定
 
-```vue
+```html
 <script setup>
 import { ref } from 'vue';
 const str = ref('completed')
@@ -84,7 +84,7 @@ function add(){
 </template>
 ```
 
-```vue
+```html
 <script setup>
 import { ref } from 'vue';
 const str = ref(true)
@@ -102,7 +102,7 @@ function add(){
 
 ## 列表渲染
 
-```vue
+```html
 <script setup>
 import { ref } from 'vue';
 
@@ -135,7 +135,7 @@ const list = ref([
 
 ## 监听器
 
-```vue
+```html
 <script setup>
 import { ref, watch } from 'vue';
 const str = ref('')      
@@ -153,7 +153,7 @@ watch(str, add)
 
 ## 监听对象
 
-```vue
+```html
 <script setup>
 import { ref, watch } from 'vue';
 const obj = ref({
@@ -174,7 +174,7 @@ watch(obj, add, {deep: true})
 
 ## 条件渲染
 
-```vue
+```html
 <script setup>
 import { ref } from 'vue';
 const bool = ref(true)
@@ -196,87 +196,89 @@ const bool = ref(true)
 
 一个vue文件可以看做一个组件
 
-```vue
-<script setup>
-import {defineProps} from 'vue'
-const props = defineProps(['text'])
-</script>
-<template>
-  // 组件
-  <div class='button'>
-    {{ props.text }}
-  </div>
-</template>
-<style scoped>
-.button{
-  width: 100px;
-  height: 100px;
-  background-color: red;
-}
-</style>
-```
+1. 父组件给子组件传值
 
-引入组件
+    ```html
+    <script setup>
+    import {defineProps} from 'vue'
+    const props = defineProps(['text'])
+    </script>
+    <template>
+      // 组件
+      <div class='button'>
+        {{ props.text }}
+      </div>
+    </template>
+    <style scoped>
+    .button{
+      width: 100px;
+      height: 100px;
+      background-color: red;
+    }
+    </style>
+    ```
 
-```vue
-<script setup>
-// 假设文件叫myButton.vue，在components目录下
-import myButton from './components/myButton.vue'
-</script>
-<template>
-  <div>
-    // 父组件给子组件传值
-    <myButton text="hello" />
-  </div>
-</template>
-```
+    引入组件
 
-子组件往父组件传值
+    ```html
+    <script setup>
+    // 假设文件叫myButton.vue，在components目录下
+    import myButton from './components/myButton.vue'
+    </script>
+    <template>
+      <div>
+        // 父组件给子组件传值
+        <myButton text="hello" />
+      </div>
+    </template>
+    ```
 
-```vue
-<script setup>
-import {defineProps, defineEmits} from 'vue'
-const props = defineProps(['text'])
-const emit = defineEmits(['ok']) 
-function send(){
-    emit('ok', 'hello')
-}
-</script>
-<template>
-  <div class='button' @click="send">
-    {{ props.text }}
-  </div>
-</template>
-<style scoped>
-.button{
-  width: 100px;
-  height: 100px;
-  background-color: red;    
-}
-</style>
-```
+2. 子组件往父组件传值
 
-父组件接收子组件的值
+    ```html
+    <script setup>
+    import {defineProps, defineEmits} from 'vue'
+    const props = defineProps(['text'])
+    const emit = defineEmits(['ok']) 
+    function send(){
+        emit('ok', 'hello')
+    }
+    </script>
+    <template>
+      <div class='button' @click="send">
+        {{ props.text }}
+      </div>
+    </template>
+    <style scoped>
+    .button{
+      width: 100px;
+      height: 100px;
+      background-color: red;    
+    }
+    </style>
+    ```
 
-```vue
-<script setup>
-// 假设文件叫myButton.vue，在components目录下
-import myButton from './components/myButton.vue'
-function add(str){
-    console.log(str)
-}
-</script>
-<template>
-  <div>
-    // 给子组件传值
-    <myButton @ok="add" text="Hi" />
-  </div>
-</template>
-```
+    父组件接收子组件的值
+
+    ```html
+    <script setup>
+    // 假设文件叫myButton.vue，在components目录下
+    import myButton from './components/myButton.vue'
+    function add(str){
+        console.log(str)
+    }
+    </script>
+    <template>
+      <div>
+        // 给子组件传值
+        <myButton @ok="add" text="Hi" />
+      </div>
+    </template>
+    ```
 
 ## axios
 
-```vue
+```html
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios'
