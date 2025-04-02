@@ -7,6 +7,8 @@ excerpt: 个人的一些随记，待整理
 
 ## 收集cpu 磁盘信息
 
+### Linux
+
 ```bash
 lsblk -db -e 7 -o SIZE -n | awk '{s+=$1} END{printf "%.1fTB", s/1024/1024/1024/1024}'
 
@@ -25,7 +27,22 @@ ethtool eth0
 lspci
 ```
 
-## windows 配置winrm
+### Windows
+
+```powershell
+# 查看网络接口信息
+Get-NetAdapter | Select-Object Name, InterfaceDescription, LinkSpeed
+# 查看内存信息
+Get-CimInstance Win32_ComputerSystem | Select-Object @{Name="TotalMemory(GB)";Expression={[math]::Round($_.TotalPhysicalMemory / 1GB, 2)}}
+# 查看每条内存信息
+Get-CimInstance Win32_PhysicalMemory | Select-Object Manufacturer, @{Name="Size(GB)";Expression={[math]::Round($_.Capacity / 1GB, 2)}}, Speed
+# 查看CPU信息
+Get-CimInstance Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
+# 查看磁盘信息
+Get-PhysicalDisk | Select-Object FriendlyName, MediaType, @{Name="Size(GB)";Expression={[math]::Round($_.Size / 1GB, 2)}}
+```
+
+## Windows 配置winrm
 
 - python基础环境
 - 防火墙放开5985端口
@@ -52,13 +69,28 @@ Set-Item WSMan:\localhost\Client\TrustedHosts -Value "*" -Force
 New-NetFirewallRule -Name "WinRM" -DisplayName "WinRM" -Enabled True -Protocol TCP -Action Allow -LocalPort 5985
 ```
 
-## ansible
+## windows 设置密码
 
+如果通过界面设置密码，密码会被显示为*，不好分辨是否包含空格或回车，设置的时候可以点击显示查看下。
+如果通过cmd来设置，如:
+
+```powershell
+# 此处与linux不同，''也会被视为密码的一部分
+net user administrator 'as^df!@ii'
+# ^ 是windows命令行的转义符，^d 其实是 d
+echo ^d  # 会输出 d
+```
+
+## Ansible
+
+```bash
 ansible 执行 win分组下所有30.21的机器 -> `ansible 'win:&*.30.21' -m win_ping`
 
-比较两列不同
+```
 
- comm -3 <(sort -u list) <(sort -u list2)
+## 比较两列不同
+
+comm -3 <(sort -u list) <(sort -u list2)
 
 ## mysql 授权远程登录及错误问题处理
 

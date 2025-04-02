@@ -3,9 +3,8 @@ title: Ansible 批量设置免密登录
 date: 2024-08-29 15:07:38
 tags: ansible
 categories: Posts
+excerpt: 利用ansible批量设置linux及windows机器免密登录
 ---
-
-# Ansible 批量设置免密登录
 
 ## 1. 准备 inventory && sshkey
   
@@ -26,17 +25,21 @@ categories: Posts
 ## 2. 编写playbook or 使用ad-hoc
 
 - authorized_key 模块
+  
   ```bash
   ## manage_dir 意思是如果/root没有.ssh文件目录就自动创建.ssh文件目录
   ansible machine -m authorized_key -a  "user=root  key='{{  lookup('file', '/root/.ssh/id_rsa.pub')  }}'  path=/root/.ssh/authorized_keys  manage_dir=yes"
   ```
+
 - copy && shell 模块
+  
   ```bash
   # copy公钥至远程主机/tmp目录下
   ansible machine -m copy -a "src=/root/.ssh/id_rsa.pub dest=/tmp/id_rsa.pub"
   # 添加公钥
   ansible machine -m shell -a "cat /tmp/id_rsa.pub >> /root/.ssh/authorized_keys"
   ```
+
 - 少量主机时可用
   - 需要自己输入密码
   - 主机较多时频繁输入密码较麻烦，主机量少时可以使用
@@ -46,6 +49,7 @@ categories: Posts
 ```bash
 ssh-copy-id -i /root/.ssh/id_rsa.pub root@192.168.1.1
 ```
+
 关于expect用法可查询其他资料，bash脚本可以结合expect使用，从而达到自动批量登录设置免密的效果。
 
 ```bash
@@ -80,9 +84,20 @@ expect eof
 ```
 
 ## 3. 验证
+
 ```bash
 # 将 ip host 写入/etc/hosts文件，如
 echo "192.168.1.1 master" >> /etc/hosts
 ## 实现直接输入master登录远程服务器
 ssh master 
+```
+
+## Windows 设置免密
+
+```shell
+ansible win -m win_shell -a "mkdir C:\Users\Administrator\.ssh -Force"
+
+ansible hz_win -m win_copy  -a "src='/root/.ssh/id_rsa.pub' dest='C:/Users/Administrator/.ssh/authorized_keys'"
+
+ansible hz_win -m win_copy  -a 'icacls C:\Users\Administrator\.ssh\authorized_keys /inheritance:r /grant "Administrator:F"''
 ```
