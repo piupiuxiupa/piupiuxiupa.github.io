@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Ansible 批量设置免密登录1. 准备 inventory &amp;&amp; sshkey  首次批量设置免密必然涉及使用带账号密码的inventory文件，  在设置完后记得修改或删除inventory文件。   生成公钥和私钥   123456# 随机生成公私钥对，ssh-keygen是Linux下认证密钥生成、管理和转换工具，详细用法可参考其man文档# 最简单的用法，然后敲回车即可">
+    <meta name="description" content="利用ansible批量设置linux及windows机器免密登录">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ansible 批量设置免密登录">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/08/29/ansible-set-sshpass/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="Ansible 批量设置免密登录1. 准备 inventory &amp;&amp; sshkey  首次批量设置免密必然涉及使用带账号密码的inventory文件，  在设置完后记得修改或删除inventory文件。   生成公钥和私钥   123456# 随机生成公私钥对，ssh-keygen是Linux下认证密钥生成、管理和转换工具，详细用法可参考其man文档# 最简单的用法，然后敲回车即可">
+<meta property="og:description" content="利用ansible批量设置linux及windows机器免密登录">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-08-29T07:07:38.000Z">
-<meta property="article:modified_time" content="2025-03-27T13:10:01.089Z">
+<meta property="article:modified_time" content="2025-04-02T01:36:28.017Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="ansible">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          602 字
+          645 字
         
       </span>
     
@@ -275,14 +275,19 @@
             
               <div class="markdown-body">
                 
-                <h1 id="Ansible-批量设置免密登录"><a href="#Ansible-批量设置免密登录" class="headerlink" title="Ansible 批量设置免密登录"></a>Ansible 批量设置免密登录</h1><h2 id="1-准备-inventory-sshkey"><a href="#1-准备-inventory-sshkey" class="headerlink" title="1. 准备 inventory &amp;&amp; sshkey"></a>1. 准备 inventory &amp;&amp; sshkey</h2><p>  首次批量设置免密必然涉及使用带账号密码的inventory文件，<br>  在设置完后记得修改或删除inventory文件。</p>
+                <h2 id="1-准备-inventory-sshkey"><a href="#1-准备-inventory-sshkey" class="headerlink" title="1. 准备 inventory &amp;&amp; sshkey"></a>1. 准备 inventory &amp;&amp; sshkey</h2><p>  首次批量设置免密必然涉及使用带账号密码的inventory文件，<br>  在设置完后记得修改或删除inventory文件。</p>
 <p>  生成公钥和私钥</p>
   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 随机生成公私钥对，ssh-keygen是Linux下认证密钥生成、管理和转换工具，详细用法可参考其man文档</span><br><span class="hljs-comment"># 最简单的用法，然后敲回车即可</span><br>ssh-keygen -t rsa<br><span class="hljs-comment"># -N 必须设置为空，否则ssh时依然需要输入-N设置的密码</span><br><span class="hljs-comment"># -C 添加注释</span><br>ssh-keygen -N <span class="hljs-string">&quot;&quot;</span> -b 4096 -t rsa -C <span class="hljs-string">&quot;root@localhost.com&quot;</span> -f /root/.ssh/root.rsa<br></code></pre></td></tr></table></figure>
 
 <h2 id="2-编写playbook-or-使用ad-hoc"><a href="#2-编写playbook-or-使用ad-hoc" class="headerlink" title="2. 编写playbook or 使用ad-hoc"></a>2. 编写playbook or 使用ad-hoc</h2><ul>
-<li>authorized_key 模块<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## manage_dir 意思是如果/root没有.ssh文件目录就自动创建.ssh文件目录</span><br>ansible machine -m authorized_key -a  <span class="hljs-string">&quot;user=root  key=&#x27;&#123;&#123;  lookup(&#x27;file&#x27;, &#x27;/root/.ssh/id_rsa.pub&#x27;)  &#125;&#125;&#x27;  path=/root/.ssh/authorized_keys  manage_dir=yes&quot;</span><br></code></pre></td></tr></table></figure></li>
-<li>copy &amp;&amp; shell 模块<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># copy公钥至远程主机/tmp目录下</span><br>ansible machine -m copy -a <span class="hljs-string">&quot;src=/root/.ssh/id_rsa.pub dest=/tmp/id_rsa.pub&quot;</span><br><span class="hljs-comment"># 添加公钥</span><br>ansible machine -m shell -a <span class="hljs-string">&quot;cat /tmp/id_rsa.pub &gt;&gt; /root/.ssh/authorized_keys&quot;</span><br></code></pre></td></tr></table></figure></li>
-<li>少量主机时可用<ul>
+<li><p>authorized_key 模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## manage_dir 意思是如果/root没有.ssh文件目录就自动创建.ssh文件目录</span><br>ansible machine -m authorized_key -a  <span class="hljs-string">&quot;user=root  key=&#x27;&#123;&#123;  lookup(&#x27;file&#x27;, &#x27;/root/.ssh/id_rsa.pub&#x27;)  &#125;&#125;&#x27;  path=/root/.ssh/authorized_keys  manage_dir=yes&quot;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>copy &amp;&amp; shell 模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># copy公钥至远程主机/tmp目录下</span><br>ansible machine -m copy -a <span class="hljs-string">&quot;src=/root/.ssh/id_rsa.pub dest=/tmp/id_rsa.pub&quot;</span><br><span class="hljs-comment"># 添加公钥</span><br>ansible machine -m shell -a <span class="hljs-string">&quot;cat /tmp/id_rsa.pub &gt;&gt; /root/.ssh/authorized_keys&quot;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>少量主机时可用</p>
+<ul>
 <li>需要自己输入密码</li>
 <li>主机较多时频繁输入密码较麻烦，主机量少时可以使用</li>
 <li>个别新增可用此方法</li>
@@ -291,10 +296,14 @@
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ssh-copy-id -i /root/.ssh/id_rsa.pub root@192.168.1.1<br></code></pre></td></tr></table></figure>
+
 <p>关于expect用法可查询其他资料，bash脚本可以结合expect使用，从而达到自动批量登录设置免密的效果。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># ! /usr/bin/expect</span><br><span class="hljs-comment"># 设置要连接的远程主机IP信息</span><br><span class="hljs-built_in">set</span> IP      [ lindex <span class="hljs-variable">$argv</span> 0 ]<br><span class="hljs-comment"># 设置要连接的远程主机登录用户</span><br><span class="hljs-built_in">set</span> USER    [ lindex <span class="hljs-variable">$argv</span> 1 ]<br><span class="hljs-comment"># 设置要连接的远程主机登录用户的密码信息</span><br><span class="hljs-built_in">set</span> PASSWD [ lindex <span class="hljs-variable">$argv</span> 2 ]<br><span class="hljs-comment"># 设置要执行的命令</span><br><span class="hljs-built_in">set</span> CMD     [ lindex <span class="hljs-variable">$argv</span> 3 ]<br><span class="hljs-comment"># spawn是expect内部命令，开启ssh连接</span><br>spawn ssh <span class="hljs-variable">$USER</span>@<span class="hljs-variable">$IP</span> <span class="hljs-variable">$CMD</span><br><span class="hljs-comment"># 判断上次执行结果</span><br>expect &#123;<br>    <span class="hljs-comment"># 如果有yes或no关键字</span><br>    <span class="hljs-string">&quot;(yes/no)? &quot;</span> &#123;<br>        <span class="hljs-comment"># 则输入yes</span><br>        send <span class="hljs-string">&quot;yes\r&quot;</span><br>        <span class="hljs-comment"># 输入完yes后如果输出结果有：password: 关键字</span><br>        expect <span class="hljs-string">&quot;password:&quot;</span><br>        <span class="hljs-comment"># 则输入密码文件</span><br>        send <span class="hljs-string">&quot;<span class="hljs-variable">$PASSWD</span>\r&quot;</span><br>        &#125;<br>    <span class="hljs-comment"># 如果上次输出结果有：password: ，则输入密码</span><br>    <span class="hljs-string">&quot;password:&quot;</span> &#123;send <span class="hljs-string">&quot;<span class="hljs-variable">$PASSWD</span>\r&quot;</span>&#125;<br>    <span class="hljs-comment"># 如果上次输出结果有：* to host ，则退出</span><br>    <span class="hljs-string">&quot;* to host&quot;</span> &#123;<span class="hljs-built_in">exit</span> 1&#125;<br>    &#125;<br>expect eof<br></code></pre></td></tr></table></figure>
 
 <h2 id="3-验证"><a href="#3-验证" class="headerlink" title="3. 验证"></a>3. 验证</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 将 ip host 写入/etc/hosts文件，如</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;192.168.1.1 master&quot;</span> &gt;&gt; /etc/hosts<br><span class="hljs-comment">## 实现直接输入master登录远程服务器</span><br>ssh master <br></code></pre></td></tr></table></figure>
+
+<h2 id="Windows-设置免密"><a href="#Windows-设置免密" class="headerlink" title="Windows 设置免密"></a>Windows 设置免密</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">ansible win -m win_shell -a &quot;mkdir C:\Users\Administrator\.ssh -Force&quot;<br><br>ansible hz_win -m win_copy  -a &quot;src=&#x27;/root/.ssh/id_rsa.pub&#x27; dest=&#x27;C:/Users/Administrator/.ssh/authorized_keys&#x27;&quot;<br><br>ansible hz_win -m win_copy  -a &#x27;icacls C:\Users\Administrator\.ssh\authorized_keys /inheritance:r /grant &quot;Administrator:F&quot;&#x27;&#x27;<br></code></pre></td></tr></table></figure>
+
                 
               </div>
             
