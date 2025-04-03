@@ -23,6 +23,13 @@ channels:
   - defaults
 show_channel_urls: true
 EOF
+
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
+conda config --add channels conda-forge
+
+conda config --set show_channel_urls yes
 ```
 
 ## 常用命令

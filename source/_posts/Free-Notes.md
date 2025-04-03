@@ -81,11 +81,20 @@ net user administrator 'as^df!@ii'
 echo ^d  # 会输出 d
 ```
 
+## 创建用户并设置管理员和远程登陆
+
+```powershell
+net user newuser password123 /add
+net localgroup "Administrators" newuser /add
+net localgroup "Remote Desktop Users" newuser /add
+```
+
 ## Ansible
 
 ```bash
 ansible 执行 win分组下所有30.21的机器 -> `ansible 'win:&*.30.21' -m win_ping`
-
+# 用ansible模块创建用户时，如果用户已存在，也会是新建用户，由于原来的用户目录已存在，会导致登陆时原来的用户目录变为用户名+机器名
+ansible 172.22.30.135 -m win_user -a "name=NewUser password='11qfZY\$\$1111'"
 ```
 
 ## 比较两列不同
