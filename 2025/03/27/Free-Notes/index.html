@@ -24,7 +24,7 @@
 <meta property="og:description" content="个人的一些随记，待整理">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-27T12:43:24.000Z">
-<meta property="article:modified_time" content="2025-04-02T02:02:15.000Z">
+<meta property="article:modified_time" content="2025-04-03T05:34:47.337Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          555 字
+          651 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          5 分钟
+          6 分钟
         
       </span>
     
@@ -287,7 +287,9 @@
 <h2 id="windows-设置密码"><a href="#windows-设置密码" class="headerlink" title="windows 设置密码"></a>windows 设置密码</h2><p>如果通过界面设置密码，密码会被显示为*，不好分辨是否包含空格或回车，设置的时候可以点击显示查看下。<br>如果通过cmd来设置，如:</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment"># 此处与linux不同，&#x27;&#x27;也会被视为密码的一部分</span><br>net user administrator <span class="hljs-string">&#x27;as^df!@ii&#x27;</span><br><span class="hljs-comment"># ^ 是windows命令行的转义符，^d 其实是 d</span><br><span class="hljs-built_in">echo</span> ^d  <span class="hljs-comment"># 会输出 d</span><br></code></pre></td></tr></table></figure>
 
-<h2 id="Ansible"><a href="#Ansible" class="headerlink" title="Ansible"></a>Ansible</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">ansible 执行 win分组下所有30.21的机器 -&gt; `ansible <span class="hljs-string">&#x27;win:&amp;*.30.21&#x27;</span> -m win_ping`<br><br></code></pre></td></tr></table></figure>
+<h2 id="创建用户并设置管理员和远程登陆"><a href="#创建用户并设置管理员和远程登陆" class="headerlink" title="创建用户并设置管理员和远程登陆"></a>创建用户并设置管理员和远程登陆</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs powershell">net user newuser password123 /add<br>net localgroup <span class="hljs-string">&quot;Administrators&quot;</span> newuser /add<br>net localgroup <span class="hljs-string">&quot;Remote Desktop Users&quot;</span> newuser /add<br></code></pre></td></tr></table></figure>
+
+<h2 id="Ansible"><a href="#Ansible" class="headerlink" title="Ansible"></a>Ansible</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">ansible 执行 win分组下所有30.21的机器 -&gt; `ansible <span class="hljs-string">&#x27;win:&amp;*.30.21&#x27;</span> -m win_ping`<br><span class="hljs-comment"># 用ansible模块创建用户时，如果用户已存在，也会是新建用户，由于原来的用户目录已存在，会导致登陆时原来的用户目录变为用户名+机器名</span><br>ansible 172.22.30.135 -m win_user -a <span class="hljs-string">&quot;name=NewUser password=&#x27;11qfZY\$\$1111&#x27;&quot;</span><br></code></pre></td></tr></table></figure>
 
 <h2 id="比较两列不同"><a href="#比较两列不同" class="headerlink" title="比较两列不同"></a>比较两列不同</h2><p>comm -3 &lt;(sort -u list) &lt;(sort -u list2)</p>
 <h2 id="mysql-授权远程登录及错误问题处理"><a href="#mysql-授权远程登录及错误问题处理" class="headerlink" title="mysql 授权远程登录及错误问题处理"></a>mysql 授权远程登录及错误问题处理</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/hanhanwanghaha/article/details/105599321">参考链接</a></p>
