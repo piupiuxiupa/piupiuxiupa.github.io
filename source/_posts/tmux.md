@@ -3,8 +3,8 @@ title: TMUX 基础操作
 date: 2024-07-11 15:20:11
 tags: tools
 categories: Posts
+excerpt: Tmux 简介
 ---
-# TMUX
 
 - 三个概念
   - session - 会话
@@ -117,8 +117,13 @@ apt install xclip
 ```bash
 # 启用鼠标支持
 set -g mouse on
-
+# 启用复制模式
 # 允许鼠标选择文本并复制
+set -g set-clipboard on
+
+set -g pane-base-index    1     # 窗格编号从 1 开始计数
+set -g renumber-windows   on    # 关掉某个窗口后，编号重排
+
 # 启用这种模式后，你可以通过鼠标选择来复制文本
 bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"
 ```
