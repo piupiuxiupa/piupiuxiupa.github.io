@@ -1,8 +1,8 @@
 ---
-title: zabbix alter by email
+title: Zabbix 配置邮件告警
 date: 2025-04-23 10:21:16
 tags: tools
-categories: Notes
+categories: Posts
 excerpt: 简单介绍zabbix配置邮件告警
 ---
 
