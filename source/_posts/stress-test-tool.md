@@ -19,12 +19,18 @@ lsblk -d -o name,rota,model
 Linux磁盘IO测试工具
 
 ```bash
-# 测试写性能
-fio --name=write_test --filename=testfile --size=1G --bs=4k --rw=write --ioengine=libaio --direct=1 --numjobs=4 --time_based --runtime=30s
-# 测试读性能
-fio --name=read_test --filename=testfile --size=1G --bs=4k --rw=read --ioengine=libaio --direct=1 --numjobs=4 --time_based --runtime=30s
-# 测试读写混合性能
-fio --name=randrw_test --filename=testfile --size=1G --bs=4k --rw=randrw --rwmixread=70 --ioengine=libaio --direct=1 --numjobs=4 --time_based --runtime=30s
+# 顺序读取
+fio --name=seqread --filename=testfile --rw=read --bs=1M --size=2G --numjobs=1 --iodepth=1 --runtime=60 --time_based --direct=1 --group_reporting
+# 顺序写入
+fio --name=seqwrite --filename=testfile --rw=write --bs=1M --size=2G --numjobs=1 --iodepth=1 --runtime=60 --direct=1 --time_based --group_reporting
+
+# 随机读取
+fio --name=randread --filename=testfile --rw=randread --bs=4k --size=2G --numjobs=4 --iodepth=16 --runtime=60 --direct=1 --time_based --group_reporting
+# 随机写入
+fio --name=randwrite --filename=testfile --rw=randwrite --bs=4k --size=2G --numjobs=4 --iodepth=16 --runtime=60 --direct=1 --time_based --group_reporting
+
+# 高并发随机读写
+fio --name=randrw --filename=testfile --rw=randrw --rwmixread=70 --bs=4k --size=2G --numjobs=8 --iodepth=16 --direct=1 --runtime=60 --time_based --group_reporting
 ```
 
 --bs=4k：每次 I/O 4KB
@@ -35,7 +41,7 @@ fio --name=randrw_test --filename=testfile --size=1G --bs=4k --rw=randrw --rwmix
 
 --direct=1：绕过缓存，直接访问设备
 
---ioengine=libaio：使用异步 I/O 引擎
+--ioengine=libaio：使用异步 I/O 引擎 或--ioengine=io_uring （5.1 内核以上）更能反映ssd盘的真实性能
 
 --runtime=30s：测试持续 30 秒
 
@@ -82,7 +88,7 @@ Linux 磁盘监控工具
 
 ```bash
 # 每 1 秒采样一次，持续 5 秒
-iostat -dx sda 1 5
+iostat -xd sda 1 5
 ```
 
 ## nmon 监控
