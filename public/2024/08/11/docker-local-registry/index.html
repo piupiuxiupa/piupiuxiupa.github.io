@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="搭建Docker本地仓库前提  安装 docker 熟悉 docker环境及基本操作  容器化部署12345678910111213141516171819# 联网环境下# 直接运行 registry镜像，本地没有会自动拉取docker run -d -p 5000:5000 --name registry registry:2# 内网环境# 下载对应镜像 tar包传入内网环境# 只有用save的">
+    <meta name="description" content="搭建Docker本地仓库前提  安装 docker 熟悉 docker环境及基本操作   二进制包部署：https:&#x2F;&#x2F;download.docker.com&#x2F;linux&#x2F;static&#x2F;stable&#x2F;x86_64&#x2F;  容器化部署12345678910111213141516171819# 联网环境下# 直接运行 registry镜像，本地没有会自动拉取docker run -d -p 5000:5">
 <meta property="og:type" content="article">
 <meta property="og:title" content="搭建Docker本地仓库">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/08/11/docker-local-registry/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="搭建Docker本地仓库前提  安装 docker 熟悉 docker环境及基本操作  容器化部署12345678910111213141516171819# 联网环境下# 直接运行 registry镜像，本地没有会自动拉取docker run -d -p 5000:5000 --name registry registry:2# 内网环境# 下载对应镜像 tar包传入内网环境# 只有用save的">
+<meta property="og:description" content="搭建Docker本地仓库前提  安装 docker 熟悉 docker环境及基本操作   二进制包部署：https:&#x2F;&#x2F;download.docker.com&#x2F;linux&#x2F;static&#x2F;stable&#x2F;x86_64&#x2F;  容器化部署12345678910111213141516171819# 联网环境下# 直接运行 registry镜像，本地没有会自动拉取docker run -d -p 5000:5">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-08-11T07:38:32.000Z">
-<meta property="article:modified_time" content="2025-03-31T01:49:33.358Z">
+<meta property="article:modified_time" content="2025-05-09T03:23:45.874Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          1.3k 字
         
       </span>
     
@@ -280,6 +280,9 @@
 <li>安装 docker</li>
 <li>熟悉 docker环境及基本操作</li>
 </ul>
+<blockquote>
+<p>二进制包部署：<a target="_blank" rel="noopener" href="https://download.docker.com/linux/static/stable/x86_64/">https://download.docker.com/linux/static/stable/x86_64/</a></p>
+</blockquote>
 <h2 id="容器化部署"><a href="#容器化部署" class="headerlink" title="容器化部署"></a>容器化部署</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 联网环境下</span><br><span class="hljs-comment"># 直接运行 registry镜像，本地没有会自动拉取</span><br>docker run -d -p 5000:5000 --name registry registry:2<br><br><span class="hljs-comment"># 内网环境</span><br><span class="hljs-comment"># 下载对应镜像 tar包传入内网环境</span><br><span class="hljs-comment"># 只有用save的镜像才能load导入，否则会报错</span><br>docker save registry:2 -o registry.tar<br>docker load -i registry.tar<br><br><span class="hljs-comment"># 也可将运行容器导出</span><br>docker <span class="hljs-built_in">export</span> 容器ID &gt; registry.tar<br><span class="hljs-comment"># 将打包容器导入</span><br><span class="hljs-comment"># 用export导出的容器，需要用import导入</span><br>docker import registry.tar localhost/registry:2<br><br><span class="hljs-comment">## 验证是否安装成功</span><br><span class="hljs-comment">## 返回 &#123;&#125;表示成功</span><br>curl -s http://localhost:5000/v2/<br></code></pre></td></tr></table></figure>
 
 <h2 id="推送镜像到本地仓库"><a href="#推送镜像到本地仓库" class="headerlink" title="推送镜像到本地仓库"></a>推送镜像到本地仓库</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 修改镜像tag为本地仓库地址</span><br>docker tag <span class="hljs-variable">$image</span> localhost:5000/<span class="hljs-variable">$image</span><br><br><span class="hljs-comment">## 推送到本地仓库</span><br>docker push localhost:5000/<span class="hljs-variable">$image</span><br><br><span class="hljs-comment">## 拉取本地仓库镜像</span><br>docker pull localhost:5000/<span class="hljs-variable">$image</span><br></code></pre></td></tr></table></figure>
@@ -330,6 +333,7 @@
 <p>api 返回的信息为 json格式，可以配合linux的 <code>jq</code>命令进行筛选查看</p>
 </blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 获取所有镜像的名称</span><br>curl -sSL -k http://localhost:5000/v2/_catalog | jq<br><br><span class="hljs-comment">## 返回输出</span><br>&#123;<br>  <span class="hljs-string">&quot;repositories&quot;</span>: [<br>    <span class="hljs-string">&quot;my-image1&quot;</span>,<br>    <span class="hljs-string">&quot;my-image2&quot;</span><br>  ]<br>&#125;<br><br><span class="hljs-comment">## 设置认证后需要修改为如下命令，配合 jq使用提取信息 </span><br>curl -sSL -k -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> http://127.0.0.1:5000/v2/_catalog |jq -r <span class="hljs-string">&quot;.repositories[]&quot;</span><br><br><span class="hljs-comment">## 获取每个镜像的标签</span><br>curl http://localhost:5000/v2/<span class="hljs-variable">$image</span>/tags/list<br>curl -sSL -k -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> http://127.0.0.1:5000/v2/<span class="hljs-variable">$image</span>/tags/list<br><br><span class="hljs-comment">## 镜像的新版本会靠前显示</span><br>&#123;<br>  <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;my-image1&quot;</span>,<br>  <span class="hljs-string">&quot;tags&quot;</span>: [<br>    <span class="hljs-string">&quot;latest&quot;</span>,<br>    <span class="hljs-string">&quot;v2.0&quot;</span>,<br>    <span class="hljs-string">&quot;v1.0&quot;</span><br>  ]<br>&#125;<br><br><span class="hljs-comment">## 获取 digest信息</span><br>curl -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> -sSL -H <span class="hljs-string">&quot;Accept: application/vnd.docker.distribution.manifest.v2+json&quot;</span> http://127.0.0.1:5000/v2/<span class="hljs-variable">$image</span>/manifests/<span class="hljs-variable">$tag</span> | jq -r <span class="hljs-string">&quot;.config.digest&quot;</span><br><br><span class="hljs-comment">## 通过delete方法删除对应镜像的 tag</span><br>curl -sSLf -k -X DELETE -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> http://127.0.0.1:5000/v2/<span class="hljs-variable">$image</span>/manifests/<span class="hljs-variable">$digest</span><br><br><span class="hljs-comment">## 清理未被引用的blobs</span><br>registry garbage-collect -m /etc/docker/registry/config.yml<br></code></pre></td></tr></table></figure>
+
                 
               </div>
             

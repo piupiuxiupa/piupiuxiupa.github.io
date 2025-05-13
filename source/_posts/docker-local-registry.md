@@ -11,6 +11,8 @@ categories: Posts
 - 安装 docker
 - 熟悉 docker环境及基本操作
 
+> 二进制包部署：https://download.docker.com/linux/static/stable/x86_64/
+
 ## 容器化部署
 
 ```bash

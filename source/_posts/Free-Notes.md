@@ -116,3 +116,64 @@ CREATE USER 'root'@'%' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 flush privileges;
 ```
+
+## samba挂载参数优化
+
+某天服务器上`df -h`发现会卡很久才显示
+
+通常如果有网络挂载，如nfs、samba，会有显示卡住的情况
+
+如果只是想看下本地挂载的情况，可以`df -hl`，就不会显示网络挂载的信息，也就不会卡很久
+
+如果只是想看某个文件系统的挂载，可以`df -t cifs -h`
+
+```bash
+# 使用strace发现df会在某些网络挂载路径卡住
+strace df -h
+# 记录下这些路径，到对应的路径
+time ls
+# 或者
+df -h $path # 具体路径， 会发现运行比其他路径慢
+```
+
+进一步排查挂载信息
+
+```bash
+# 因为用的samba，所以是cifs文件系统
+mount | grep cifs
+cat /proc/mounts | grep cifs
+findmnt -t cifs
+
+# 排查后发现疑似挂载路径下文件数量过多，导致获取文件很慢
+# 卸载后重新挂载
+mount -t cifs //192.168.1.1/sharefile /mnt -o user=public,password=public,dir_mode=0777,file_mode=0777,noperm,vers=3.0,nodfs
+```
+
+修改samba配置文件
+
+```ini
+# Some other performace tuning options
+# disable links and symbol links
+    follow symlinks = no
+    wide links = no
+# enable some read/write tuning
+    use sendfile = yes
+    read raw = yes
+    write raw = yes
+    aio read size = 16384
+    aio write size = 16384
+    write cache size = 262144
+    max xmit = 65536
+    large readwrite = yes
+    getwd cache = yes
+# disable locking, because only 2 share can be written.
+    strict locking = no
+    fake oplocks = yes
+    oplocks = no
+```
+
+重载配置文件
+
+```bash
+ smbcontrol smbd reload-config
+```

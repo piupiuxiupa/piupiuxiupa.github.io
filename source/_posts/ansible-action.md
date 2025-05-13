@@ -1,7 +1,9 @@
 ---
 title: Ansible Playbook 规范
 date: 2024-09-27 15:01:47
-tags: ansible
+tags: 
+  - ansible
+  - linux
 categories: Posts
 ---
 # Ansible Playbook 规范
