@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="TMUX 三个概念 session - 会话 每运行一次tmux会创建一个session   window - 窗口 在session内按前缀键后，c键创建的就是一个window   pane - 窗格 将window进行分割后得到的就是pane      基础操作1. 会话外操作12345678tmux attach -t 0 ## 进入一个会话tmux ls ## 查看当前服务器的tmux会话">
+    <meta name="description" content="Tmux 简介">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TMUX 基础操作">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/07/11/tmux/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="TMUX 三个概念 session - 会话 每运行一次tmux会创建一个session   window - 窗口 在session内按前缀键后，c键创建的就是一个window   pane - 窗格 将window进行分割后得到的就是pane      基础操作1. 会话外操作12345678tmux attach -t 0 ## 进入一个会话tmux ls ## 查看当前服务器的tmux会话">
+<meta property="og:description" content="Tmux 简介">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-07-11T07:20:11.000Z">
-<meta property="article:modified_time" content="2025-03-27T13:10:01.104Z">
+<meta property="article:modified_time" content="2025-05-13T07:06:33.538Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="tools">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          528 字
+          563 字
         
       </span>
     
@@ -275,7 +275,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="TMUX"><a href="#TMUX" class="headerlink" title="TMUX"></a>TMUX</h1><ul>
+                <ul>
 <li>三个概念<ul>
 <li>session - 会话<ul>
 <li>每运行一次<code>tmux</code>会创建一个session</li>
@@ -336,7 +336,7 @@
 <p>部分终端修改后可能无法复制，需要安装<code>xclip</code>，再修改配置文件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">apt install xclip<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启用鼠标支持</span><br><span class="hljs-built_in">set</span> -g mouse on<br><br><span class="hljs-comment"># 允许鼠标选择文本并复制</span><br><span class="hljs-comment"># 启用这种模式后，你可以通过鼠标选择来复制文本</span><br><span class="hljs-built_in">bind</span> -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel <span class="hljs-string">&quot;xclip -in -selection clipboard&quot;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启用鼠标支持</span><br><span class="hljs-built_in">set</span> -g mouse on<br><span class="hljs-comment"># 启用复制模式</span><br><span class="hljs-comment"># 允许鼠标选择文本并复制</span><br><span class="hljs-built_in">set</span> -g set-clipboard on<br><br><span class="hljs-built_in">set</span> -g pane-base-index    1     <span class="hljs-comment"># 窗格编号从 1 开始计数</span><br><span class="hljs-built_in">set</span> -g renumber-windows   on    <span class="hljs-comment"># 关掉某个窗口后，编号重排</span><br><br><span class="hljs-comment"># 启用这种模式后，你可以通过鼠标选择来复制文本</span><br><span class="hljs-built_in">bind</span> -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel <span class="hljs-string">&quot;xclip -in -selection clipboard&quot;</span><br></code></pre></td></tr></table></figure>
 
 <p>部分终端可能直接鼠标滚轮即可在pane中翻页，部分需要配合<strong>shift键</strong>才能翻页。</p>
 
