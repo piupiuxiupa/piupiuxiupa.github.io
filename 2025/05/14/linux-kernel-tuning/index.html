@@ -24,7 +24,7 @@
 <meta property="og:description" content="内核参数优化">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-05-14T01:12:14.000Z">
-<meta property="article:modified_time" content="2025-05-16T07:35:26.479Z">
+<meta property="article:modified_time" content="2025-05-22T07:12:46.617Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.9k 字
+          4.1k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          33 分钟
+          35 分钟
         
       </span>
     
@@ -644,7 +644,13 @@
 </ul>
 </li>
 </ul>
-<h3 id="内存内核参数"><a href="#内存内核参数" class="headerlink" title="内存内核参数"></a>内存内核参数</h3>
+<h3 id="内存内核参数"><a href="#内存内核参数" class="headerlink" title="内存内核参数"></a>内存内核参数</h3><h3 id="文件系统内核参数"><a href="#文件系统内核参数" class="headerlink" title="文件系统内核参数"></a>文件系统内核参数</h3><p>优化参考配置</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">net.ipv4.tcp_fin_timeout</span> = <span class="hljs-number">10</span><br><span class="hljs-attr">net.ipv4.tcp_keepalive_time</span> = <span class="hljs-number">120</span><br><span class="hljs-attr">net.ipv4.ip_local_port_range</span> = <span class="hljs-number">1024</span> <span class="hljs-number">65535</span><br><span class="hljs-attr">net.ipv4.tcp_max_tw_buckets</span> = <span class="hljs-number">80000</span><br><span class="hljs-attr">net.ipv4.tcp_keepalive_time</span> = <span class="hljs-number">120</span><br><span class="hljs-attr">net.ipv4.tcp_keepalive_intvl</span> = <span class="hljs-number">15</span><br><span class="hljs-attr">net.ipv4.tcp_keepalive_probes</span> = <span class="hljs-number">5</span><br><br><span class="hljs-attr">net.ipv4.conf.lo.arp_ignore</span> = <span class="hljs-number">1</span><br><span class="hljs-attr">net.ipv4.conf.lo.arp_announce</span> = <span class="hljs-number">2</span><br><span class="hljs-attr">net.ipv4.conf.all.arp_ignore</span> = <span class="hljs-number">1</span><br><span class="hljs-attr">net.ipv4.conf.all.arp_announce</span> = <span class="hljs-number">2</span><br><br><span class="hljs-attr">net.ipv4.tcp_tw_reuse</span> = <span class="hljs-number">1</span><br><span class="hljs-attr">net.ipv4.tcp_tw_recycle</span> = <span class="hljs-number">1</span><br><span class="hljs-attr">net.ipv4.tcp_fin_timeout</span> = <span class="hljs-number">10</span><br><br><span class="hljs-attr">net.ipv4.tcp_max_syn_backlog</span> = <span class="hljs-number">20000</span><br><span class="hljs-attr">net.core.netdev_max_backlog</span> = <span class="hljs-number">32768</span><br><span class="hljs-attr">net.core.somaxconn</span> = <span class="hljs-number">32768</span><br><br><span class="hljs-attr">net.core.wmem_default</span> = <span class="hljs-number">8388608</span><br><span class="hljs-attr">net.core.rmem_default</span> = <span class="hljs-number">8388608</span><br><span class="hljs-attr">net.core.rmem_max</span> = <span class="hljs-number">16777216</span><br><span class="hljs-attr">net.core.wmem_max</span> = <span class="hljs-number">16777216</span><br><br><span class="hljs-attr">net.ipv4.tcp_timestamps</span> = <span class="hljs-number">0</span><br><span class="hljs-attr">net.ipv4.tcp_synack_retries</span> = <span class="hljs-number">2</span><br><span class="hljs-attr">net.ipv4.tcp_syn_retries</span> = <span class="hljs-number">2</span><br><br><span class="hljs-attr">net.ipv4.tcp_mem</span> = <span class="hljs-number">94500000</span> <span class="hljs-number">915000000</span> <span class="hljs-number">927000000</span><br><span class="hljs-attr">net.ipv4.tcp_max_orphans</span> = <span class="hljs-number">3276800</span><br><br><span class="hljs-attr">net.ipv4.ip_local_port_range</span> = <span class="hljs-number">1024</span> <span class="hljs-number">65535</span><br><span class="hljs-attr">net.ipv4.tcp_max_tw_buckets</span> = <span class="hljs-number">5000000</span><br><span class="hljs-attr">net.ipv4.tcp_keepalive_time</span> = <span class="hljs-number">60</span><br><span class="hljs-attr">net.ipv4.tcp_keepalive_intvl</span> = <span class="hljs-number">15</span><br><span class="hljs-attr">net.ipv4.tcp_keepalive_probes</span> = <span class="hljs-number">5</span><br><span class="hljs-attr">net.nf_conntrack_max</span> = <span class="hljs-number">2097152</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="回收Cache"><a href="#回收Cache" class="headerlink" title="回收Cache"></a>回收Cache</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 释放前需要使用sync将未写的系统缓冲区写到磁盘中</span><br><br><span class="hljs-comment"># 回收page cache</span><br><span class="hljs-built_in">echo</span> 1 &gt; /proc/sys/vm/drop_caches<br><span class="hljs-comment"># 释放文件节点inodes缓存和目录项缓存</span><br><span class="hljs-built_in">echo</span> 2 &gt; /proc/sys/vm/drop_caches<br><span class="hljs-comment"># 释放Page Cache、文件节点inodes缓存和目录项缓存</span><br><span class="hljs-built_in">echo</span> 3 &gt; /proc/sys/vm/drop_caches<br></code></pre></td></tr></table></figure>
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 统计所有用户创建的进程数</span><br><br>ps h -Led -o user | <span class="hljs-built_in">sort</span> | <span class="hljs-built_in">uniq</span> -c | <span class="hljs-built_in">sort</span> -rn<br></code></pre></td></tr></table></figure>
                 
               </div>
             
