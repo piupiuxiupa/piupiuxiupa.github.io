@@ -46,6 +46,12 @@ git reset HEAD^ ## 回退到上一次提交
 
 git log ## 公共提交记录
 git reflog ## 本地操作记录
+
+## 一般不建议用reset回退
+## 如果用了reset回退，需要强制push
+git log                 # 找到目标 commit hash
+git reset --hard <hash>
+git push -f             # 强制推送覆盖远程（慎重操作）
 ```
 
 ## switch/checkout
@@ -111,4 +117,13 @@ git stash pop
 
 # 恢复指定的stash内容
 git stash apply stash@{0}
+```
+
+## revert
+
+```bash
+## 撤销某次提交
+git log                 # 找到目标 commit hash
+git revert <hash>       # 自动生成撤销该提交内容的 commit
+git push
 ```

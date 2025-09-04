@@ -1,5 +1,5 @@
 ---
-title: linux kernel tuning
+title: Linux Kernel Tuning
 date: 2025-05-14 09:12:14
 tags: linux
 categories: Notes
@@ -268,3 +268,112 @@ sysctl -w kernel.msgmnb=40960
 
 - `/proc/sys/net/ipv4/tcp_tw_reuse`
   - 表示开启重用，允许将TIME-WAIT sockets重新用于新的TCP连接
+  - 此值默认值为0，表示关闭；启用该resuse的同时，必须同时启用快速回收recycle（即tcp_tw_recycle为1）​。
+- `/proc/sys/net/ipv4/tcp_fin_timeout`
+  - 表示处于TIME_WAIT状态的连接在回收前必须等待的最小时间
+  - 普通web服务器建议设置为15秒
+- `/proc/sys/net/ipv4/tcp_keepalive_probes`
+  - 用来减少超时前的探测次数，普通Web服务器建议设置为 5
+- `/proc/sys/net/core/netdev_max_backlog`
+  - 用来设置每个网络接口接收数据包的速率比内核处理这些包的速率快时，允许送到队列的数据包的最大数目
+  - 默认值1000，建议3000
+- `/proc/sys/net/core/rmem_max、wmem_max`
+  - 可以提高TCP的最大缓冲区大小。
+  - rmem_max：表示接收套接字缓冲区大小的最大值（以字节为单位）​。
+  - wmem_max：表示发送套接字缓冲区大小的最大值（以字节为单位）​。
+  - 建议设置16777216
+- `/proc/sys/net/ipv4/tcp_rmem、tcp_wmem`
+  - 可以提高Linux内核自动对Socket缓冲区进行优化的能力
+  - tcp_rmem：用来配置读缓冲的大小，第1个值为最小值，第2个值为默认值，第3个值为最大值
+  - tcp_wmem：用来配置写缓冲的大小，第1个值为最小值，第2个值为默认值，第3个值为最大值
+  - 如：`echo "4096 87380 16777216" > /proc/sys/net/ipv4/tcp_rmem`
+- `/proc/sys/net/core/somaxconn`
+  - 参数用来设置Socket监听（listen）的backlog上限
+  - backlog就是Socket的监听队列，当一个请求（request）尚未被处理或建立时，它会进入backlog。而Socket server可以一次性处理backlog中的所有请求，处理后的请求不再位于监听队列中。当Server处理请求较慢，以至于监听队列被填满后，新来的请求会被拒绝。
+  - 默认值为128, 建议4096
+
+### 系统Kernel参数优化
+
+- `/proc/sys/kernel/panic`
+  - 设置如果发生内核严重错误，则内核在重新引导之前等待的时间，单位s
+  - 默认为0， 表示在发生内核严重错误时禁止重新引导
+  - 建议为1，也就是内核故障后1s自动重启
+- `/proc/sys/kernel/pid_max`
+  - 参数用来设置Linux下进程数量的最大值。
+  - 默认值是32768，正常情况下是够用的，当任务重时，会不够用，最终导致内存无法分配的错误
+- `/proc/sys/kernel/ctrl-alt-del`
+  - /proc/sys/kernel/ctrl-alt-del文件有一个二进制值，该值控制系统在接收到〈Ctrl+Alt+Delete〉组合键时如何反应
+  - 0值，表示捕获〈Ctrl+Alt+Delete〉，并将其送至init程序。这将允许系统可以安全地关闭和重启，就好像输入shutdown命令一样
+  - 1值，表示不捕获〈Ctrl+Alt+Delete〉
+- `/proc/sys/kernel/core_pattern`
+  - 参数用来设置core文件保存位置或文件名，只有文件名时，则保存在应用程序运行的目录下
+  - `echo "core.%e.%p" > /proc/sys/kernel/core_pattern`
+  - %e表示程序名，%p表示进程id。
+
+### 内存内核参数
+
+### 文件系统内核参数
+
+优化参考配置
+
+```ini
+net.ipv4.tcp_fin_timeout = 10
+net.ipv4.tcp_keepalive_time = 120
+net.ipv4.ip_local_port_range = 1024 65535
+net.ipv4.tcp_max_tw_buckets = 80000
+net.ipv4.tcp_keepalive_time = 120
+net.ipv4.tcp_keepalive_intvl = 15
+net.ipv4.tcp_keepalive_probes = 5
+
+net.ipv4.conf.lo.arp_ignore = 1
+net.ipv4.conf.lo.arp_announce = 2
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.all.arp_announce = 2
+
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_tw_recycle = 1
+net.ipv4.tcp_fin_timeout = 10
+
+net.ipv4.tcp_max_syn_backlog = 20000
+net.core.netdev_max_backlog = 32768
+net.core.somaxconn = 32768
+
+net.core.wmem_default = 8388608
+net.core.rmem_default = 8388608
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+
+net.ipv4.tcp_timestamps = 0
+net.ipv4.tcp_synack_retries = 2
+net.ipv4.tcp_syn_retries = 2
+
+net.ipv4.tcp_mem = 94500000 915000000 927000000
+net.ipv4.tcp_max_orphans = 3276800
+
+net.ipv4.ip_local_port_range = 1024 65535
+net.ipv4.tcp_max_tw_buckets = 5000000
+net.ipv4.tcp_keepalive_time = 60
+net.ipv4.tcp_keepalive_intvl = 15
+net.ipv4.tcp_keepalive_probes = 5
+net.nf_conntrack_max = 2097152
+```
+
+#### 回收Cache
+
+```bash
+# 释放前需要使用sync将未写的系统缓冲区写到磁盘中
+
+# 回收page cache
+echo 1 > /proc/sys/vm/drop_caches
+# 释放文件节点inodes缓存和目录项缓存
+echo 2 > /proc/sys/vm/drop_caches
+# 释放Page Cache、文件节点inodes缓存和目录项缓存
+echo 3 > /proc/sys/vm/drop_caches
+```
+
+
+```bash
+# 统计所有用户创建的进程数
+
+ps h -Led -o user | sort | uniq -c | sort -rn
+```
