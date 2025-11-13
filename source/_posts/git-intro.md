@@ -127,3 +127,18 @@ git log                 # 找到目标 commit hash
 git revert <hash>       # 自动生成撤销该提交内容的 commit
 git push
 ```
+
+## cherry-pick
+
+```bash
+# 只合并某个分支里的 某一次提交
+# 切换到目标分支，比如 main
+git checkout main  
+
+# 把某次提交合并过来（commit id 用 git log 查）
+git cherry-pick <commit-id>  
+
+# 推送到远程
+## 前提是有权限推送到main分支
+git push origin main
+```

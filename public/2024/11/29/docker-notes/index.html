@@ -16,15 +16,15 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Docker Notesdocker save 和 export 区别 功能和用途   docker export  导出一个容器的文件系统。 提取容器当前的文件系统快照，不包括镜像的历史层、元数据或启动命令等信息。 通常用于备份或迁移容器的文件系统内容。   docker save  保存一个镜像及其历史层和元数据。 包括镜像的所有历史层、CMD、ENTRYPOINT、环境变量等配置。 通常用于">
+    <meta name="description" content="Docker Notesdocker save 和 export 区别 功能和用途  docker export  导出一个容器的文件系统。 提取容器当前的文件系统快照，不包括镜像的历史层、元数据或启动命令等信息。 通常用于备份或迁移容器的文件系统内容。   docker save  保存一个镜像及其历史层和元数据。 包括镜像的所有历史层、CMD、ENTRYPOINT、环境变量等配置。 通常用于备">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker Notes">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2024/11/29/docker-notes/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="Docker Notesdocker save 和 export 区别 功能和用途   docker export  导出一个容器的文件系统。 提取容器当前的文件系统快照，不包括镜像的历史层、元数据或启动命令等信息。 通常用于备份或迁移容器的文件系统内容。   docker save  保存一个镜像及其历史层和元数据。 包括镜像的所有历史层、CMD、ENTRYPOINT、环境变量等配置。 通常用于">
+<meta property="og:description" content="Docker Notesdocker save 和 export 区别 功能和用途  docker export  导出一个容器的文件系统。 提取容器当前的文件系统快照，不包括镜像的历史层、元数据或启动命令等信息。 通常用于备份或迁移容器的文件系统内容。   docker save  保存一个镜像及其历史层和元数据。 包括镜像的所有历史层、CMD、ENTRYPOINT、环境变量等配置。 通常用于备">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-29T01:25:12.000Z">
-<meta property="article:modified_time" content="2025-03-30T09:29:57.973Z">
+<meta property="article:modified_time" content="2025-09-03T10:02:12.408Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          677 字
+          735 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          6 分钟
+          7 分钟
         
       </span>
     
@@ -276,8 +276,7 @@
               <div class="markdown-body">
                 
                 <h1 id="Docker-Notes"><a href="#Docker-Notes" class="headerlink" title="Docker Notes"></a>Docker Notes</h1><h2 id="docker-save-和-export-区别"><a href="#docker-save-和-export-区别" class="headerlink" title="docker save 和 export 区别"></a>docker save 和 export 区别</h2><ol>
-<li>功能和用途</li>
-</ol>
+<li><p>功能和用途</p>
 <ul>
 <li><p>docker export</p>
 <ul>
@@ -294,9 +293,8 @@
 </ul>
 </li>
 </ul>
-<ol start="2">
-<li>导出的内容</li>
-</ol>
+</li>
+<li><p>导出的内容</p>
 <ul>
 <li>docker export<ul>
 <li>导出的内容是容器的文件系统，形式是一个纯文件层，没有镜像的结构信息。</li>
@@ -309,9 +307,8 @@
 </ul>
 </li>
 </ul>
-<ol start="3">
-<li>使用场景</li>
-</ol>
+</li>
+<li><p>使用场景</p>
 <ul>
 <li>docker export<ul>
 <li>当您只需要容器文件系统中的文件，而不需要镜像信息时使用。</li>
@@ -324,9 +321,8 @@
 </ul>
 </li>
 </ul>
-<ol start="4">
-<li>加载&#x2F;恢复方式</li>
-</ol>
+</li>
+<li><p>加载&#x2F;恢复方式</p>
 <ul>
 <li><p>docker export</p>
 <ul>
@@ -338,12 +334,14 @@
 <ul>
 <li>使用 docker load 加载为完整镜像，可以直接运行。</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker load -i image.tar <br></code></pre></td></tr></table></figure></li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker load -i image.tar<br></code></pre></td></tr></table></figure></li>
 </ul>
+</li>
+</ol>
 <h2 id="容器共享内存"><a href="#容器共享内存" class="headerlink" title="容器共享内存"></a>容器共享内存</h2><p>在 Docker 容器中，&#x2F;dev&#x2F;shm 是一个内存共享区域，通常用于高效的进程间通信（IPC）。Docker 默认会为每个容器分配一个大小固定的 &#x2F;dev&#x2F;shm 区域，默认大小为 64MB，这在某些应用场景（如高性能计算、数据库操作等）中可能不足。</p>
 <ol>
 <li><p>&#x2F;dev&#x2F;shm 的默认大小：</p>
-<p> 默认大小为 64MB，但可以通过配置容器启动参数增加。</p>
+<p>默认大小为 64MB，但可以通过配置容器启动参数增加。</p>
 </li>
 <li><p>使用场景：</p>
 <ul>
@@ -360,16 +358,18 @@
 </ol>
 <h3 id="调整共享内存"><a href="#调整共享内存" class="headerlink" title="调整共享内存"></a>调整共享内存</h3><ol>
 <li><p>在 docker run 中指定</p>
- <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run --shm-size=1g your_image<br></code></pre></td></tr></table></figure></li>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run --shm-size=1g your_image<br></code></pre></td></tr></table></figure>
+</li>
 <li><p>在 docker-compose 中配置</p>
- <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">your_service:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">your_image</span><br>    <span class="hljs-attr">shm_size:</span> <span class="hljs-string">1g</span><br></code></pre></td></tr></table></figure>
-
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">your_service:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">your_image</span><br>    <span class="hljs-attr">shm_size:</span> <span class="hljs-string">1g</span><br></code></pre></td></tr></table></figure>
 </li>
 <li><p>在 Kubernetes 中配置</p>
-<p> 在 Pod 的 spec 中，使用 emptyDir 配置共享内存。例如：</p>
- <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">example-deployment</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">example-app</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">example-app</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">example-container</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">your-image:latest</span><br>        <span class="hljs-attr">resources:</span><br>          <span class="hljs-attr">limits:</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">2Gi</span><br>        <span class="hljs-attr">volumeMounts:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/dev/shm</span><br>          <span class="hljs-attr">name:</span> <span class="hljs-string">dshm</span><br>      <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">dshm</span><br>        <span class="hljs-attr">emptyDir:</span><br>          <span class="hljs-attr">medium:</span> <span class="hljs-string">Memory</span><br>          <span class="hljs-attr">sizeLimit:</span> <span class="hljs-string">1Gi</span><br></code></pre></td></tr></table></figure></li>
+<p>在 Pod 的 spec 中，使用 emptyDir 配置共享内存。例如：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">example-deployment</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">example-app</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">example-app</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">example-container</span><br>          <span class="hljs-attr">image:</span> <span class="hljs-string">your-image:latest</span><br>          <span class="hljs-attr">resources:</span><br>            <span class="hljs-attr">limits:</span><br>              <span class="hljs-attr">memory:</span> <span class="hljs-string">2Gi</span><br>          <span class="hljs-attr">volumeMounts:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/dev/shm</span><br>              <span class="hljs-attr">name:</span> <span class="hljs-string">dshm</span><br>      <span class="hljs-attr">volumes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">dshm</span><br>          <span class="hljs-attr">emptyDir:</span><br>            <span class="hljs-attr">medium:</span> <span class="hljs-string">Memory</span><br>            <span class="hljs-attr">sizeLimit:</span> <span class="hljs-string">1Gi</span><br></code></pre></td></tr></table></figure></li>
 </ol>
 <h3 id="检查共享内存使用情况"><a href="#检查共享内存使用情况" class="headerlink" title="检查共享内存使用情况"></a>检查共享内存使用情况</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ipcs -m<br></code></pre></td></tr></table></figure>
+
+<h3 id="指定平台获取镜像及构建"><a href="#指定平台获取镜像及构建" class="headerlink" title="指定平台获取镜像及构建"></a>指定平台获取镜像及构建</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 设置环境变量让docker默认获取x86_64架构的镜像</span><br><span class="hljs-built_in">export</span> DOCKER_DEFAULT_PLATFORM=linux/amd64<br><br><span class="hljs-comment"># 指定构建的指令平台</span><br>docker buildx build --platform linux/amd64 -t your-image:latest .<br><br><span class="hljs-comment"># 拉取x86_64架构的ubuntu镜像</span><br>docker pull --platform=linux/amd64 ubuntu:22.04<br></code></pre></td></tr></table></figure>
 
                 
               </div>
