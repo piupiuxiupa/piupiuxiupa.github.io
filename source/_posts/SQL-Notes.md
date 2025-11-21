@@ -199,6 +199,9 @@ doris的insert会触发列默认值，update不会触发列默认值，需要手
 ```sql
 -- 导入旧数据
 INSERT INTO example_new SELECT * FROM example;
+
+-- 更新数据
+UPDATE example_new SET status = '1' WHERE user_id = 123;
 ```
 
 ### 权限修改
