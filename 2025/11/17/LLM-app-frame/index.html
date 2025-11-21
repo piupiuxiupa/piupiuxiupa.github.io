@@ -1,0 +1,843 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="piupiuxiupa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Python 常用框架 Langchain LlamaIndex  基于RAG架构的开发 大模型知识冻结 大模型幻觉  基于Agent架构的开发模型调用的分类 按照模型功能不同：  非对话模型 对话模型 嵌入模型   按照模型调用时参数书写位置  硬编码方式，将参数写在代码中 使用环境变量的方式 使用配置文件的方式   具体API的调用  使用LangChain提供的API 使用OpenAI 官方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLM-app-frame">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2025/11/17/LLM-app-frame/index.html">
+<meta property="og:site_name" content="piupiuxiupa&#39;s blog">
+<meta property="og:description" content="Python 常用框架 Langchain LlamaIndex  基于RAG架构的开发 大模型知识冻结 大模型幻觉  基于Agent架构的开发模型调用的分类 按照模型功能不同：  非对话模型 对话模型 嵌入模型   按照模型调用时参数书写位置  硬编码方式，将参数写在代码中 使用环境变量的方式 使用配置文件的方式   具体API的调用  使用LangChain提供的API 使用OpenAI 官方">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-17T03:05:59.000Z">
+<meta property="article:modified_time" content="2025-11-21T06:37:27.274Z">
+<meta property="article:author" content="piupiuxiupa">
+<meta property="article:tag" content="LLM">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>LLM-app-frame - piupiuxiupa&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"piupiuxiupa.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>piupiuxiupa&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="LLM-app-frame"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-11-17 11:05" pubdate>
+          2025年11月17日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">LLM-app-frame</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Python-常用框架"><a href="#Python-常用框架" class="headerlink" title="Python 常用框架"></a>Python 常用框架</h2><ul>
+<li>Langchain</li>
+<li>LlamaIndex</li>
+</ul>
+<h2 id="基于RAG架构的开发"><a href="#基于RAG架构的开发" class="headerlink" title="基于RAG架构的开发"></a>基于RAG架构的开发</h2><ul>
+<li>大模型知识冻结</li>
+<li>大模型幻觉</li>
+</ul>
+<h2 id="基于Agent架构的开发"><a href="#基于Agent架构的开发" class="headerlink" title="基于Agent架构的开发"></a>基于Agent架构的开发</h2><h2 id="模型调用的分类"><a href="#模型调用的分类" class="headerlink" title="模型调用的分类"></a>模型调用的分类</h2><ol>
+<li><p>按照模型功能不同：</p>
+<ul>
+<li>非对话模型</li>
+<li>对话模型</li>
+<li>嵌入模型</li>
+</ul>
+</li>
+<li><p>按照模型调用时参数书写位置</p>
+<ul>
+<li>硬编码方式，将参数写在代码中</li>
+<li>使用环境变量的方式</li>
+<li>使用配置文件的方式</li>
+</ul>
+</li>
+<li><p>具体API的调用</p>
+<ul>
+<li>使用LangChain提供的API</li>
+<li>使用OpenAI 官方的API</li>
+<li>使用其他平台提供的API</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 非对话模型</span><br><span class="hljs-keyword">from</span> langchain_openai <span class="hljs-keyword">import</span> OpenAI<br><span class="hljs-comment"># 对话模型</span><br><span class="hljs-keyword">from</span> langchain_openai <span class="hljs-keyword">import</span> ChatOpenAI<br></code></pre></td></tr></table></figure>
+
+<h2 id="参数设置"><a href="#参数设置" class="headerlink" title="参数设置"></a>参数设置</h2><ul>
+<li><p>model_name</p>
+<ul>
+<li>模型名称，如”gpt-3.5-turbo”、”gpt-4”等</li>
+</ul>
+</li>
+<li><p>base_url</p>
+<ul>
+<li>模型API的基础URL，如”<a target="_blank" rel="noopener" href="https://api.openai.com/v1">https://api.openai.com/v1</a>“</li>
+</ul>
+</li>
+<li><p>api_key</p>
+<ul>
+<li>模型API的密钥，用于身份验证</li>
+</ul>
+</li>
+<li><p>temperature</p>
+<ul>
+<li>温度，控制生成文本的随机性，取值范围为0～1<ul>
+<li>值越低，输出越确定、保守，适合事实回答</li>
+<li>值越高，输出越多样、有创意，适合创意写作</li>
+</ul>
+</li>
+<li>精确模式<ul>
+<li>0.5或更低，生成的文本更加安全可靠</li>
+</ul>
+</li>
+<li>平衡模式<ul>
+<li>通常是0.8，生成的文本通常有一定的多样性，又能保持较好的连贯性和准确性</li>
+</ul>
+</li>
+<li>创意模式<ul>
+<li>通常是1，生成的文本更有创意，但也更容易出现语法错误或不合逻辑的内容</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>max_tokens</p>
+<ul>
+<li>限制生成文本的最大长度，防止输出过长</li>
+<li>设置建议<ul>
+<li>短回复：128-256</li>
+<li>常规对话、多轮对话：512-1024</li>
+<li>长内容生成：1024-4096</li>
+</ul>
+</li>
+<li>token<ul>
+<li>大模型处理文本的最小单位，相当于自然语言中的词或字，输出时逐个token依次生成</li>
+<li>一般收费标准1个token约等于1-1.8个汉字或3-4个英文字母</li>
+<li><a target="_blank" rel="noopener" href="https://platform.openai.com/tokenizer">token字符转化工具</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="对话模型的message"><a href="#对话模型的message" class="headerlink" title="对话模型的message"></a>对话模型的message</h2><ul>
+<li>SystemMessage<ul>
+<li>设定AI行为规则或背景信息。比如设定AI的初始状态、行为模式或对话的总体目标。比如：“作为一个代码专家”，或者“返回JSON格式”。通常是输入消息序列中的第一个传递</li>
+</ul>
+</li>
+<li>HumanMessage<ul>
+<li>表示来自用户输入</li>
+</ul>
+</li>
+<li>AIMessage<ul>
+<li>存储AI回复的内容，可以是文本，也可以是调用工具的请求</li>
+</ul>
+</li>
+<li>ChatMessage<ul>
+<li>可以自定义角色的通用消息类型</li>
+</ul>
+</li>
+<li>FunctionMessage&#x2F;ToolMessage<ul>
+<li>函数调用&#x2F;工具消息，用于函数调用结果的消息类型</li>
+</ul>
+</li>
+</ul>
+<h2 id="模型调用的方法"><a href="#模型调用的方法" class="headerlink" title="模型调用的方法"></a>模型调用的方法</h2><ul>
+<li>invoke<ul>
+<li>处理单条输入，等待LLM完全推理完成后再返回调用结果</li>
+</ul>
+</li>
+<li>stream<ul>
+<li>流式响应，逐字输出LLM的响应结果</li>
+</ul>
+</li>
+<li>batch<ul>
+<li>处理批量输入<br>有相应的异步方法，与asyncio和await语法一起使用实现并发</li>
+</ul>
+</li>
+<li>astream<ul>
+<li>异步流式响应</li>
+</ul>
+</li>
+<li>ainvoke<ul>
+<li>异步处理单条输入</li>
+</ul>
+</li>
+<li>abatch<ul>
+<li>异步处理批量输入</li>
+</ul>
+</li>
+<li>astream_log<ul>
+<li>异步流式返回中间步骤，以及最终结果</li>
+</ul>
+</li>
+</ul>
+<h2 id="提示词模板"><a href="#提示词模板" class="headerlink" title="提示词模板"></a>提示词模板</h2><ul>
+<li>PromptTemplate<ul>
+<li>用于生成字符串提示</li>
+</ul>
+</li>
+<li>ChatPromptTemplate<ul>
+<li>聊天提示模板，用于组合各种角色的消息模板，传入聊天模型</li>
+</ul>
+</li>
+<li>XxxMessagePromptTemplate<ul>
+<li>消息模板词模板，包括：SystemMessagePromptTemplate、HumanMessagePromptTemplate、AIMessagePromptTemplate、ChatMessagePromptTemplate等</li>
+</ul>
+</li>
+<li>FewShotPromptTemplate<ul>
+<li>样本提示词模板，通过示例来教模型如何回答</li>
+</ul>
+</li>
+<li>PipelinePrompt<ul>
+<li>管道提示词模板，将多个提示词模板组合起来一起使用</li>
+</ul>
+</li>
+<li>自定义模板<ul>
+<li>允许基于其他模板类来定制自己的提示词模板</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> Langchain_core.prompts <span class="hljs-keyword">import</span> PromptTemplate<br><br>prompt_template = PromptTemplate.from_template(<br>    template=<span class="hljs-string">&quot;请回答以下问题：&#123;question&#125;&quot;</span>,<br>)<br>prompt_template.<span class="hljs-built_in">format</span>(question=<span class="hljs-string">&quot;你是谁&quot;</span>) <span class="hljs-comment"># 返回值类型为字符串</span><br>prompt_template.invoke(<span class="hljs-built_in">input</span>=&#123;<span class="hljs-string">&quot;question&quot;</span>: <span class="hljs-string">&quot;你是谁&quot;</span>&#125;) <span class="hljs-comment"># 返回值类型为PromptValue</span><br><br>prompt_template = PromptTemplate.from_template(<br>    template=<span class="hljs-string">&quot;请回答以下问题：&#123;question&#125;, 并保持回答的专业和准确性, 返回格式&#123;format&#125;&quot;</span>,<br>    partial_variables=&#123;<span class="hljs-string">&quot;question&quot;</span>: <span class="hljs-string">&quot;AI能够做什么&quot;</span>,&#125;,<br>)<br>prompt_template.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">format</span>=<span class="hljs-string">&quot;JSON&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="ChatPromptTemplate"><a href="#ChatPromptTemplate" class="headerlink" title="ChatPromptTemplate"></a>ChatPromptTemplate</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> Langchain_core.prompts <span class="hljs-keyword">import</span> ChatPromptTemplate<br><br>chat_prompt_template = ChatPromptTemplate.from_messages(<br>    messages=[<br>        (<span class="hljs-string">&quot;system&quot;</span>, <span class="hljs-string">&quot;你是一个&#123;role&#125;，名字叫&#123;name&#125;&quot;</span>),<br>        (<span class="hljs-string">&quot;human&quot;</span>, <span class="hljs-string">&quot;&#123;question&#125;&quot;</span>),<br>    ],<br>    <span class="hljs-comment">#input_variables=[&quot;role&quot;, &quot;name&quot;, &quot;question&quot;],</span><br>) <br><span class="hljs-comment">## 返回类型为ChatPromptValue</span><br>chat_prompt_template.invoke(<span class="hljs-built_in">input</span>=&#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;专业的代码助手&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;AI助手&quot;</span>, <span class="hljs-string">&quot;question&quot;</span>: <span class="hljs-string">&quot;你是谁&quot;</span>&#125;)  <br><span class="hljs-comment">## 返回类型为List</span><br>chat_prompt_template.format_messages(role=<span class="hljs-string">&quot;专业的代码助手&quot;</span>, name=<span class="hljs-string">&quot;AI助手&quot;</span>, question=<span class="hljs-string">&quot;你是谁&quot;</span>)<br><br><span class="hljs-comment">## 实现ChatPromptValue、List、字符串之间的转换</span><br>chat_prompt_template.to_string()<br>chat_prompt_template.to_messages()<br></code></pre></td></tr></table></figure>
+
+<h2 id="插入消息列表"><a href="#插入消息列表" class="headerlink" title="插入消息列表"></a>插入消息列表</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 当ChatPromptTemplate模板中的消息类型和个数不确定的时候，可以使用MessagePlaceholder</span><br><span class="hljs-keyword">from</span> langchain_core.prompts <span class="hljs-keyword">import</span> ChatPromptTemplate<br><span class="hljs-keyword">from</span> langchain_core.prompts.chat <span class="hljs-keyword">import</span> MessagePlaceholder<br><span class="hljs-keyword">from</span> langchain_core.messages <span class="hljs-keyword">import</span> HumanMessage, AIMessage<br><br>chat_prompt_template = ChatPromptTemplate.from_messages(<br>    messages=[<br>        (<span class="hljs-string">&quot;system&quot;</span>, <span class="hljs-string">&quot;你是一个&#123;role&#125;，名字叫&#123;name&#125;&quot;</span>),<br>        MessagePlaceholder(variable_name=<span class="hljs-string">&quot;history&quot;</span>),<br>        (<span class="hljs-string">&quot;human&quot;</span>, <span class="hljs-string">&quot;&#123;question&#125;&quot;</span>),<br>    ],<br>)<br><br>chat_prompt_template.invoke(&#123;<br>  <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;专业的代码助手&quot;</span>, <br>  <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;AI助手&quot;</span>, <br>  <span class="hljs-comment"># &quot;messages&quot;: [(&quot;human&quot;, &quot;你是谁&quot;)],</span><br>  <span class="hljs-string">&quot;history&quot;</span>: [HumanMessage(content=<span class="hljs-string">&quot;你是谁&quot;</span>), AIMessage(content=<span class="hljs-string">&quot;我是一个专业的代码助手&quot;</span>)],<br>  <span class="hljs-string">&quot;question&quot;</span>: <span class="hljs-string">&quot;我刚才的问题是什么？&quot;</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="少量示例提示词模板"><a href="#少量示例提示词模板" class="headerlink" title="少量示例提示词模板"></a>少量示例提示词模板</h2><p>FewShotPromptTemplate与PromptTemplate一起使用<br>FewShotChatMessagePromptTemplate 与ChatPromptTemplate一起使用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python">example_prompt_template = FewShotPromptTemplate(<br>    example_prompt=PromptTemplate.from_template(<br>        template=<span class="hljs-string">&quot;问题：&#123;question&#125;\n回答：&#123;answer&#125;&quot;</span>,<br>    ),<br>    examples=[<br>        &#123;<span class="hljs-string">&quot;question&quot;</span>: <span class="hljs-string">&quot;你是谁&quot;</span>, <span class="hljs-string">&quot;answer&quot;</span>: <span class="hljs-string">&quot;我是一个专业的代码助手&quot;</span>&#125;,<br>        &#123;<span class="hljs-string">&quot;question&quot;</span>: <span class="hljs-string">&quot;你能做什么&quot;</span>, <span class="hljs-string">&quot;answer&quot;</span>: <span class="hljs-string">&quot;我可以回答代码相关的问题&quot;</span>&#125;,<br>    ],<br>    suffix=<span class="hljs-string">&quot;问题：&#123;question&#125;\n回答：&quot;</span>,<br>    input_variables=[<span class="hljs-string">&quot;question&quot;</span>],<br>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> langchain_core.prompts <span class="hljs-keyword">import</span> FewShotChatMessagePromptTemplate<br>example_prompt_template = FewShotChatMessagePromptTemplate(<br>    example_prompt=ChatPromptTemplate.from_messages(<br>        messages=[<br>            (<span class="hljs-string">&quot;human&quot;</span>, <span class="hljs-string">&quot;&#123;question&#125; 是多少？&quot;</span>),<br>            (<span class="hljs-string">&quot;ai&quot;</span>, <span class="hljs-string">&quot;&#123;answer&#125;&quot;</span>),<br>        ],<br>    ),<br>    examples=[<br>        &#123;<span class="hljs-string">&quot;question&quot;</span>: <span class="hljs-string">&quot;2 🌈 2&quot;</span>, <span class="hljs-string">&quot;answer&quot;</span>: <span class="hljs-string">&quot;4&quot;</span>&#125;,<br>        &#123;<span class="hljs-string">&quot;question&quot;</span>: <span class="hljs-string">&quot;2 🌈 3&quot;</span>, <span class="hljs-string">&quot;answer&quot;</span>: <span class="hljs-string">&quot;8&quot;</span>&#125;,<br>    ],<br>)<br>final_prompt_template = ChatPromptTemplate.from_messages(<br>    messages=[<br>        (<span class="hljs-string">&quot;system&quot;</span>, <span class="hljs-string">&quot;你是一个数学专业的助手&quot;</span>),<br>        example_prompt_template,<br>        (<span class="hljs-string">&quot;human&quot;</span>, <span class="hljs-string">&quot;&#123;question&#125;&quot;</span>),<br>    ],<br>)<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Notes/" class="category-chain-item">Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/LLM/" class="print-no-link">#LLM</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LLM-app-frame</div>
+      <div>https://piupiuxiupa.github.io/2025/11/17/LLM-app-frame/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>piupiuxiupa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年11月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/11/06/SQL-Notes/" title="SQL Notes">
+                        <span class="hidden-mobile">SQL Notes</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> <a href="https://piupiuxiupa.github.io/" target="_blank" rel="nofollow noopener"><span>piupiuxiupa</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
