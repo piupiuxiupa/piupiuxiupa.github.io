@@ -1,0 +1,722 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="piupiuxiupa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本地大模型部署 Windows根据官网下载安装即可 Linux 官方安装步骤  1. 安装ollama12345678910111213## 可能会比较慢，需要magiccurl -fsSL https:&#x2F;&#x2F;ollama.com&#x2F;install.sh | sh## 也可先把ollama-linux-amd64下载到本地## 然后上传到linux## 修改安装脚本两处地方再安装curl -fsSL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="本地大模型部署">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2024/08/04/local-llm-deploy/index.html">
+<meta property="og:site_name" content="piupiuxiupa&#39;s blog">
+<meta property="og:description" content="本地大模型部署 Windows根据官网下载安装即可 Linux 官方安装步骤  1. 安装ollama12345678910111213## 可能会比较慢，需要magiccurl -fsSL https:&#x2F;&#x2F;ollama.com&#x2F;install.sh | sh## 也可先把ollama-linux-amd64下载到本地## 然后上传到linux## 修改安装脚本两处地方再安装curl -fsSL">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://piupiuxiupa.github.io/images/local-llm-deploy/select-model.png">
+<meta property="og:image" content="https://piupiuxiupa.github.io/images/local-llm-deploy/qwen2.png">
+<meta property="og:image" content="https://piupiuxiupa.github.io/images/local-llm-deploy/open-webui.png">
+<meta property="article:published_time" content="2024-08-04T10:59:10.000Z">
+<meta property="article:modified_time" content="2025-11-21T06:39:22.738Z">
+<meta property="article:author" content="piupiuxiupa">
+<meta property="article:tag" content="tools">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://piupiuxiupa.github.io/images/local-llm-deploy/select-model.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>本地大模型部署 - piupiuxiupa&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"piupiuxiupa.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>piupiuxiupa&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="本地大模型部署"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-04 18:59" pubdate>
+          2024年8月4日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          882 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          8 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">本地大模型部署</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="本地大模型部署"><a href="#本地大模型部署" class="headerlink" title="本地大模型部署"></a>本地大模型部署</h1><blockquote>
+<p>Windows根据官网下载安装即可</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ollama/ollama/blob/main/docs/linux.md">Linux 官方安装步骤</a></p>
+</blockquote>
+<h2 id="1-安装ollama"><a href="#1-安装ollama" class="headerlink" title="1. 安装ollama"></a>1. 安装ollama</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 可能会比较慢，需要magic</span><br>curl -fsSL https://ollama.com/install.sh | sh<br><span class="hljs-comment">## 也可先把ollama-linux-amd64下载到本地</span><br><span class="hljs-comment">## 然后上传到linux</span><br><span class="hljs-comment">## 修改安装脚本两处地方再安装</span><br>curl -fsSL https://ollama.com/install.sh &gt;&gt; ollama_install.sh<br>sed -i.bak -e <span class="hljs-string">&#x27;/TEMP_DIR=/c TEMP_DIR=/tmp&#x27;</span> -e <span class="hljs-string">&#x27;/curl --fail.*-o/s/^/#/&#x27;</span> ollama_install.sh<br><span class="hljs-comment">## 将 ollama-linux-amd64放到tmp下，并重命名为ollama</span><br><span class="hljs-built_in">mv</span> ollama-linux-amd64 /tmp/ollama<br><span class="hljs-comment">## 运行ollama_install.sh即可</span><br>sh ollama_install.sh<br><span class="hljs-comment">## 查看ollama状态</span><br>systemctl status ollama<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python-repl">root@localhost:~/mp_mount/llm# sh ollama_install.sh<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Downloading ollama...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Installing ollama to /usr/local/<span class="hljs-built_in">bin</span>...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Creating ollama user...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Adding ollama user to render group...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Adding ollama user to video group...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Adding current user to ollama group...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Creating ollama systemd service...</span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Enabling <span class="hljs-keyword">and</span> starting ollama service...</span><br>Created symlink /etc/systemd/system/default.target.wants/ollama.service → /etc/systemd/system/ollama.service.<br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">The Ollama API <span class="hljs-keyword">is</span> now available at <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">11434.</span></span><br><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">Install complete. Run <span class="hljs-string">&quot;ollama&quot;</span> <span class="hljs-keyword">from</span> the command line.</span><br></code></pre></td></tr></table></figure>
+
+<p>此时访问<code>127.0.0.1:11434</code>显示<code>Ollama is running</code>，则部署成功。</p>
+<p>容器形式:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="2-选择模型"><a href="#2-选择模型" class="headerlink" title="2. 选择模型"></a>2. 选择模型</h2><p><a target="_blank" rel="noopener" href="https://ollama.com/">https://ollama.com/</a> 官网右上角 model</p>
+<p><img src="/../images/local-llm-deploy/select-model.png" srcset="/img/loading.gif" lazyload alt="select-model"></p>
+<p>这里模型我们选择阿里的千问2，复制命令<code>ollama run qwen2</code>在linux上运行即可，下载时间会有点长，耐心等待。</p>
+<p><img src="/../images/local-llm-deploy/qwen2.png" srcset="/img/loading.gif" lazyload alt="open-webui"></p>
+<h2 id="3-安装open-webui"><a href="#3-安装open-webui" class="headerlink" title="3. 安装open-webui"></a>3. 安装open-webui</h2><p><a target="_blank" rel="noopener" href="https://github.com/open-webui/open-webui">https://github.com/open-webui/open-webui</a></p>
+<p>通过容器化部署。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1:3000/">http://127.0.0.1:3000</a> 访问，需要注册，随便填写即可。</p>
+<p>登录后效果如图：</p>
+<p><img src="/../images/local-llm-deploy/open-webui.png" srcset="/img/loading.gif" lazyload alt="open-webui"></p>
+<p>至此，我们就成功部署了一个由CPU提供算力的大语言模型。</p>
+<p>由于CPU和GPU设计结构的不同，CPU在处理大模型语言时效果并不理想。</p>
+<p>根据前面部署完后，使用时会发现模型给出回复的时候反应很慢，且是一个字一个字蹦出来的。</p>
+<p>然而GPU驱动大模型能够显著提高其反应速度，回复也是一段一段显示。</p>
+<p>下面容器化部署一并介绍如何使用GPU提供算力。</p>
+<h2 id="4-容器化部署"><a href="#4-容器化部署" class="headerlink" title="4. 容器化部署"></a>4. 容器化部署</h2><p>使用Nvidia显卡需要下载驱动</p>
+<blockquote>
+<p>Nvidia 官网</p>
+<p><a target="_blank" rel="noopener" href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html">https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 配置apt包仓库地址</span><br>curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | <span class="hljs-built_in">sudo</span> gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \<br>  &amp;&amp; curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \<br>    sed <span class="hljs-string">&#x27;s#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g&#x27;</span> | \<br>    <span class="hljs-built_in">sudo</span> <span class="hljs-built_in">tee</span> /etc/apt/sources.list.d/nvidia-container-toolkit.list<br>    <br><span class="hljs-comment">## 更新仓库包列表</span><br><span class="hljs-built_in">sudo</span> apt-get update<br><br><span class="hljs-comment">## 安装工具</span><br><span class="hljs-built_in">sudo</span> apt-get install -y nvidia-container-toolkit<br><br><span class="hljs-comment">## 可使用该命令查看gpu</span><br>nvidia-smi<br><span class="hljs-comment">## 查看显卡列表</span><br>nvidia-smi -L<br><span class="hljs-comment">## 在使用过程中可观察gpu运行情况变化</span><br>watch -n 1 nvidia-smi<br><span class="hljs-comment"># 或</span><br>nvidia-smi -l<br><br><span class="hljs-comment">## 运行由gpu驱动的ollama，将大模型存放路径持久化，--gpus all将所有gpu设备加入容器</span><br>docker run --gpus all -d -v /opt/ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama<br><br><span class="hljs-comment">## 下载大模型</span><br>docker <span class="hljs-built_in">exec</span> -it ollama ollama pull qwen2:7b<br></code></pre></td></tr></table></figure>
+
+<p><strong>其他包管理工具配置</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## yum 地址</span><br>curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | \<br>  <span class="hljs-built_in">sudo</span> <span class="hljs-built_in">tee</span> /etc/yum.repos.d/nvidia-container-toolkit.repo<br>  <br><span class="hljs-comment">## zypper地址</span><br><span class="hljs-built_in">sudo</span> zypper ar https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo<br><span class="hljs-built_in">sudo</span> zypper --gpg-auto-import-keys install -y nvidia-container-toolkit<br></code></pre></td></tr></table></figure>
+
+<h2 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h2><h3 id="mac-环境下部署"><a href="#mac-环境下部署" class="headerlink" title="mac 环境下部署"></a>mac 环境下部署</h3><p>Docker Desktop 在 macOS 上运行时，会通过一个轻量级的虚拟机（如 colima 或基于 HyperKit 的虚拟机）来运行 Docker 容器。这种方式确保容器运行在一个 Linux 内核上，而不是 macOS 的内核。因此，&#x2F;var&#x2F;lib&#x2F;docker 实际上存在于虚拟机内，而不是 macOS 本地文件系统中。</p>
+<p>进入 Docker Desktop 的虚拟机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker context use default<br>docker run --<span class="hljs-built_in">rm</span> -it --privileged --pid=host justincormack/nsenter1<br></code></pre></td></tr></table></figure>
+
+<p>数据位置通常在:  <code>~/Library/Containers/com.docker.docker/Data/vms/0/</code></p>
+<p>调整 Docker Desktop 虚拟机的磁盘大小:<br><code>settings -&gt; resuorces -&gt; advanced -&gt; Disk usage limit</code></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Posts/" class="category-chain-item">Posts</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/tools/" class="print-no-link">#tools</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>本地大模型部署</div>
+      <div>https://piupiuxiupa.github.io/2024/08/04/local-llm-deploy/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>piupiuxiupa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年8月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/08/04/WSL-Linux-init-proxy/" title="WSL启动Linux并初始化及代理配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">WSL启动Linux并初始化及代理配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/04/wsl-base/" title="WSL 基础用法">
+                        <span class="hidden-mobile">WSL 基础用法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> <a href="https://piupiuxiupa.github.io/" target="_blank" rel="nofollow noopener"><span>piupiuxiupa</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

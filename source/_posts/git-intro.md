@@ -103,6 +103,29 @@ git switch main
 git rebase dev
 ```
 
+### rebase 手动修改合并提交
+
+```bash
+# commit_id 指要修改的某个commit的前一个历史commit
+git rebase -i $commit_id
+# 会进入一个编辑页，包含输入的commit_id的下一个commit一直到HEAD
+
+# 类似如下
+pick d1ac219 # 'Update post'
+pick 594574b # 'Update post'
+pick e76b482 # update
+pick 32be783 # Fix: Modify some content
+pick 416d78e # update content
+pick 415c264 # update
+pick d1ddbce # update
+
+# 通过将内容前的pick改成drop来删除某次commit
+# 将某些commit改成squash，来合并最近的几次提交
+# 此类rebase徐压迫远程仓库开启强制push才能推送
+# 否则只能本地生效
+# 推荐用于本地合并提交后推送，保证commit内容整洁，已推送内容不建议修改
+```
+
 ## stash
 
 ```bash
@@ -141,4 +164,35 @@ git cherry-pick <commit-id>
 # 推送到远程
 ## 前提是有权限推送到main分支
 git push origin main
+```
+
+## bisect
+
+二分查找某次有bug的提交
+
+```bash
+# 假设当前HEAD有错误，但在某次commit时还是正常的
+# 开启二分查找
+git bisect start
+# 标记当前HEAD为坏commit
+git bisect bad HEAD
+# 标记已知是好的commit
+git bisect good $commit_id
+# 此时git会输出好与坏中间的那个commit
+# 然后测试commit，标记好坏，重复步骤即可找到引入bug的第一个提交
+# 结束查找
+git bisect reset
+
+# 如果中间的某次提交是不完整的工作提交可以使用skip跳过
+git bisect skip
+
+# 查看日志
+git bisect log
+# 重放日志
+git bisect log > bisect.log
+git bisect replay bisect.log
+# 查看进度
+git bisect status
+# 可视化查看二分查找过程
+git log --oneline --graph --boundary $(git bisect rev-list --bisect-vars | tr ' ' '\n' | grep -E '^(BISECT_START|BISECT_BAD|BISECT_GOOD)')
 ```
