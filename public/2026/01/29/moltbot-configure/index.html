@@ -1,0 +1,751 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="piupiuxiupa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本文档详细介绍了如何在 macOS 系统中部署 Clawdbot、安装技能(Skills)以及保持后台运行的方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Moltbot(Clawdbot) 在 macOS 系统中的部署指南">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2026/01/29/moltbot-configure/index.html">
+<meta property="og:site_name" content="piupiuxiupa&#39;s blog">
+<meta property="og:description" content="本文档详细介绍了如何在 macOS 系统中部署 Clawdbot、安装技能(Skills)以及保持后台运行的方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-01-29T08:26:06.000Z">
+<meta property="article:modified_time" content="2026-01-30T02:41:30.775Z">
+<meta property="article:author" content="piupiuxiupa">
+<meta property="article:tag" content="tools">
+<meta property="article:tag" content="LLM">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Moltbot(Clawdbot) 在 macOS 系统中的部署指南 - piupiuxiupa&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"piupiuxiupa.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>piupiuxiupa&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Moltbot(Clawdbot) 在 macOS 系统中的部署指南"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-01-29 16:26" pubdate>
+          2026年1月29日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Moltbot(Clawdbot) 在 macOS 系统中的部署指南</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="1-系统要求"><a href="#1-系统要求" class="headerlink" title="1. 系统要求"></a>1. 系统要求</h2><ul>
+<li>macOS 10.15 (Catalina) 或更高版本</li>
+<li>Node.js 18.x 或更高版本</li>
+<li>npm 包管理器</li>
+<li>稳定的互联网连接</li>
+</ul>
+<h2 id="2-安装-Clawdbot"><a href="#2-安装-Clawdbot" class="headerlink" title="2. 安装 Clawdbot"></a>2. 安装 Clawdbot</h2><h3 id="2-1-安装-Node-js"><a href="#2-1-安装-Node-js" class="headerlink" title="2.1 安装 Node.js"></a>2.1 安装 Node.js</h3><p>首先确保您的系统已安装 Node.js：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 检查是否已安装 Node.js</span><br>node --version<br>npm --version<br><br><span class="hljs-comment"># 如果未安装，可以通过以下方式之一安装：</span><br><span class="hljs-comment"># 方式1：使用 Homebrew</span><br>brew install node<br><br><span class="hljs-comment"># 方式2：从官网下载安装包</span><br><span class="hljs-comment"># https://nodejs.org/</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-全局安装-Clawdbot"><a href="#2-2-全局安装-Clawdbot" class="headerlink" title="2.2 全局安装 Clawdbot"></a>2.2 全局安装 Clawdbot</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 全局安装 Clawdbot</span><br>npm install -g clawdbot<br><span class="hljs-comment">## 或者</span><br>curl -fsSL https://molt.bot/install.sh | bash<br><br><span class="hljs-comment"># 验证安装</span><br>clawdbot --version<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-配置-Clawdbot"><a href="#3-配置-Clawdbot" class="headerlink" title="3. 配置 Clawdbot"></a>3. 配置 Clawdbot</h2><h3 id="3-1-运行配置向导"><a href="#3-1-运行配置向导" class="headerlink" title="3.1 运行配置向导"></a>3.1 运行配置向导</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 运行交互式配置向导</span><br>clawdbot configure<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-配置通道（Channels）"><a href="#3-2-配置通道（Channels）" class="headerlink" title="3.2 配置通道（Channels）"></a>3.2 配置通道（Channels）</h3><p>根据您的需要配置通信渠道，如 Telegram、WhatsApp 等：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 配置 Telegram 机器人</span><br>clawdbot channels login --channel telegram<br><br><span class="hljs-comment"># 配置 WhatsApp</span><br>clawdbot channels login --channel whatsapp<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-安装和管理-Skills"><a href="#4-安装和管理-Skills" class="headerlink" title="4. 安装和管理 Skills"></a>4. 安装和管理 Skills</h2><p><a target="_blank" rel="noopener" href="https://clawdhub.com/">MoltHub</a></p>
+<h3 id="4-1-使用-ClawdHub-搜索和安装-Skills"><a href="#4-1-使用-ClawdHub-搜索和安装-Skills" class="headerlink" title="4.1 使用 ClawdHub 搜索和安装 Skills"></a>4.1 使用 ClawdHub 搜索和安装 Skills</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 安装</span><br>npm i -g clawdhub<br><br><span class="hljs-comment"># 搜索可用的 Skills</span><br>npx clawdhub search [关键词]<br><br><span class="hljs-comment"># 安装特定 Skill</span><br>npx clawdhub install [skill-name]<br><br><span class="hljs-comment"># 查看已安装的 Skills</span><br>npx clawdhub list<br><br><span class="hljs-comment"># 更新所有 Skills</span><br>npx clawdhub update<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2-手动安装-Skills"><a href="#4-2-手动安装-Skills" class="headerlink" title="4.2 手动安装 Skills"></a>4.2 手动安装 Skills</h3><p>您也可以从 GitHub 或其他来源手动安装 Skills：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 进入工作目录</span><br><span class="hljs-built_in">cd</span> ~/clawd<br><br><span class="hljs-comment"># 创建 Skills 目录（如果不存在）</span><br><span class="hljs-built_in">mkdir</span> -p skills<br><br><span class="hljs-comment"># 将 Skill 文件夹复制到 skills 目录</span><br><span class="hljs-built_in">cp</span> -r /path/to/skill ./skills/<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-3-配置-API-密钥"><a href="#4-3-配置-API-密钥" class="headerlink" title="4.3 配置 API 密钥"></a>4.3 配置 API 密钥</h3><p>对于需要 API 密钥的 Skills，在配置文件中设置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 编辑配置文件</span><br>nano ~/.clawdbot/clawdbot.json<br><br><span class="hljs-comment"># 在配置文件中添加 API 密钥</span><br>&#123;<br>  ...<br>  skills: &#123;<br>    entries: &#123;<br>      <span class="hljs-string">&quot;skill-name&quot;</span>: &#123;<br>        enabled: <span class="hljs-literal">true</span>,<br>        <span class="hljs-comment"># ENV_API_KEY 对应skills需要的环境变量名</span><br>        apiKey: <span class="hljs-string">&quot;ENV_API_KEY&quot;</span>,<br>        <span class="hljs-built_in">env</span>: &#123;<br>          ENV_API_KEY: <span class="hljs-string">&quot;YOUR-API-KEY&quot;</span><br>        &#125;,<br>      &#125;,<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-4-验证-Skills-安装"><a href="#4-4-验证-Skills-安装" class="headerlink" title="4.4 验证 Skills 安装"></a>4.4 验证 Skills 安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 检查所有 Skills 的状态</span><br>clawdbot skills check<br><br><span class="hljs-comment"># 查看特定 Skill 信息</span><br>clawdbot skills info [skill-name]<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-启动和测试-Clawdbot"><a href="#5-启动和测试-Clawdbot" class="headerlink" title="5. 启动和测试 Clawdbot"></a>5. 启动和测试 Clawdbot</h2><h3 id="5-1-启动-Gateway"><a href="#5-1-启动-Gateway" class="headerlink" title="5.1 启动 Gateway"></a>5.1 启动 Gateway</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启动clawdbot</span><br>clawdbot onboard<br><br><span class="hljs-comment"># 启动 Clawdbot Gateway</span><br>clawdbot gateway<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-2-测试功能"><a href="#5-2-测试功能" class="headerlink" title="5.2 测试功能"></a>5.2 测试功能</h3><p>启动后，通过您配置的通信渠道（如 Telegram 或 WhatsApp）与 Clawdbot 交流，确认一切正常工作。</p>
+<h2 id="6-保持后台运行"><a href="#6-保持后台运行" class="headerlink" title="6. 保持后台运行"></a>6. 保持后台运行</h2><h3 id="6-1-方法一：使用-PM2（推荐）"><a href="#6-1-方法一：使用-PM2（推荐）" class="headerlink" title="6.1 方法一：使用 PM2（推荐）"></a>6.1 方法一：使用 PM2（推荐）</h3><h4 id="安装-PM2"><a href="#安装-PM2" class="headerlink" title="安装 PM2"></a>安装 PM2</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 全局安装 PM2</span><br>npm install -g pm2<br><br><span class="hljs-comment"># 启动 Clawdbot 并命名进程</span><br>pm2 start clawdbot --name <span class="hljs-string">&quot;clawdbot&quot;</span> -- gateway<br><br><span class="hljs-comment"># 设置开机自启</span><br>pm2 startup<br>pm2 save<br><br><span class="hljs-comment"># 查看进程状态</span><br>pm2 status<br><br><span class="hljs-comment"># 查看日志</span><br>pm2 logs clawdbot<br></code></pre></td></tr></table></figure>
+
+<h4 id="PM2-常用命令"><a href="#PM2-常用命令" class="headerlink" title="PM2 常用命令"></a>PM2 常用命令</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 重启进程</span><br>pm2 restart clawdbot<br><br><span class="hljs-comment"># 停止进程</span><br>pm2 stop clawdbot<br><br><span class="hljs-comment"># 删除进程</span><br>pm2 delete clawdbot<br><br><span class="hljs-comment"># 查看内存和 CPU 使用情况</span><br>pm2 monit<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-2-方法二：使用-Launchd（macOS-原生）"><a href="#6-2-方法二：使用-Launchd（macOS-原生）" class="headerlink" title="6.2 方法二：使用 Launchd（macOS 原生）"></a>6.2 方法二：使用 Launchd（macOS 原生）</h3><p>创建一个 Launchd 配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 创建 plist 文件</span><br>nano ~/Library/LaunchAgents/com.user.clawdbot.plist<br></code></pre></td></tr></table></figure>
+
+<p>将以下内容粘贴到文件中（替换路径为您的实际路径）：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;UTF-8&quot;</span>?&gt;</span><br><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">plist</span> <span class="hljs-keyword">PUBLIC</span> <span class="hljs-string">&quot;-//Apple//DTD PLIST 1.0//EN&quot;</span> <span class="hljs-string">&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">plist</span> <span class="hljs-attr">version</span>=<span class="hljs-string">&quot;1.0&quot;</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dict</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>Label<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>com.user.clawdbot<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>ProgramArguments<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">array</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>/opt/homebrew/bin/clawdbot<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>gateway<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">array</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>WorkingDirectory<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>/Users/[YOUR_NAME]/clawd<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>RunAtLoad<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">true</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>KeepAlive<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">true</span>/&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>StandardOutPath<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>/Users/[YOUR_NAME]/clawdbot.log<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>StandardErrorPath<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>/Users/[YOUR_NAME]/clawdbot_error.log<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>EnvironmentVariables<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dict</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">key</span>&gt;</span>PATH<span class="hljs-tag">&lt;/<span class="hljs-name">key</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">string</span>&gt;</span>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin<span class="hljs-tag">&lt;/<span class="hljs-name">string</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dict</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dict</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">plist</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>加载服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 加载服务</span><br>launchctl load ~/Library/LaunchAgents/com.user.clawdbot.plist<br><br><span class="hljs-comment"># 启动服务</span><br>launchctl start com.user.clawdbot<br><br><span class="hljs-comment"># 查看服务状态</span><br>launchctl list | grep clawdbot<br><br><span class="hljs-comment"># 停止服务</span><br>launchctl stop com.user.clawdbot<br><br><span class="hljs-comment"># 卸载服务</span><br>launchctl unload ~/Library/LaunchAgents/com.user.clawdbot.plist<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-3-方法三：使用-nohup"><a href="#6-3-方法三：使用-nohup" class="headerlink" title="6.3 方法三：使用 nohup"></a>6.3 方法三：使用 nohup</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 在后台启动 Clawdbot</span><br><span class="hljs-built_in">nohup</span> clawdbot gateway &gt; ~/clawdbot.log 2&gt;&amp;1 &amp;<br><br><span class="hljs-comment"># 获取进程 ID</span><br><span class="hljs-built_in">echo</span> $! &gt; ~/clawdbot.pid<br><br><span class="hljs-comment"># 检查进程是否在运行</span><br>ps aux | grep clawdbot<br><br><span class="hljs-comment"># 停止进程</span><br><span class="hljs-built_in">kill</span> $(<span class="hljs-built_in">cat</span> ~/clawdbot.pid)<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-4-方法四：使用-tmux"><a href="#6-4-方法四：使用-tmux" class="headerlink" title="6.4 方法四：使用 tmux"></a>6.4 方法四：使用 tmux</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 创建并启动 tmux 会话</span><br>tmux new-session -d -s clawdbot <span class="hljs-string">&#x27;clawdbot gateway&#x27;</span><br><br><span class="hljs-comment"># 重新连接到会话</span><br>tmux attach -t clawdbot<br><br><span class="hljs-comment"># 分离会话（保持运行）</span><br><span class="hljs-comment"># 在 tmux 会话中按 Ctrl+b 然后按 d</span><br><br><span class="hljs-comment"># 列出所有会话</span><br>tmux <span class="hljs-built_in">ls</span><br><br><span class="hljs-comment"># 停止会话</span><br>tmux kill-session -t clawdbot<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-监控和维护"><a href="#7-监控和维护" class="headerlink" title="7. 监控和维护"></a>7. 监控和维护</h2><h3 id="7-1-日志管理"><a href="#7-1-日志管理" class="headerlink" title="7.1 日志管理"></a>7.1 日志管理</h3><p>无论使用哪种后台运行方法，都建议定期检查日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 如果使用 PM2</span><br>pm2 logs clawdbot --lines 100<br><br><span class="hljs-comment"># 如果使用 Launchd，查看指定的日志文件</span><br><span class="hljs-built_in">tail</span> -f ~/clawdbot.log<br></code></pre></td></tr></table></figure>
+
+<h3 id="7-2-更新-Clawdbot"><a href="#7-2-更新-Clawdbot" class="headerlink" title="7.2 更新 Clawdbot"></a>7.2 更新 Clawdbot</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 更新 Clawdbot</span><br>npm update -g clawdbot<br><br><span class="hljs-comment"># 重启服务（如果是 PM2 管理）</span><br>pm2 restart clawdbot<br></code></pre></td></tr></table></figure>
+
+<h3 id="7-3-备份配置"><a href="#7-3-备份配置" class="headerlink" title="7.3 备份配置"></a>7.3 备份配置</h3><p>定期备份您的配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 备份配置</span><br><span class="hljs-built_in">cp</span> -r ~/.clawdbot ~/clawdbot_backup_$(<span class="hljs-built_in">date</span> +%Y%m%d)<br></code></pre></td></tr></table></figure>
+
+<h2 id="8-故障排除"><a href="#8-故障排除" class="headerlink" title="8. 故障排除"></a>8. 故障排除</h2><h3 id="8-1-常见问题"><a href="#8-1-常见问题" class="headerlink" title="8.1 常见问题"></a>8.1 常见问题</h3><ol>
+<li><strong>权限问题</strong>：确保运行 Clawdbot 的用户有足够的权限</li>
+<li><strong>端口占用</strong>：默认端口 18789，如果被占用，使用 <code>--port</code> 参数指定其他端口</li>
+<li><strong>API 密钥</strong>：确保所有需要的 API 密钥都已正确配置</li>
+<li><strong>依赖问题</strong>：有的时候npm安装缺少依赖，需要手动补齐，在安装<code>clawdhub</code>时没有安装依赖<code>undici</code>，<code>cd /opt/homebrew/lib/node_modules/clawdhub &amp;&amp; npm install undici</code></li>
+</ol>
+<h3 id="8-2-调试技巧"><a href="#8-2-调试技巧" class="headerlink" title="8.2 调试技巧"></a>8.2 调试技巧</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 运行诊断</span><br>clawdbot doctor<br><br><span class="hljs-comment"># 检查健康状态</span><br>clawdbot health<br><br><span class="hljs-comment"># 查看状态</span><br>clawdbot status<br></code></pre></td></tr></table></figure>
+
+<h2 id="9-性能优化"><a href="#9-性能优化" class="headerlink" title="9. 性能优化"></a>9. 性能优化</h2><ul>
+<li>定期清理日志文件</li>
+<li>监控内存使用情况</li>
+<li>根据需要调整模型设置</li>
+<li>只启用必要的 Skills 以减少资源消耗</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="Telegram-机器人配置"><a href="#Telegram-机器人配置" class="headerlink" title="Telegram 机器人配置"></a>Telegram 机器人配置</h3><ol>
+<li>搜索BotFather</li>
+<li>发送<code>/newbot</code></li>
+<li>会让你输入机器人的名字，随便定义，比如：<code>clawdbot</code></li>
+<li>输入机器人用户名，比如：<code>xxxbot</code>，这里必须以bot结尾，用户名是唯一id，可能会因为占用需要重新输入</li>
+<li>创建完后会收到HTTP API的密钥</li>
+<li>发送<code>/setprivacy</code>，然后发送你刚才创建的机器人的用户名id</li>
+<li>此时输入框会显示选项，选择<code>Disable</code></li>
+<li>创建完后可以在搜索通过<code>@xxxbot</code>找到对应机器人添加</li>
+<li>第一次需要主动跟机器人对话，会返回一个 <code>Pairing code</code></li>
+<li>运行<code>clawdbot pairing approve telegram &lt;code&gt;</code></li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Posts/" class="category-chain-item">Posts</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/tools/" class="print-no-link">#tools</a>
+      
+        <a href="/tags/LLM/" class="print-no-link">#LLM</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Moltbot(Clawdbot) 在 macOS 系统中的部署指南</div>
+      <div>https://piupiuxiupa.github.io/2026/01/29/moltbot-configure/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>piupiuxiupa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年1月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/11/17/LLM-app-frame/" title="LLM-app-frame">
+                        <span class="hidden-mobile">LLM-app-frame</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> <a href="https://piupiuxiupa.github.io/" target="_blank" rel="nofollow noopener"><span>piupiuxiupa</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
