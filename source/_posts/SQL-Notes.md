@@ -227,3 +227,11 @@ REVOKE LOAD_PRIV ON test.* FROM 'username'@'%';
 GRANT ALL PRIVILEGES ON test.* TO 'username'@'%';
 FLUSH PRIVILEGES;
 ```
+
+```sql
+-- oracle 权限修改
+-- with grant option 可以将该权限转授给其他pattern
+GRANT SELECT ON 'pattern'.'table' TO 'user' WITH GRANT OPTION;
+-- 回收权限
+REVOKE SELECT ON 'pattern'.'table' FROM 'user';
+```
