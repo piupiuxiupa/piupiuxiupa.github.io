@@ -24,7 +24,7 @@
 <meta property="og:description" content="Tmux 简介">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-07-11T07:20:11.000Z">
-<meta property="article:modified_time" content="2025-11-21T06:39:22.740Z">
+<meta property="article:modified_time" content="2026-03-11T02:34:32.617Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="tools">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          563 字
+          596 字
         
       </span>
     
@@ -336,7 +336,7 @@
 <p>部分终端修改后可能无法复制，需要安装<code>xclip</code>，再修改配置文件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">apt install xclip<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启用鼠标支持</span><br><span class="hljs-built_in">set</span> -g mouse on<br><span class="hljs-comment"># 启用复制模式</span><br><span class="hljs-comment"># 允许鼠标选择文本并复制</span><br><span class="hljs-built_in">set</span> -g set-clipboard on<br><br><span class="hljs-built_in">set</span> -g pane-base-index    1     <span class="hljs-comment"># 窗格编号从 1 开始计数</span><br><span class="hljs-built_in">set</span> -g renumber-windows   on    <span class="hljs-comment"># 关掉某个窗口后，编号重排</span><br><br><span class="hljs-comment"># 启用这种模式后，你可以通过鼠标选择来复制文本</span><br><span class="hljs-built_in">bind</span> -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel <span class="hljs-string">&quot;xclip -in -selection clipboard&quot;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启用鼠标支持</span><br><span class="hljs-built_in">set</span> -g mouse on<br><span class="hljs-comment"># 启用复制模式</span><br><span class="hljs-comment"># 允许鼠标选择文本并复制</span><br><span class="hljs-built_in">set</span> -g set-clipboard on<br><br><span class="hljs-built_in">set</span> -g pane-base-index    1     <span class="hljs-comment"># 窗格编号从 1 开始计数</span><br><span class="hljs-built_in">set</span> -g renumber-windows   on    <span class="hljs-comment"># 关掉某个窗口后，编号重排</span><br><br><span class="hljs-comment"># 启用这种模式后，你可以通过鼠标选择来复制文本</span><br><span class="hljs-built_in">bind</span> -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel <span class="hljs-string">&quot;xclip -in -selection clipboard&quot;</span><br><br><span class="hljs-comment"># history </span><br><span class="hljs-built_in">set</span> -g history-limit 200000<br><br><span class="hljs-comment"># 开启 tmux 异步刷新</span><br><span class="hljs-comment"># faster response</span><br><span class="hljs-built_in">set</span> -sg escape-time 0<br><br><br><span class="hljs-comment"># 禁用 paste 检测</span><br><span class="hljs-built_in">set</span> -g assume-paste-time 0<br><br><span class="hljs-comment"># 使用 256 色终端</span><br><span class="hljs-built_in">set</span> -g default-terminal <span class="hljs-string">&quot;tmux-256color&quot;</span><br><br></code></pre></td></tr></table></figure>
 
 <p>部分终端可能直接鼠标滚轮即可在pane中翻页，部分需要配合<strong>shift键</strong>才能翻页。</p>
 
