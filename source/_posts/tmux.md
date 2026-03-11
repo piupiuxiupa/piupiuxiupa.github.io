@@ -126,6 +126,21 @@ set -g renumber-windows   on    # 关掉某个窗口后，编号重排
 
 # 启用这种模式后，你可以通过鼠标选择来复制文本
 bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"
+
+# history 
+set -g history-limit 200000
+
+# 开启 tmux 异步刷新
+# faster response
+set -sg escape-time 0
+
+
+# 禁用 paste 检测
+set -g assume-paste-time 0
+
+# 使用 256 色终端
+set -g default-terminal "tmux-256color"
+
 ```
 
 部分终端可能直接鼠标滚轮即可在pane中翻页，部分需要配合**shift键**才能翻页。
