@@ -177,3 +177,22 @@ mount -t cifs //192.168.1.1/sharefile /mnt -o user=public,password=public,dir_mo
 ```bash
  smbcontrol smbd reload-config
 ```
+
+## Docker-Desktop 进入vm机
+
+Mac上的Docker-Desktop启动了一个linux虚拟机，通过这个虚拟机中转的容器
+
+```bash
+docker run -it --rm --privileged --pid=host alpine nsenter -t 1 -m -u -n -i bash
+```
+
+- --privileged 给容器最高权限，能访问宿主机（VM）的所有设备
+- --pid=host 让容器共享 VM 的 PID 命名空间，能看到 VM 里所有进程
+
+- nsenter 参数作用
+- nsenter "namespace enter" — 进入某个进程的命名空间
+- -t 1 目标进程 PID=1（VM 的 init 进程）
+- -m 进入它的 mount 命名空间 → 看到 VM 的真实文件系统
+- -u 进入 UTS 命名空间 → 看到 VM 的主机名
+- -n 进入 network 命名空间 → 看到 VM 的网络栈
+- -i 进入 IPC 命名空间 → 看到 VM 的进程间通信
