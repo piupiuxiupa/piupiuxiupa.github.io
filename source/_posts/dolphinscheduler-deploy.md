@@ -1,7 +1,7 @@
 ---
 title: Helm 部署 DolphinScheduler 3.4.1 
 date: 2026-04-10 10:00:18
-tags: tools
+tags: [tools, k8s]
 categories: Posts
 ---
 
