@@ -613,3 +613,221 @@ DBCA 日志:  /u01/app/oracle/cfgtoollogs/dbca/<SID>/
 Alert 日志: /u01/app/oracle/diag/rdbms/<db_name>/<SID>/trace/alert_<SID>.log
 监听日志:   /u01/app/oracle/diag/tnslsnr/<hostname>/listener/alert/log.xml
 ```
+
+## 10 CDB 与 PDB 概念说明
+
+### 10.1 什么是 CDB 和 PDB
+
+类比 Docker 来理解：
+
+| 概念 | 类比 | 说明 |
+|------|------|------|
+| **CDB**（Container Database） | Docker 引擎 | 容器数据库，提供共享的内存、进程、管理基础设施 |
+| **PDB**（Pluggable Database） | Docker 容器 | 可插拔数据库，逻辑上完全独立的数据库 |
+
+CDB 内部结构：
+
+```
+CDB (orcl)
+├── CDB$ROOT   ← 根容器，存系统级元数据、公共用户、公共角色
+├── PDB$SEED   ← 种子容器，只读模板，创建新 PDB 时从这里复制
+└── ORCLPDB1   ← 你实际的业务数据库
+```
+
+### 10.2 为什么需要 CDB
+
+PDB 不是独立实例，它**依赖 CDB 提供的共享基础设施**：
+
+- **SGA / 后台进程** — 只有一套，所有 PDB 共享内存和进程，省资源
+- **系统元数据** — Oracle 内核的字典表只在 CDB root 存一份，PDB 里只存自己的业务数据
+- **公共管理** — 打补丁、升级、备份可以在 CDB 层面一次搞定，不用逐个 PDB 操作
+- **资源控制** — CDB 统一管理内存/CPU，可以给每个 PDB 分配配额
+
+简单说：**CDB 是引擎，PDB 是数据库。**
+
+### 10.3 Non-CDB vs CDB
+
+| | Non-CDB（传统模式） | CDB + PDB（多租户模式） |
+|---|---|---|
+| 架构 | 传统单数据库 | 一个 CDB root 下挂多个 PDB |
+| 多租户 | 不支持 | 支持，可插拔/拔出 |
+| 资源隔离 | 无 | PDB 间可隔离 CPU/内存 |
+| 19c 默认 | 否 | 是（Oracle 19c 默认创建 CDB） |
+| 许可 | 无限制 | **不超过 3 个 PDB 时免费**（不买 Multitenant 许可） |
+| 适用场景 | 只需要一个数据库 | 需要多个独立数据库 |
+
+创建 CDB + PDB：
+
+```bash
+dbca -silent -createDatabase \
+  -gdbname orcl \
+  -sid orcl \
+  -templateName General_Purpose.dbc \
+  -characterSet AL32UTF8 \
+  -sysPassword Oracle123 \
+  -systemPassword Oracle123 \
+  -datafileDestination /u01/app/oracle/oradata \
+  -createAsContainerDatabase true \
+  -numberOfPDBs 1 \
+  -pdbName orclpdb1 \
+  -pdbAdminPassword Oracle123
+```
+
+创建 Non-CDB（不加 CDB 相关参数即可）：
+
+```bash
+dbca -silent -createDatabase \
+  -gdbname orcl \
+  -sid orcl \
+  -templateName General_Purpose.dbc \
+  -characterSet AL32UTF8 \
+  -sysPassword Oracle123 \
+  -systemPassword Oracle123 \
+  -datafileDestination /u01/app/oracle/oradata
+```
+
+### 10.4 DBCA 创建命令参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `-createAsContainerDatabase true` | 创建为容器数据库（CDB） |
+| `-numberOfPDBs 1` | 创建几个 PDB，设为 3 则自动创建 orclpdb1、orclpdb2、orclpdb3 |
+| `-pdbName orclpdb` | PDB 名称前缀，多个时自动加编号 |
+| `-pdbAdminPassword Oracle123` | PDB 管理员（PDBADMIN 用户）的密码 |
+
+> 建议不要把 PDB 命名为与 CDB 相同的名字（如都叫 orcl），容易混淆。
+
+### 10.5 Non-CDB 转 CDB
+
+如果建库时没有创建 CDB，需要转换为 CDB + PDB 架构：
+
+**方案一：无业务数据 → 删库重建（推荐）**
+
+```bash
+dbca -silent -deleteDatabase -sourceDB orcl
+
+dbca -silent -createDatabase \
+  -gdbname orcl \
+  -sid orcl \
+  -templateName General_Purpose.dbc \
+  -characterSet AL32UTF8 \
+  -sysPassword Oracle123 \
+  -systemPassword Oracle123 \
+  -datafileDestination /u01/app/oracle/oradata \
+  -createAsContainerDatabase true \
+  -numberOfPDBs 1 \
+  -pdbName orclpdb1 \
+  -pdbAdminPassword Oracle123
+```
+
+**方案二：有数据要保留 → 将 Non-CDB 插入到新 CDB**
+
+```sql
+-- 1. 在原 Non-CDB 中，以 read only 打开
+shutdown immediate;
+startup mount;
+alter database open read only;
+
+-- 2. 生成 PDB 描述文件
+begin
+  dbms_pdb.describe(pdb_descr_file => '/tmp/orcl_pdb.xml');
+end;
+/
+
+-- 3. 关闭原库
+shutdown immediate;
+```
+
+```bash
+# 4. 创建一个新的 CDB（不含 PDB）
+dbca -silent -createDatabase \
+  -gdbname newcdb \
+  -sid newcdb \
+  -templateName General_Purpose.dbc \
+  -characterSet AL32UTF8 \
+  -sysPassword Oracle123 \
+  -systemPassword Oracle123 \
+  -datafileDestination /u01/app/oracle/oradata \
+  -createAsContainerDatabase true \
+  -numberOfPDBs 0
+```
+
+```sql
+-- 5. 在新 CDB 中，把原库作为 PDB 插入
+create pluggable database orclpdb1 using '/tmp/orcl_pdb.xml' copy;
+alter pluggable database orclpdb1 open;
+alter pluggable database orclpdb1 save state;
+
+-- 6. 运行数据字典升级脚本（耗时较长）
+alter session set container=orclpdb1;
+@?/rdbms/admin/noncdb_to_pdb.sql
+```
+
+### 10.6 多 CDB 与多 PDB
+
+**一台服务器可以运行多个 CDB**，每个 CDB 各自拥有独立的实例、内存（SGA）、后台进程：
+
+```bash
+# 第一个 CDB
+dbca -silent -createDatabase -gdbname cdb1 -sid cdb1 ...
+
+# 第二个 CDB
+dbca -silent -createDatabase -gdbname cdb2 -sid cdb2 ...
+```
+
+但一般**不推荐多个 CDB**，每个 CDB 都要吃一份内存。推荐架构：
+
+```
+一台服务器
+└── 一个 CDB（一套内存、一套进程）
+    ├── PDB: ERP
+    ├── PDB: CRM
+    ├── PDB: 测试环境
+    └── PDB: 开发环境
+```
+
+在已有 CDB 中追加 PDB：
+
+```sql
+-- 从种子库创建新 PDB
+create pluggable database hrpdb admin user hradmin identified by Oracle123;
+alter pluggable database hrpdb open;
+alter pluggable database hrpdb save state;
+
+-- 从已有 PDB 克隆
+alter pluggable database bizpdb1 open;
+create pluggable database bizpdb2 from bizpdb1;
+alter pluggable database bizpdb2 open;
+```
+
+### 10.7 PDB 与 Schema 的关系
+
+**PDB 就是数据库，下面没有子库了。** 每个 PDB 内部就是正常的数据库结构：表空间、用户、表、视图、索引。要在 PDB 里"分库"，靠的是用户/Schema 隔离：
+
+```
+连接到 orclpdb1（一个 PDB = 一个数据库）
+└── Schema（模式）
+    ├── SYS          ← 系统自带
+    ├── SYSTEM       ← 系统自带
+    ├── HR           ← 业务用户，下面有表、视图、索引...
+    ├── ORDER_APP    ← 业务用户
+    └── REPORT_APP   ← 业务用户
+```
+
+| 概念 | 对应关系 |
+|------|---------|
+| 数据库（类似 MySQL 的 database） | PDB |
+| 模式（Schema） | 一个 Oracle 用户拥有的所有对象 |
+
+Oracle 中 **Schema 和用户是一一对应的**，创建一个用户就自动有一个同名的 Schema。
+
+### 10.8 使用 DBeaver 连接
+
+DBeaver 连接时指定的服务名决定了你进入的是哪个 PDB。不同 PDB 需要建不同的连接：
+
+| 连接服务名 | 进入的 PDB | 看到的 Schema |
+|------------|-----------|---------------|
+| `orclpdb1` | orclpdb1  | 该 PDB 下的所有用户 |
+| `orclpdb2` | orclpdb2  | 该 PDB 下的所有用户 |
+
+DBeaver 中的"模式"就是 Schema，不是 PDB。切换"数据库"的做法是建多个连接，分别连不同的 PDB 服务名。
