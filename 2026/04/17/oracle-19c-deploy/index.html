@@ -24,7 +24,7 @@
 <meta property="og:description" content="环境说明   项目 说明    操作系统 CentOS 8.x (x86_64)   安装包 LINUX.X64_193000_db_home.zip   Oracle 版本 19.3.0.0.0   Oracle Home &#x2F;u01&#x2F;app&#x2F;oracle&#x2F;product&#x2F;19c&#x2F;dbhome_1   Oracle Base &#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-04-17T08:51:20.000Z">
-<meta property="article:modified_time" content="2026-04-17T09:01:11.650Z">
+<meta property="article:modified_time" content="2026-04-17T09:43:33.738Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="database">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          3k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          16 分钟
+          25 分钟
         
       </span>
     
@@ -454,6 +454,171 @@
 </tr>
 </tbody></table>
 <h3 id="9-2-日志位置"><a href="#9-2-日志位置" class="headerlink" title="9.2 日志位置"></a>9.2 日志位置</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk">安装日志:   <span class="hljs-regexp">/u01/</span>app<span class="hljs-regexp">/oracle/i</span>nventory<span class="hljs-regexp">/logs/</span><br>DBCA 日志:  <span class="hljs-regexp">/u01/</span>app<span class="hljs-regexp">/oracle/</span>cfgtoollogs<span class="hljs-regexp">/dbca/</span>&lt;SID&gt;/<br>Alert 日志: <span class="hljs-regexp">/u01/</span>app<span class="hljs-regexp">/oracle/</span>diag<span class="hljs-regexp">/rdbms/</span>&lt;db_name&gt;<span class="hljs-regexp">/&lt;SID&gt;/</span>trace/alert_&lt;SID&gt;.log<br>监听日志:   <span class="hljs-regexp">/u01/</span>app<span class="hljs-regexp">/oracle/</span>diag<span class="hljs-regexp">/tnslsnr/</span>&lt;hostname&gt;<span class="hljs-regexp">/listener/</span>alert/log.xml<br></code></pre></td></tr></table></figure>
+
+<h2 id="10-CDB-与-PDB-概念说明"><a href="#10-CDB-与-PDB-概念说明" class="headerlink" title="10 CDB 与 PDB 概念说明"></a>10 CDB 与 PDB 概念说明</h2><h3 id="10-1-什么是-CDB-和-PDB"><a href="#10-1-什么是-CDB-和-PDB" class="headerlink" title="10.1 什么是 CDB 和 PDB"></a>10.1 什么是 CDB 和 PDB</h3><p>类比 Docker 来理解：</p>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>类比</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CDB</strong>（Container Database）</td>
+<td>Docker 引擎</td>
+<td>容器数据库，提供共享的内存、进程、管理基础设施</td>
+</tr>
+<tr>
+<td><strong>PDB</strong>（Pluggable Database）</td>
+<td>Docker 容器</td>
+<td>可插拔数据库，逻辑上完全独立的数据库</td>
+</tr>
+</tbody></table>
+<p>CDB 内部结构：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">CDB</span> (orcl)<br>├── CDB<span class="hljs-variable">$ROOT</span>   ← 根容器，存系统级元数据、公共用户、公共角色<br>├── PDB<span class="hljs-variable">$SEED</span>   ← 种子容器，只读模板，创建新 PDB 时从这里复制<br>└── ORCLPDB1   ← 你实际的业务数据库<br></code></pre></td></tr></table></figure>
+
+<h3 id="10-2-为什么需要-CDB"><a href="#10-2-为什么需要-CDB" class="headerlink" title="10.2 为什么需要 CDB"></a>10.2 为什么需要 CDB</h3><p>PDB 不是独立实例，它<strong>依赖 CDB 提供的共享基础设施</strong>：</p>
+<ul>
+<li><strong>SGA &#x2F; 后台进程</strong> — 只有一套，所有 PDB 共享内存和进程，省资源</li>
+<li><strong>系统元数据</strong> — Oracle 内核的字典表只在 CDB root 存一份，PDB 里只存自己的业务数据</li>
+<li><strong>公共管理</strong> — 打补丁、升级、备份可以在 CDB 层面一次搞定，不用逐个 PDB 操作</li>
+<li><strong>资源控制</strong> — CDB 统一管理内存&#x2F;CPU，可以给每个 PDB 分配配额</li>
+</ul>
+<p>简单说：<strong>CDB 是引擎，PDB 是数据库。</strong></p>
+<h3 id="10-3-Non-CDB-vs-CDB"><a href="#10-3-Non-CDB-vs-CDB" class="headerlink" title="10.3 Non-CDB vs CDB"></a>10.3 Non-CDB vs CDB</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>Non-CDB（传统模式）</th>
+<th>CDB + PDB（多租户模式）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>架构</td>
+<td>传统单数据库</td>
+<td>一个 CDB root 下挂多个 PDB</td>
+</tr>
+<tr>
+<td>多租户</td>
+<td>不支持</td>
+<td>支持，可插拔&#x2F;拔出</td>
+</tr>
+<tr>
+<td>资源隔离</td>
+<td>无</td>
+<td>PDB 间可隔离 CPU&#x2F;内存</td>
+</tr>
+<tr>
+<td>19c 默认</td>
+<td>否</td>
+<td>是（Oracle 19c 默认创建 CDB）</td>
+</tr>
+<tr>
+<td>许可</td>
+<td>无限制</td>
+<td><strong>不超过 3 个 PDB 时免费</strong>（不买 Multitenant 许可）</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>只需要一个数据库</td>
+<td>需要多个独立数据库</td>
+</tr>
+</tbody></table>
+<p>创建 CDB + PDB：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">dbca -silent -createDatabase \<br>  -gdbname orcl \<br>  -sid orcl \<br>  -templateName General_Purpose.dbc \<br>  -characterSet AL32UTF8 \<br>  -sysPassword Oracle123 \<br>  -systemPassword Oracle123 \<br>  -datafileDestination /u01/app/oracle/oradata \<br>  -createAsContainerDatabase <span class="hljs-literal">true</span> \<br>  -numberOfPDBs 1 \<br>  -pdbName orclpdb1 \<br>  -pdbAdminPassword Oracle123<br></code></pre></td></tr></table></figure>
+
+<p>创建 Non-CDB（不加 CDB 相关参数即可）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">dbca -silent -createDatabase \<br>  -gdbname orcl \<br>  -sid orcl \<br>  -templateName General_Purpose.dbc \<br>  -characterSet AL32UTF8 \<br>  -sysPassword Oracle123 \<br>  -systemPassword Oracle123 \<br>  -datafileDestination /u01/app/oracle/oradata<br></code></pre></td></tr></table></figure>
+
+<h3 id="10-4-DBCA-创建命令参数说明"><a href="#10-4-DBCA-创建命令参数说明" class="headerlink" title="10.4 DBCA 创建命令参数说明"></a>10.4 DBCA 创建命令参数说明</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-createAsContainerDatabase true</code></td>
+<td>创建为容器数据库（CDB）</td>
+</tr>
+<tr>
+<td><code>-numberOfPDBs 1</code></td>
+<td>创建几个 PDB，设为 3 则自动创建 orclpdb1、orclpdb2、orclpdb3</td>
+</tr>
+<tr>
+<td><code>-pdbName orclpdb</code></td>
+<td>PDB 名称前缀，多个时自动加编号</td>
+</tr>
+<tr>
+<td><code>-pdbAdminPassword Oracle123</code></td>
+<td>PDB 管理员（PDBADMIN 用户）的密码</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>建议不要把 PDB 命名为与 CDB 相同的名字（如都叫 orcl），容易混淆。</p>
+</blockquote>
+<h3 id="10-5-Non-CDB-转-CDB"><a href="#10-5-Non-CDB-转-CDB" class="headerlink" title="10.5 Non-CDB 转 CDB"></a>10.5 Non-CDB 转 CDB</h3><p>如果建库时没有创建 CDB，需要转换为 CDB + PDB 架构：</p>
+<p><strong>方案一：无业务数据 → 删库重建（推荐）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">dbca -silent -deleteDatabase -sourceDB orcl<br><br>dbca -silent -createDatabase \<br>  -gdbname orcl \<br>  -sid orcl \<br>  -templateName General_Purpose.dbc \<br>  -characterSet AL32UTF8 \<br>  -sysPassword Oracle123 \<br>  -systemPassword Oracle123 \<br>  -datafileDestination /u01/app/oracle/oradata \<br>  -createAsContainerDatabase <span class="hljs-literal">true</span> \<br>  -numberOfPDBs 1 \<br>  -pdbName orclpdb1 \<br>  -pdbAdminPassword Oracle123<br></code></pre></td></tr></table></figure>
+
+<p><strong>方案二：有数据要保留 → 将 Non-CDB 插入到新 CDB</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 1. 在原 Non-CDB 中，以 read only 打开</span><br>shutdown immediate;<br>startup mount;<br><span class="hljs-keyword">alter</span> database <span class="hljs-keyword">open</span> read <span class="hljs-keyword">only</span>;<br><br><span class="hljs-comment">-- 2. 生成 PDB 描述文件</span><br><span class="hljs-keyword">begin</span><br>  dbms_pdb.describe(pdb_descr_file <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-string">&#x27;/tmp/orcl_pdb.xml&#x27;</span>);<br><span class="hljs-keyword">end</span>;<br><span class="hljs-operator">/</span><br><br><span class="hljs-comment">-- 3. 关闭原库</span><br>shutdown immediate;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 4. 创建一个新的 CDB（不含 PDB）</span><br>dbca -silent -createDatabase \<br>  -gdbname newcdb \<br>  -sid newcdb \<br>  -templateName General_Purpose.dbc \<br>  -characterSet AL32UTF8 \<br>  -sysPassword Oracle123 \<br>  -systemPassword Oracle123 \<br>  -datafileDestination /u01/app/oracle/oradata \<br>  -createAsContainerDatabase <span class="hljs-literal">true</span> \<br>  -numberOfPDBs 0<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 5. 在新 CDB 中，把原库作为 PDB 插入</span><br><span class="hljs-keyword">create</span> pluggable database orclpdb1 <span class="hljs-keyword">using</span> <span class="hljs-string">&#x27;/tmp/orcl_pdb.xml&#x27;</span> <span class="hljs-keyword">copy</span>;<br><span class="hljs-keyword">alter</span> pluggable database orclpdb1 <span class="hljs-keyword">open</span>;<br><span class="hljs-keyword">alter</span> pluggable database orclpdb1 save state;<br><br><span class="hljs-comment">-- 6. 运行数据字典升级脚本（耗时较长）</span><br><span class="hljs-keyword">alter</span> session <span class="hljs-keyword">set</span> container<span class="hljs-operator">=</span>orclpdb1;<br>@?<span class="hljs-operator">/</span>rdbms<span class="hljs-operator">/</span>admin<span class="hljs-operator">/</span>noncdb_to_pdb.sql<br></code></pre></td></tr></table></figure>
+
+<h3 id="10-6-多-CDB-与多-PDB"><a href="#10-6-多-CDB-与多-PDB" class="headerlink" title="10.6 多 CDB 与多 PDB"></a>10.6 多 CDB 与多 PDB</h3><p><strong>一台服务器可以运行多个 CDB</strong>，每个 CDB 各自拥有独立的实例、内存（SGA）、后台进程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 第一个 CDB</span><br>dbca -silent -createDatabase -gdbname cdb1 -sid cdb1 ...<br><br><span class="hljs-comment"># 第二个 CDB</span><br>dbca -silent -createDatabase -gdbname cdb2 -sid cdb2 ...<br></code></pre></td></tr></table></figure>
+
+<p>但一般<strong>不推荐多个 CDB</strong>，每个 CDB 都要吃一份内存。推荐架构：</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">一台服务器</span><br><span class="hljs-attribute">└── 一个 CDB（一套内存、一套进程）</span><br><span class="hljs-attribute">    ├── PDB</span><span class="hljs-punctuation">:</span> <span class="hljs-string">ERP</span><br>    <span class="hljs-attribute">├── PDB</span><span class="hljs-punctuation">:</span> <span class="hljs-string">CRM</span><br>    <span class="hljs-attribute">├── PDB</span><span class="hljs-punctuation">:</span> <span class="hljs-string">测试环境</span><br>    <span class="hljs-attribute">└── PDB</span><span class="hljs-punctuation">:</span> <span class="hljs-string">开发环境</span><br></code></pre></td></tr></table></figure>
+
+<p>在已有 CDB 中追加 PDB：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 从种子库创建新 PDB</span><br><span class="hljs-keyword">create</span> pluggable database hrpdb admin <span class="hljs-keyword">user</span> hradmin identified <span class="hljs-keyword">by</span> Oracle123;<br><span class="hljs-keyword">alter</span> pluggable database hrpdb <span class="hljs-keyword">open</span>;<br><span class="hljs-keyword">alter</span> pluggable database hrpdb save state;<br><br><span class="hljs-comment">-- 从已有 PDB 克隆</span><br><span class="hljs-keyword">alter</span> pluggable database bizpdb1 <span class="hljs-keyword">open</span>;<br><span class="hljs-keyword">create</span> pluggable database bizpdb2 <span class="hljs-keyword">from</span> bizpdb1;<br><span class="hljs-keyword">alter</span> pluggable database bizpdb2 <span class="hljs-keyword">open</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="10-7-PDB-与-Schema-的关系"><a href="#10-7-PDB-与-Schema-的关系" class="headerlink" title="10.7 PDB 与 Schema 的关系"></a>10.7 PDB 与 Schema 的关系</h3><p><strong>PDB 就是数据库，下面没有子库了。</strong> 每个 PDB 内部就是正常的数据库结构：表空间、用户、表、视图、索引。要在 PDB 里”分库”，靠的是用户&#x2F;Schema 隔离：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">连接到 <span class="hljs-keyword">orclpdb1（一个 </span>PDB = 一个数据库）<br>└── <span class="hljs-keyword">Schema（模式）</span><br><span class="hljs-keyword"></span>    ├── SYS          ← 系统自带<br>    ├── SYSTEM       ← 系统自带<br>    ├── HR           ← 业务用户，下面有表、视图、索引...<br>    ├── <span class="hljs-keyword">ORDER_APP </span>   ← 业务用户<br>    └── REPORT_APP   ← 业务用户<br></code></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>对应关系</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据库（类似 MySQL 的 database）</td>
+<td>PDB</td>
+</tr>
+<tr>
+<td>模式（Schema）</td>
+<td>一个 Oracle 用户拥有的所有对象</td>
+</tr>
+</tbody></table>
+<p>Oracle 中 <strong>Schema 和用户是一一对应的</strong>，创建一个用户就自动有一个同名的 Schema。</p>
+<h3 id="10-8-使用-DBeaver-连接"><a href="#10-8-使用-DBeaver-连接" class="headerlink" title="10.8 使用 DBeaver 连接"></a>10.8 使用 DBeaver 连接</h3><p>DBeaver 连接时指定的服务名决定了你进入的是哪个 PDB。不同 PDB 需要建不同的连接：</p>
+<table>
+<thead>
+<tr>
+<th>连接服务名</th>
+<th>进入的 PDB</th>
+<th>看到的 Schema</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>orclpdb1</code></td>
+<td>orclpdb1</td>
+<td>该 PDB 下的所有用户</td>
+</tr>
+<tr>
+<td><code>orclpdb2</code></td>
+<td>orclpdb2</td>
+<td>该 PDB 下的所有用户</td>
+</tr>
+</tbody></table>
+<p>DBeaver 中的”模式”就是 Schema，不是 PDB。切换”数据库”的做法是建多个连接，分别连不同的 PDB 服务名。</p>
 
                 
               </div>
