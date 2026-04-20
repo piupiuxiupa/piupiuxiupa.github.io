@@ -24,7 +24,7 @@
 <meta property="og:description" content="环境说明   项目 说明    操作系统 CentOS 8.x (x86_64)   安装包 LINUX.X64_193000_db_home.zip   Oracle 版本 19.3.0.0.0   Oracle Home &#x2F;u01&#x2F;app&#x2F;oracle&#x2F;product&#x2F;19c&#x2F;dbhome_1   Oracle Base &#x2F;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-04-17T08:51:20.000Z">
-<meta property="article:modified_time" content="2026-04-17T09:43:33.738Z">
+<meta property="article:modified_time" content="2026-04-20T01:01:12.788Z">
 <meta property="article:author" content="piupiuxiupa">
 <meta property="article:tag" content="database">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          3.3k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          25 分钟
+          28 分钟
         
       </span>
     
@@ -397,7 +397,7 @@
 <p>创建 <code>$ORACLE_HOME/network/admin/tnsnames.ora</code>：</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">ORCL</span> =<br>  (<span class="hljs-attr">DESCRIPTION</span> =<br>    (<span class="hljs-attr">ADDRESS</span> = (PROTOCOL = TCP)(HOST = oracledb)(PORT = <span class="hljs-number">1521</span>))<br>    (<span class="hljs-attr">CONNECT_DATA</span> =<br>      (<span class="hljs-attr">SERVER</span> = DEDICATED)<br>      (<span class="hljs-attr">SERVICE_NAME</span> = ORCL)<br>    )<br>  )<br><br><span class="hljs-attr">ORCLPDB1</span> =<br>  (<span class="hljs-attr">DESCRIPTION</span> =<br>    (<span class="hljs-attr">ADDRESS</span> = (PROTOCOL = TCP)(HOST = oracledb)(PORT = <span class="hljs-number">1521</span>))<br>    (<span class="hljs-attr">CONNECT_DATA</span> =<br>      (<span class="hljs-attr">SERVER</span> = DEDICATED)<br>      (<span class="hljs-attr">SERVICE_NAME</span> = ORCLPDB1)<br>    )<br>  )<br></code></pre></td></tr></table></figure>
 
-<h3 id="5-2-启动-停止监听"><a href="#5-2-启动-停止监听" class="headerlink" title="5.2 启动&#x2F;停止监听"></a>5.2 启动&#x2F;停止监听</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启动</span><br>lsnrctl start<br><br><span class="hljs-comment"># 查看状态</span><br>lsnrctl status<br><br><span class="hljs-comment"># 停止</span><br>lsnrctl stop<br></code></pre></td></tr></table></figure>
+<h3 id="5-2-启动-停止监听"><a href="#5-2-启动-停止监听" class="headerlink" title="5.2 启动&#x2F;停止监听"></a>5.2 启动&#x2F;停止监听</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启动</span><br>lsnrctl start<br><br><span class="hljs-comment"># 查看状态</span><br>lsnrctl status<br><br><span class="hljs-comment"># 停止</span><br>lsnrctl stop<br><br><span class="hljs-comment"># 指定配置文件</span><br>lsnrctl start LISTENER -PFILE <span class="hljs-variable">$ORACLE_HOME</span>/network/admin/listener.ora<br></code></pre></td></tr></table></figure>
 
 <h2 id="6-配置开机自启动"><a href="#6-配置开机自启动" class="headerlink" title="6 配置开机自启动"></a>6 配置开机自启动</h2><h3 id="6-1-修改-oratab"><a href="#6-1-修改-oratab" class="headerlink" title="6.1 修改 oratab"></a>6.1 修改 oratab</h3><p>编辑 <code>/etc/oratab</code>，将最后一行的 <code>N</code> 改为 <code>Y</code>：</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ruby"><span class="hljs-variable constant_">ORCL</span><span class="hljs-symbol">:/u01/app/oracle/product/</span>19c/<span class="hljs-symbol">dbhome_1:</span>Y<br></code></pre></td></tr></table></figure>
@@ -579,7 +579,7 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 从种子库创建新 PDB</span><br><span class="hljs-keyword">create</span> pluggable database hrpdb admin <span class="hljs-keyword">user</span> hradmin identified <span class="hljs-keyword">by</span> Oracle123;<br><span class="hljs-keyword">alter</span> pluggable database hrpdb <span class="hljs-keyword">open</span>;<br><span class="hljs-keyword">alter</span> pluggable database hrpdb save state;<br><br><span class="hljs-comment">-- 从已有 PDB 克隆</span><br><span class="hljs-keyword">alter</span> pluggable database bizpdb1 <span class="hljs-keyword">open</span>;<br><span class="hljs-keyword">create</span> pluggable database bizpdb2 <span class="hljs-keyword">from</span> bizpdb1;<br><span class="hljs-keyword">alter</span> pluggable database bizpdb2 <span class="hljs-keyword">open</span>;<br></code></pre></td></tr></table></figure>
 
 <h3 id="10-7-PDB-与-Schema-的关系"><a href="#10-7-PDB-与-Schema-的关系" class="headerlink" title="10.7 PDB 与 Schema 的关系"></a>10.7 PDB 与 Schema 的关系</h3><p><strong>PDB 就是数据库，下面没有子库了。</strong> 每个 PDB 内部就是正常的数据库结构：表空间、用户、表、视图、索引。要在 PDB 里”分库”，靠的是用户&#x2F;Schema 隔离：</p>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">连接到 <span class="hljs-keyword">orclpdb1（一个 </span>PDB = 一个数据库）<br>└── <span class="hljs-keyword">Schema（模式）</span><br><span class="hljs-keyword"></span>    ├── SYS          ← 系统自带<br>    ├── SYSTEM       ← 系统自带<br>    ├── HR           ← 业务用户，下面有表、视图、索引...<br>    ├── <span class="hljs-keyword">ORDER_APP </span>   ← 业务用户<br>    └── REPORT_APP   ← 业务用户<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">连接到 orclpdb1（一个 PDB = 一个数据库）<br>└── Schema（模式）<br>    ├── SYS          ← 系统自带<br>    ├── SYSTEM       ← 系统自带<br>    ├── HR           ← 业务用户，下面有表、视图、索引...<br>    ├── ORDER_APP    ← 业务用户<br>    └── REPORT_APP   ← 业务用户<br></code></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -619,6 +619,69 @@
 </tr>
 </tbody></table>
 <p>DBeaver 中的”模式”就是 Schema，不是 PDB。切换”数据库”的做法是建多个连接，分别连不同的 PDB 服务名。</p>
+<h2 id="11-开启远程连接"><a href="#11-开启远程连接" class="headerlink" title="11 开启远程连接"></a>11 开启远程连接</h2><h3 id="11-1-确认监听配置"><a href="#11-1-确认监听配置" class="headerlink" title="11.1 确认监听配置"></a>11.1 确认监听配置</h3><p>编辑 <code>$ORACLE_HOME/network/admin/listener.ora</code>，HOST 改为服务器实际 IP 或 <code>0.0.0.0</code>：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">LISTENER</span> =<br>  (<span class="hljs-attr">DESCRIPTION_LIST</span> =<br>    (<span class="hljs-attr">DESCRIPTION</span> =<br>      (<span class="hljs-attr">ADDRESS</span> = (PROTOCOL = TCP)(HOST = <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>)(PORT = <span class="hljs-number">1521</span>))<br>    )<br>  )<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果 HOST 是 <code>localhost</code> 或 <code>127.0.0.1</code>，只能本地连接。改为 <code>0.0.0.0</code> 监听所有网卡。</p>
+</blockquote>
+<p>重启监听并确认状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">lsnrctl stop<br>lsnrctl start<br>lsnrctl status<br></code></pre></td></tr></table></figure>
+
+<p><code>status</code> 输出中应能看到 PDB 服务名：</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs erlang">Services Summary...<br>Service <span class="hljs-string">&quot;orcl&quot;</span> has <span class="hljs-number">1</span> instance(s).<br>Service <span class="hljs-string">&quot;orclpdb1&quot;</span> has <span class="hljs-number">1</span> instance(s).<br></code></pre></td></tr></table></figure>
+
+<h3 id="11-2-防火墙放行-1521-端口"><a href="#11-2-防火墙放行-1521-端口" class="headerlink" title="11.2 防火墙放行 1521 端口"></a>11.2 防火墙放行 1521 端口</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># firewalld</span><br>firewall-cmd --permanent --add-port=1521/tcp<br>firewall-cmd --reload<br><br><span class="hljs-comment"># 验证</span><br>firewall-cmd --list-ports<br></code></pre></td></tr></table></figure>
+
+<p>如果防火墙已关闭（第 1 节操作过），可跳过此步。</p>
+<h3 id="11-3-客户端连接方式"><a href="#11-3-客户端连接方式" class="headerlink" title="11.3 客户端连接方式"></a>11.3 客户端连接方式</h3><p><strong>DBeaver &#x2F; Navicat 等图形工具：</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主机</td>
+<td>192.168.1.100（服务器 IP）</td>
+</tr>
+<tr>
+<td>端口</td>
+<td>1521</td>
+</tr>
+<tr>
+<td>服务名</td>
+<td>orclpdb1（连 PDB）或 orcl（连 CDB）</td>
+</tr>
+<tr>
+<td>用户名</td>
+<td>system</td>
+</tr>
+<tr>
+<td>密码</td>
+<td>Oracle123</td>
+</tr>
+</tbody></table>
+<p><strong>sqlplus 通过 tnsnames.ora 连接：</strong></p>
+<p>客户端 <code>$ORACLE_HOME/network/admin/tnsnames.ora</code> 中添加：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">ORCLPDB1</span> =<br>  (<span class="hljs-attr">DESCRIPTION</span> =<br>    (<span class="hljs-attr">ADDRESS</span> = (PROTOCOL = TCP)(HOST = <span class="hljs-number">192.168</span>.<span class="hljs-number">1.100</span>)(PORT = <span class="hljs-number">1521</span>))<br>    (<span class="hljs-attr">CONNECT_DATA</span> =<br>      (<span class="hljs-attr">SERVER</span> = DEDICATED)<br>      (<span class="hljs-attr">SERVICE_NAME</span> = orclpdb1)<br>    )<br>  )<br></code></pre></td></tr></table></figure>
+
+<p>连接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sqlplus system/Oracle123@ORCLPDB1<br></code></pre></td></tr></table></figure>
+
+<p><strong>sqlplus 通过 EZConnect 直连（无需配置 tnsnames.ora）：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sqlplus system/Oracle123@192.168.1.100:1521/orclpdb1<br></code></pre></td></tr></table></figure>
+
+<h3 id="11-4-远程连接排查"><a href="#11-4-远程连接排查" class="headerlink" title="11.4 远程连接排查"></a>11.4 远程连接排查</h3><p>按以下顺序逐项检查：</p>
+<ol>
+<li>服务器本地能连吗？         → sqlplus &#x2F; as sysdba</li>
+<li>监听正常吗？               → lsnrctl status</li>
+<li>监听绑的是 0.0.0.0 吗？    → 检查 listener.ora 的 HOST</li>
+<li>网络端口通吗？             → telnet 192.168.1.100 1521</li>
+<li>防火墙放行了吗？           → firewall-cmd –list-ports</li>
+<li>PDB 打开了吗？            → show pdbs（状态应为 READ WRITE）</li>
+</ol>
 
                 
               </div>

@@ -471,6 +471,9 @@ lsnrctl status
 
 # 停止
 lsnrctl stop
+
+# 指定配置文件
+lsnrctl start LISTENER -PFILE $ORACLE_HOME/network/admin/listener.ora
 ```
 
 ## 6 配置开机自启动
@@ -804,7 +807,7 @@ alter pluggable database bizpdb2 open;
 
 **PDB 就是数据库，下面没有子库了。** 每个 PDB 内部就是正常的数据库结构：表空间、用户、表、视图、索引。要在 PDB 里"分库"，靠的是用户/Schema 隔离：
 
-```
+```bash
 连接到 orclpdb1（一个 PDB = 一个数据库）
 └── Schema（模式）
     ├── SYS          ← 系统自带
@@ -831,3 +834,99 @@ DBeaver 连接时指定的服务名决定了你进入的是哪个 PDB。不同 P
 | `orclpdb2` | orclpdb2  | 该 PDB 下的所有用户 |
 
 DBeaver 中的"模式"就是 Schema，不是 PDB。切换"数据库"的做法是建多个连接，分别连不同的 PDB 服务名。
+
+## 11 开启远程连接
+
+### 11.1 确认监听配置
+
+编辑 `$ORACLE_HOME/network/admin/listener.ora`，HOST 改为服务器实际 IP 或 `0.0.0.0`：
+
+```ini
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = 0.0.0.0)(PORT = 1521))
+    )
+  )
+```
+
+> 如果 HOST 是 `localhost` 或 `127.0.0.1`，只能本地连接。改为 `0.0.0.0` 监听所有网卡。
+
+重启监听并确认状态：
+
+```bash
+lsnrctl stop
+lsnrctl start
+lsnrctl status
+```
+
+`status` 输出中应能看到 PDB 服务名：
+
+```
+Services Summary...
+Service "orcl" has 1 instance(s).
+Service "orclpdb1" has 1 instance(s).
+```
+
+### 11.2 防火墙放行 1521 端口
+
+```bash
+# firewalld
+firewall-cmd --permanent --add-port=1521/tcp
+firewall-cmd --reload
+
+# 验证
+firewall-cmd --list-ports
+```
+
+如果防火墙已关闭（第 1 节操作过），可跳过此步。
+
+### 11.3 客户端连接方式
+
+**DBeaver / Navicat 等图形工具：**
+
+| 参数 | 值 |
+|------|---|
+| 主机 | 192.168.1.100（服务器 IP） |
+| 端口 | 1521 |
+| 服务名 | orclpdb1（连 PDB）或 orcl（连 CDB） |
+| 用户名 | system |
+| 密码 | Oracle123 |
+
+**sqlplus 通过 tnsnames.ora 连接：**
+
+客户端 `$ORACLE_HOME/network/admin/tnsnames.ora` 中添加：
+
+```ini
+ORCLPDB1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.1.100)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = orclpdb1)
+    )
+  )
+```
+
+连接：
+
+```bash
+sqlplus system/Oracle123@ORCLPDB1
+```
+
+**sqlplus 通过 EZConnect 直连（无需配置 tnsnames.ora）：**
+
+```bash
+sqlplus system/Oracle123@192.168.1.100:1521/orclpdb1
+```
+
+### 11.4 远程连接排查
+
+按以下顺序逐项检查：
+
+1. 服务器本地能连吗？         → sqlplus / as sysdba
+2. 监听正常吗？               → lsnrctl status
+3. 监听绑的是 0.0.0.0 吗？    → 检查 listener.ora 的 HOST
+4. 网络端口通吗？             → telnet 192.168.1.100 1521
+5. 防火墙放行了吗？           → firewall-cmd --list-ports
+6. PDB 打开了吗？            → show pdbs（状态应为 READ WRITE）
