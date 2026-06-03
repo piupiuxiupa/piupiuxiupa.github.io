@@ -1,0 +1,731 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="piupiuxiupa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="搭建Docker本地仓库前提  安装 docker 熟悉 docker环境及基本操作   二进制包部署：https:&#x2F;&#x2F;download.docker.com&#x2F;linux&#x2F;static&#x2F;stable&#x2F;x86_64&#x2F;  容器化部署12345678910111213141516171819# 联网环境下# 直接运行 registry镜像，本地没有会自动拉取docker run -d -p 5000:5">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建Docker本地仓库">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2024/08/11/docker-local-registry/index.html">
+<meta property="og:site_name" content="piupiuxiupa&#39;s blog">
+<meta property="og:description" content="搭建Docker本地仓库前提  安装 docker 熟悉 docker环境及基本操作   二进制包部署：https:&#x2F;&#x2F;download.docker.com&#x2F;linux&#x2F;static&#x2F;stable&#x2F;x86_64&#x2F;  容器化部署12345678910111213141516171819# 联网环境下# 直接运行 registry镜像，本地没有会自动拉取docker run -d -p 5000:5">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-08-11T07:38:32.000Z">
+<meta property="article:modified_time" content="2025-11-21T06:39:22.735Z">
+<meta property="article:author" content="piupiuxiupa">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>搭建Docker本地仓库 - piupiuxiupa&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"piupiuxiupa.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>piupiuxiupa&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="搭建Docker本地仓库"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-11 15:38" pubdate>
+          2024年8月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">搭建Docker本地仓库</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="搭建Docker本地仓库"><a href="#搭建Docker本地仓库" class="headerlink" title="搭建Docker本地仓库"></a>搭建Docker本地仓库</h1><p>前提</p>
+<ul>
+<li>安装 docker</li>
+<li>熟悉 docker环境及基本操作</li>
+</ul>
+<blockquote>
+<p>二进制包部署：<a target="_blank" rel="noopener" href="https://download.docker.com/linux/static/stable/x86_64/">https://download.docker.com/linux/static/stable/x86_64/</a></p>
+</blockquote>
+<h2 id="容器化部署"><a href="#容器化部署" class="headerlink" title="容器化部署"></a>容器化部署</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 联网环境下</span><br><span class="hljs-comment"># 直接运行 registry镜像，本地没有会自动拉取</span><br>docker run -d -p 5000:5000 --name registry registry:2<br><br><span class="hljs-comment"># 内网环境</span><br><span class="hljs-comment"># 下载对应镜像 tar包传入内网环境</span><br><span class="hljs-comment"># 只有用save的镜像才能load导入，否则会报错</span><br>docker save registry:2 -o registry.tar<br>docker load -i registry.tar<br><br><span class="hljs-comment"># 也可将运行容器导出</span><br>docker <span class="hljs-built_in">export</span> 容器ID &gt; registry.tar<br><span class="hljs-comment"># 将打包容器导入</span><br><span class="hljs-comment"># 用export导出的容器，需要用import导入</span><br>docker import registry.tar localhost/registry:2<br><br><span class="hljs-comment">## 验证是否安装成功</span><br><span class="hljs-comment">## 返回 &#123;&#125;表示成功</span><br>curl -s http://localhost:5000/v2/<br></code></pre></td></tr></table></figure>
+
+<h2 id="推送镜像到本地仓库"><a href="#推送镜像到本地仓库" class="headerlink" title="推送镜像到本地仓库"></a>推送镜像到本地仓库</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 修改镜像tag为本地仓库地址</span><br>docker tag <span class="hljs-variable">$image</span> localhost:5000/<span class="hljs-variable">$image</span><br><br><span class="hljs-comment">## 推送到本地仓库</span><br>docker push localhost:5000/<span class="hljs-variable">$image</span><br><br><span class="hljs-comment">## 拉取本地仓库镜像</span><br>docker pull localhost:5000/<span class="hljs-variable">$image</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="持久化存储镜像"><a href="#持久化存储镜像" class="headerlink" title="持久化存储镜像"></a>持久化存储镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d -p 5000:5000 --name registry -v /home/registry:/var/lib/registry registry:2<br></code></pre></td></tr></table></figure>
+
+<h2 id="配置本地仓库HTTPS"><a href="#配置本地仓库HTTPS" class="headerlink" title="配置本地仓库HTTPS"></a>配置本地仓库HTTPS</h2><p>可以选择生成自签名证书或使用受信任的证书颁发机构 (CA) 签发的证书。</p>
+<h3 id="生成自签名证书"><a href="#生成自签名证书" class="headerlink" title="生成自签名证书"></a>生成自签名证书</h3><ul>
+<li><code>-newkey rsa:4096</code>：生成一个新的 RSA 私钥和证书请求，并使用 4096 位的密钥长度</li>
+<li><code>-nodes</code>：指定不对生成的私钥进行加密。如果不使用这个选项，需要为私钥设置一个密码。对于自动化使用，通常不设置密码。</li>
+<li><code>-sha256</code>：使用 SHA-256 哈希算法来生成证书。</li>
+<li><code>-keyout certs/domain.key</code>：指定生成的私钥文件的输出路径。</li>
+<li><code>-x509</code>：表示生成自签名的 X.509 证书。X.509 是一种标准格式，用于公钥证书。</li>
+<li><code>-days 365</code>：设置证书的有效期为 365 天，过期后需要更新。</li>
+<li><code>-out certs/domain.crt</code>：指定生成的自签名证书文件的输出路径。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p /etc/certs<br><br>openssl req -newkey rsa:4096 -nodes -sha256 -keyout /etc/certs/domain.key -x509 -days 365 -out /etc/certs/domain.crt<br><span class="hljs-comment">## 运行完会提示需要输入一些信息</span><br><span class="hljs-comment">## Common Name是最重要的一个</span><br><span class="hljs-comment"># 需要填写服务器的完全限定域名 (FQDN) 或 IP 地址。</span><br><span class="hljs-comment"># 如果为 Registry 配置 HTTPS，必须匹配客户端将用来访问服务器的域名或 IP 地址</span><br><span class="hljs-comment"># 比如本地localhost或者127.0.0.1</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="registry-配置HTTPS"><a href="#registry-配置HTTPS" class="headerlink" title="registry 配置HTTPS"></a>registry 配置HTTPS</h3><ul>
+<li><code>REGISTRY_HTTP_ADDR=0.0.0.0:443</code>：配置 Registry 监听 HTTPS 请求</li>
+<li><code>REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt</code>：指定 SSL 证书路径</li>
+<li><code>REGISTRY_HTTP_TLS_KEY=/certs/domain.key</code>：指定 SSL 私钥路径</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d \<br>  -p 443:443 \<br>  --name registry \<br>  -v /etc/certs:/certs \<br>  -v /home/registry:/var/lib/registry \<br>  -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \<br>  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \<br>  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \<br>  registry:2<br></code></pre></td></tr></table></figure>
+
+<h3 id="配置-Docker-客户端信任自签名证书"><a href="#配置-Docker-客户端信任自签名证书" class="headerlink" title="配置 Docker 客户端信任自签名证书"></a>配置 Docker 客户端信任自签名证书</h3><p>如果使用的是自签名证书，Docker 客户端默认不会信任你生成的证书。</p>
+<p>需要将证书添加到 Docker 的信任列表。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 之前生成证书 common name填的 localhost，因此在此处创建localhost</span><br><span class="hljs-built_in">mkdir</span> -p /etc/docker/certs.d/localhost<br><span class="hljs-built_in">cp</span> /etc/certs/domain.crt /etc/docker/certs.d/localhost/ca.crt<br></code></pre></td></tr></table></figure>
+
+<h3 id="配置客户端的-insecure-registries"><a href="#配置客户端的-insecure-registries" class="headerlink" title="配置客户端的 insecure-registries"></a>配置客户端的 insecure-registries</h3><p>如果不想配置证书，可以将 Registry 配置为 insecure-registry，但不推荐在生产环境中使用。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;insecure-registries&quot;</span> <span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;localhost&quot;</span><span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+<p>重启docker即可生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -sSL -k https://localhost:443/v2/<br></code></pre></td></tr></table></figure>
+
+<h3 id="使用反向代理"><a href="#使用反向代理" class="headerlink" title="使用反向代理"></a>使用反向代理</h3><p>可以使用反向代理来处理 HTTPS，而 Registry继续使用 HTTP</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs conf">server &#123;<br>    listen 443 ssl;<br>    server_name yourdomain.com;<br><br>    ssl_certificate /etc/nginx/certs/domain.crt;<br>    ssl_certificate_key /etc/nginx/certs/domain.key;<br><br>    location / &#123;<br>        proxy_pass http://localhost:5000;<br>        # 容器化部署时改为容器名 <br>        proxy_pass http://registry:5000;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>容器化 nginx反向代理</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 创建一个 bridge网络</span><br>docker create network proxy_network<br><span class="hljs-comment">## 启动时 nginx和 registry两个容器都指定 proxy_network 网络</span><br>docker run -d --name nginx --network proxy_network -p 443:443 -v ~/nginx.conf:/etc/nginx/nginx.conf -v /etc/certs/:/etc/nginx/certs nginx:latest<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="设置仓库登陆认证"><a href="#设置仓库登陆认证" class="headerlink" title="设置仓库登陆认证"></a>设置仓库登陆认证</h2><h3 id="安装-htpasswd"><a href="#安装-htpasswd" class="headerlink" title="安装 htpasswd"></a>安装 htpasswd</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> apt-get install apache2-utils<br><span class="hljs-built_in">sudo</span> yum install httpd-tools<br></code></pre></td></tr></table></figure>
+
+<h3 id="创建认证文件"><a href="#创建认证文件" class="headerlink" title="创建认证文件"></a>创建认证文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> /etc/auth<br>htpasswd -Bc /etc/auth/htpasswd myuser<br><span class="hljs-comment">## -B：使用 bcrypt 加密算法</span><br><span class="hljs-comment">## -c：创建一个新的文件</span><br><span class="hljs-comment">## /etc/auth/htpasswd：保存用户名和密码的文件路径。</span><br><br><span class="hljs-comment">## 如果需要添加更多用户，不加 -c</span><br>htpasswd -B /etc/auth/htpasswd anotheruser<br></code></pre></td></tr></table></figure>
+<h3 id="配置-Registry登陆认证"><a href="#配置-Registry登陆认证" class="headerlink" title="配置 Registry登陆认证"></a>配置 Registry登陆认证</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d \<br>  -p 5000:5000 \<br>  --name registry \<br>  -v /etc/auth:/auth \<br>  -e <span class="hljs-string">&quot;REGISTRY_AUTH=htpasswd&quot;</span> \<br>  -e <span class="hljs-string">&quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&quot;</span> \<br>  -e <span class="hljs-string">&quot;REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd&quot;</span> \<br>  -v /home/registry:/var/lib/registry \<br>  registry:2<br><span class="hljs-comment"># REGISTRY_AUTH=htpasswd：启用 htpasswd 认证</span><br><span class="hljs-comment"># REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm：设置认证领域（可以随意设定）</span><br><span class="hljs-comment"># REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd：指定 htpasswd 文件的路径。</span><br><br><span class="hljs-comment">## 验证</span><br>docker login localhost:5000<br></code></pre></td></tr></table></figure>
+
+
+<h2 id="通过api查看本地镜像"><a href="#通过api查看本地镜像" class="headerlink" title="通过api查看本地镜像"></a>通过api查看本地镜像</h2><blockquote>
+<p>api 返回的信息为 json格式，可以配合linux的 <code>jq</code>命令进行筛选查看</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 获取所有镜像的名称</span><br>curl -sSL -k http://localhost:5000/v2/_catalog | jq<br><br><span class="hljs-comment">## 返回输出</span><br>&#123;<br>  <span class="hljs-string">&quot;repositories&quot;</span>: [<br>    <span class="hljs-string">&quot;my-image1&quot;</span>,<br>    <span class="hljs-string">&quot;my-image2&quot;</span><br>  ]<br>&#125;<br><br><span class="hljs-comment">## 设置认证后需要修改为如下命令，配合 jq使用提取信息 </span><br>curl -sSL -k -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> http://127.0.0.1:5000/v2/_catalog |jq -r <span class="hljs-string">&quot;.repositories[]&quot;</span><br><br><span class="hljs-comment">## 获取每个镜像的标签</span><br>curl http://localhost:5000/v2/<span class="hljs-variable">$image</span>/tags/list<br>curl -sSL -k -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> http://127.0.0.1:5000/v2/<span class="hljs-variable">$image</span>/tags/list<br><br><span class="hljs-comment">## 镜像的新版本会靠前显示</span><br>&#123;<br>  <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;my-image1&quot;</span>,<br>  <span class="hljs-string">&quot;tags&quot;</span>: [<br>    <span class="hljs-string">&quot;latest&quot;</span>,<br>    <span class="hljs-string">&quot;v2.0&quot;</span>,<br>    <span class="hljs-string">&quot;v1.0&quot;</span><br>  ]<br>&#125;<br><br><span class="hljs-comment">## 获取 digest信息</span><br>curl -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> -sSL -H <span class="hljs-string">&quot;Accept: application/vnd.docker.distribution.manifest.v2+json&quot;</span> http://127.0.0.1:5000/v2/<span class="hljs-variable">$image</span>/manifests/<span class="hljs-variable">$tag</span> | jq -r <span class="hljs-string">&quot;.config.digest&quot;</span><br><br><span class="hljs-comment">## 通过delete方法删除对应镜像的 tag</span><br>curl -sSLf -k -X DELETE -u <span class="hljs-variable">$username</span>:<span class="hljs-variable">$passwd</span> http://127.0.0.1:5000/v2/<span class="hljs-variable">$image</span>/manifests/<span class="hljs-variable">$digest</span><br><br><span class="hljs-comment">## 清理未被引用的blobs</span><br>registry garbage-collect -m /etc/docker/registry/config.yml<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Posts/" class="category-chain-item">Posts</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/docker/" class="print-no-link">#docker</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>搭建Docker本地仓库</div>
+      <div>https://piupiuxiupa.github.io/2024/08/11/docker-local-registry/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>piupiuxiupa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年8月11日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/08/14/curl-action/" title="Linux curl 基础用法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux curl 基础用法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/07/shell-action-2/" title="Shell 实用技巧（二）">
+                        <span class="hidden-mobile">Shell 实用技巧（二）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> <a href="https://piupiuxiupa.github.io/" target="_blank" rel="nofollow noopener"><span>piupiuxiupa</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
