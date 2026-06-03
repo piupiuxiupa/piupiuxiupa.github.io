@@ -1,3 +1,4 @@
 .deploy_git/
 **.DS_Store
 db.json
+node_modules/
