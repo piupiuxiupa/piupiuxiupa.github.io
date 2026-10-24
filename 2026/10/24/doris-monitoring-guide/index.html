@@ -1,0 +1,852 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="piupiuxiupa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Doris FE&#x2F;BE 自带 Prometheus 格式指标，无需插件。本文给出抓取配置、FE&#x2F;BE 关键指标清单、11 条告警规则（含 Compaction Score、元数据同步、BE 磁盘）、Compaction 堆积的五步排查路径，以及版本间指标命名差异的校对方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache Doris 监控接入：Prometheus + Grafana 实战">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2026/10/24/doris-monitoring-guide/index.html">
+<meta property="og:site_name" content="piupiuxiupa&#39;s blog">
+<meta property="og:description" content="Doris FE&#x2F;BE 自带 Prometheus 格式指标，无需插件。本文给出抓取配置、FE&#x2F;BE 关键指标清单、11 条告警规则（含 Compaction Score、元数据同步、BE 磁盘）、Compaction 堆积的五步排查路径，以及版本间指标命名差异的校对方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-10-24T15:55:37.000Z">
+<meta property="article:modified_time" content="2026-10-24T15:56:08.895Z">
+<meta property="article:author" content="piupiuxiupa">
+<meta property="article:tag" content="doris, prometheus, monitoring, grafana, devops">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Apache Doris 监控接入：Prometheus + Grafana 实战 - piupiuxiupa&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"piupiuxiupa.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>piupiuxiupa&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Apache Doris 监控接入：Prometheus + Grafana 实战"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-10-24 23:55" pubdate>
+          2026年10月24日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          19 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Apache Doris 监控接入：Prometheus + Grafana 实战</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>本篇是《Prometheus 监控保姆级教程 —— Linux 服务器通用版》的配套篇：主篇讲 Prometheus 本身怎么装怎么用，本篇只讲 Doris 怎么接上去。前置条件：已有一套能跑的 Prometheus（还没有就先看主篇第 1–3 章）。<br>指标名已对照 Doris 官方 4.x 指标文档核对；Doris 1.x → 4.x 命名有增改，接入时务必按第 4 节的命令用实际 &#x2F;metrics 输出校对。</p>
+</blockquote>
+<h2 id="1-端口与指标端点"><a href="#1-端口与指标端点" class="headerlink" title="1. 端口与指标端点"></a>1. 端口与指标端点</h2><p>Doris FE&#x2F;BE 进程原生暴露 Prometheus 格式指标，不需要额外 exporter。</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>默认端口</th>
+<th>指标端点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FE</td>
+<td>http_port <code>8030</code></td>
+<td><code>http://fe_host:8030/metrics</code></td>
+</tr>
+<tr>
+<td>BE</td>
+<td>webserver_port <code>8040</code></td>
+<td><code>http://be_host:8040/metrics</code></td>
+</tr>
+<tr>
+<td>BE（bvar 细分指标）</td>
+<td>brpc_port <code>8060</code></td>
+<td><code>http://be_host:8060/brpc_metrics</code></td>
+</tr>
+<tr>
+<td>Broker</td>
+<td>无</td>
+<td>不提供</td>
+</tr>
+</tbody></table>
+<p>先人工核对（fe.conf &#x2F; be.conf 里端口可能改过）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -s http://fe1:8030/metrics | <span class="hljs-built_in">head</span> -5<br>curl -s http://be1:8040/metrics | grep -E <span class="hljs-string">&#x27;^doris_be_(tablet|disks)&#x27;</span> | <span class="hljs-built_in">head</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-抓取配置"><a href="#2-抓取配置" class="headerlink" title="2. 抓取配置"></a>2. 抓取配置</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-bullet">-</span> <span class="hljs-attr">job_name:</span> <span class="hljs-string">doris_fe</span><br>  <span class="hljs-attr">metrics_path:</span> <span class="hljs-string">/metrics</span><br>  <span class="hljs-attr">static_configs:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">targets:</span> [<span class="hljs-string">&#x27;10.0.0.21:8030&#x27;</span>, <span class="hljs-string">&#x27;10.0.0.22:8030&#x27;</span>, <span class="hljs-string">&#x27;10.0.0.23:8030&#x27;</span>]<br>      <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">group:</span> <span class="hljs-string">fe</span>, <span class="hljs-attr">cluster:</span> <span class="hljs-string">doris-prod</span>&#125;<br><br><span class="hljs-bullet">-</span> <span class="hljs-attr">job_name:</span> <span class="hljs-string">doris_be</span><br>  <span class="hljs-attr">metrics_path:</span> <span class="hljs-string">/metrics</span><br>  <span class="hljs-attr">static_configs:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">targets:</span> [<span class="hljs-string">&#x27;10.0.0.11:8040&#x27;</span>, <span class="hljs-string">&#x27;10.0.0.12:8040&#x27;</span>, <span class="hljs-string">&#x27;10.0.0.13:8040&#x27;</span>, <span class="hljs-string">&#x27;10.0.0.14:8040&#x27;</span>]<br>      <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">group:</span> <span class="hljs-string">be</span>, <span class="hljs-attr">cluster:</span> <span class="hljs-string">doris-prod</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>机器多或经常扩缩容时，改用 file_sd（写法见主教程第 4 章），加节点就是改 JSON，30 秒自动生效。</p>
+<p>关键注意点：<strong>部分集群级指标（如 <code>doris_fe_max_tablet_compaction_score</code>）由 Master FE 汇报，非 Master 上可能缺失或为 0</strong>。所以：</p>
+<ul>
+<li>FE 全部抓，不是只抓 Master；</li>
+<li>查询这类指标一律用 <code>max(...)</code> 聚合，别直接画单节点曲线。</li>
+</ul>
+<h2 id="3-FE-关键指标"><a href="#3-FE-关键指标" class="headerlink" title="3. FE 关键指标"></a>3. FE 关键指标</h2><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>类型</th>
+<th>含义&#x2F;用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>doris_fe_qps</code> &#x2F; <code>doris_fe_rps</code></td>
+<td>Gauge</td>
+<td>当前 FE QPS &#x2F; RPS</td>
+</tr>
+<tr>
+<td><code>doris_fe_query_err_rate</code></td>
+<td>Gauge</td>
+<td>每秒失败查询数（直接用，不用再 rate）</td>
+</tr>
+<tr>
+<td><code>doris_fe_query_latency_ms&#123;quantile=&quot;0.99&quot;&#125;</code></td>
+<td>Summary</td>
+<td>查询延迟分位数，直接取 label，不要套 histogram_quantile</td>
+</tr>
+<tr>
+<td><code>doris_fe_max_tablet_compaction_score</code></td>
+<td>Gauge</td>
+<td>全集群最大 Compaction Score（P0，告警核心指标）</td>
+</tr>
+<tr>
+<td><code>doris_fe_connection_total</code></td>
+<td>Gauge</td>
+<td>MySQL 端口当前连接数</td>
+</tr>
+<tr>
+<td><code>doris_fe_max_journal_id</code></td>
+<td>Gauge</td>
+<td>元数据日志最大 ID；多 FE 差值大 &#x3D; 元数据同步问题</td>
+</tr>
+<tr>
+<td><code>doris_fe_edit_log&#123;type=&quot;current_bytes&quot;&#125;</code></td>
+<td>Gauge</td>
+<td>元数据日志当前大小</td>
+</tr>
+<tr>
+<td><code>doris_fe_report_queue_size</code></td>
+<td>Gauge</td>
+<td>BE 上报任务队列长度，反映 Master FE 处理能力</td>
+</tr>
+<tr>
+<td><code>doris_fe_job&#123;job=...,state=...&#125;</code></td>
+<td>Gauge</td>
+<td>各类任务（导入等）数量&#x2F;状态</td>
+</tr>
+<tr>
+<td><code>doris_fe_edit_log_clean&#123;type=&quot;failed&quot;&#125;</code></td>
+<td>Counter</td>
+<td>元数据日志清理失败，出现即需人工介入</td>
+</tr>
+</tbody></table>
+<h2 id="4-BE-关键指标与版本校对"><a href="#4-BE-关键指标与版本校对" class="headerlink" title="4. BE 关键指标与版本校对"></a>4. BE 关键指标与版本校对</h2><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>含义&#x2F;用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>doris_be_tablet_cumulative_max_compaction_score</code> &#x2F; <code>..._base_max_compaction_score</code></td>
+<td>BE 侧 cumulative&#x2F;base Compaction Score</td>
+</tr>
+<tr>
+<td><code>doris_be_disks_avail_capacity</code> &#x2F; <code>doris_be_disks_total_capacity</code></td>
+<td>数据盘可用&#x2F;总量（按 path 标签分盘）</td>
+</tr>
+<tr>
+<td><code>doris_be_memory_allocated_bytes</code> &#x2F; <code>doris_be_memory_pool_bytes_total</code></td>
+<td>BE 内存（jemalloc &#x2F; 分池）</td>
+</tr>
+<tr>
+<td><code>doris_be_process_fd_num_used</code> &#x2F; <code>..._limit_soft</code></td>
+<td>文件句柄使用&#x2F;软限</td>
+</tr>
+<tr>
+<td><code>doris_be_query_scan_bytes</code> &#x2F; <code>doris_be_query_scan_rows</code></td>
+<td>扫描量（Counter，rate 后看趋势）</td>
+</tr>
+<tr>
+<td><code>doris_be_streaming_load_current_processing</code></td>
+<td>进行中的 Stream Load 数</td>
+</tr>
+<tr>
+<td><code>doris_be_tablet_version_num_distribution</code></td>
+<td>tablet 版本数分布（倾斜&#x2F;版本堆积排查）</td>
+</tr>
+</tbody></table>
+<p>版本差异校对工作流（接入前必做）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -s http://be1:8040/metrics | grep -oE <span class="hljs-string">&#x27;^doris_be_[a-z_0-9]+&#x27;</span> | <span class="hljs-built_in">sort</span> -u &gt; be-metrics.txt<br>curl -s http://fe1:8030/metrics | grep -oE <span class="hljs-string">&#x27;^doris_fe_[a-z_0-9]+&#x27;</span> | <span class="hljs-built_in">sort</span> -u &gt; fe-metrics.txt<br></code></pre></td></tr></table></figure>
+
+<p>以实际输出对照官方指标文档（见文末参考资料）逐个确认再写告警。Doris 1.x → 4.x 变化不小：老版本的 <code>doris_be_compaction_score</code> 拆分成了 cumulative&#x2F;base&#x2F;time_series&#x2F;size_based 多个；也有部分指标不带 <code>doris_be_</code> 前缀。<strong>写错的指标名不会报错，只会让规则永远不触发。</strong></p>
+<h2 id="5-Doris-实战-PromQL"><a href="#5-Doris-实战-PromQL" class="headerlink" title="5. Doris 实战 PromQL"></a>5. Doris 实战 PromQL</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">集群总 QPS                  sum(doris_fe_qps)<br>集群查询错误率              sum(doris_fe_query_err_rate)<br>查询 P99 延迟(ms)           max(doris_fe_query_latency_ms&#123;quantile=&quot;0.99&quot;&#125;)<br>最大 Compaction Score      max(doris_fe_max_tablet_compaction_score)<br>BE 数据盘使用率 %           (1 - doris_be_disks_avail_capacity / doris_be_disks_total_capacity) * 100<br>FE 元数据同步差距           max(doris_fe_max_journal_id) - min(doris_fe_max_journal_id)<br>BE 内存(Bytes)              doris_be_memory_allocated_bytes<br>连接数                      doris_fe_connection_total<br></code></pre></td></tr></table></figure>
+
+<h2 id="6-告警规则（11-条）"><a href="#6-告警规则（11-条）" class="headerlink" title="6. 告警规则（11 条）"></a>6. 告警规则（11 条）</h2><p><code>/etc/prometheus/rules/doris-rules.yml</code>（指标名已对照官方文档；标了”经验值&#x2F;示例阈值”的，请结合自己集群基线调整，先以 P2 级别观察一周再放开通知）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><code class="hljs yaml">&#123;<span class="hljs-string">%</span> <span class="hljs-string">raw</span> <span class="hljs-string">%</span>&#125;<br><span class="hljs-attr">groups:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">doris-rules</span><br>    <span class="hljs-attr">rules:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">DorisFEDown</span><br>        <span class="hljs-attr">expr:</span> <span class="hljs-string">up&#123;job=&quot;doris_fe&quot;&#125;</span> <span class="hljs-string">==</span> <span class="hljs-number">0</span><br>        <span class="hljs-attr">for:</span> <span class="hljs-string">1m</span><br>        <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">severity:</span> <span class="hljs-string">P0</span>, <span class="hljs-attr">team:</span> <span class="hljs-string">doris</span>&#125;<br>        <span class="hljs-attr">annotations:</span><br>          <span class="hljs-attr">summary:</span> <span class="hljs-string">&#x27;FE 失联 <span class="hljs-template-variable">&#123;&#123; $labels.instance &#125;&#125;</span>&#x27;</span><br>          <span class="hljs-attr">description:</span> <span class="hljs-string">&#x27;FE /metrics 抓取失败 1 分钟。FE 挂了整个集群不可查询，立即处理。&#x27;</span><br><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">DorisBEDown</span><br>        <span class="hljs-attr">expr:</span> <span class="hljs-string">up&#123;job=&quot;doris_be&quot;&#125;</span> <span class="hljs-string">==</span> <span class="hljs-number">0</span><br>        <span class="hljs-attr">for:</span> <span class="hljs-string">1m</span><br>        <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">severity:</span> <span class="hljs-string">P0</span>, <span class="hljs-attr">team:</span> <span class="hljs-string">doris</span>&#125;<br>        <span class="hljs-attr">annotations:</span><br>          <span class="hljs-attr">summary:</span> <span class="hljs-string">&#x27;BE 失联 <span class="hljs-template-variable">&#123;&#123; $labels.instance &#125;&#125;</span>&#x27;</span><br>          <span class="hljs-attr">description:</span> <span class="hljs-string">&#x27;BE /metrics 抓取失败 1 分钟。tablet 副本将开始降级，立即处理。&#x27;</span><br><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">DorisCompactionScoreWarning</span><br>        <span class="hljs-attr">expr:</span> <span class="hljs-string">max(doris_fe_max_tablet_compaction_score)</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">500</span><br>        <span class="hljs-attr">for:</span> <span class="hljs-string">10m</span><br>        <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">severity:</span> <span class="hljs-string">P1</span>, <span class="hljs-attr">team:</span> <span class="hljs-string">doris</span>&#125;<br>        <span class="hljs-attr">annotations:</span><br>          <span class="hljs-attr">summary:</span> <span class="hljs-string">&#x27;Compaction Score 偏高（经验阈值）&#x27;</span><br>          <span class="hljs-attr">description:</span> <span class="hljs-string">&#x27;集群最大 compaction score <span class="hljs-template-variable">&#123;&#123; $value | printf &quot;%.0f&quot; &#125;&#125;</span> &gt; 500，导入过快或 compaction 滞后，查询/写放大风险。&#x27;</span><br><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">DorisCompactionScoreCritical</span><br>        <span class="hljs-attr">expr:</span> <span class="hljs-string">max(doris_fe_max_tablet_compaction_score)</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">1000</span><br>        <span class="hljs-attr">for:</span> <span class="hljs-string">5m</span><br>        <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">severity:</span> <span class="hljs-string">P0</span>, <span class="hljs-attr">team:</span> <span class="hljs-string">doris</span>&#125;<br>        <span class="hljs-attr">annotations:</span><br>          <span class="hljs-attr">summary:</span> <span class="hljs-string">&#x27;Compaction Score 严重过高（经验阈值）&#x27;</span><br>          <span class="hljs-attr">description:</span> <span class="hljs-string">&#x27;score <span class="hljs-template-variable">&#123;&#123; $value | printf &quot;%.0f&quot; &#125;&#125;</span> &gt; 1000，版本堆积，限流导入并排查 BE compaction。&#x27;</span><br><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">DorisQueryErrorRateHigh</span><br>        <span class="hljs-attr">expr:</span> <span class="hljs-string">sum(doris_fe_query_err_rate)</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">1</span><br>        <span class="hljs-attr">for:</span> <span class="hljs-string">5m</span><br>        <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">severity:</span> <span class="hljs-string">P1</span>, <span class="hljs-attr">team:</span> <span class="hljs-string">doris</span>&#125;<br>        <span class="hljs-attr">annotations:</span><br>          <span class="hljs-attr">summary:</span> <span class="hljs-string">&#x27;查询错误率上升&#x27;</span><br>          <span class="hljs-attr">description:</span> <span class="hljs-string">&#x27;每秒失败查询 <span class="hljs-template-variable">&#123;&#123; $value | printf &quot;%.1f&quot; &#125;&#125;</span>。审计日志查具体报错。&#x27;</span><br><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">DorisQueryP99Slow</span><br>        <span class="hljs-attr">expr:</span> <span class="hljs-string">doris_fe_query_latency_ms&#123;quantile=&quot;0.99&quot;&#125;</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">5000</span><br>        <span class="hljs-attr">for:</span> <span class="hljs-string">10m</span><br>        <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">severity:</span> <span class="hljs-string">P2</span>, <span class="hljs-attr">team:</span> <span class="hljs-string">doris</span>&#125;<br>        <span class="hljs-attr">annotations:</span><br>          <span class="hljs-attr">summary:</span> <span class="hljs-string">&#x27;查询 P99 慢 <span class="hljs-template-variable">&#123;&#123; $labels.instance &#125;&#125;</span>&#x27;</span><br>          <span class="hljs-attr">description:</span> <span class="hljs-string">&#x27;P99 <span class="hljs-template-variable">&#123;&#123; $value | printf &quot;%.0f&quot; &#125;&#125;</span>ms，超过 5s 基线（示例阈值）。&#x27;</span><br><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">DorisFEMetadataLag</span><br>        <span class="hljs-attr">expr:</span> <span class="hljs-string">max(doris_fe_max_journal_id)</span> <span class="hljs-bullet">-</span> <span class="hljs-string">min(doris_fe_max_journal_id)</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">1000</span><br>        <span class="hljs-attr">for:</span> <span class="hljs-string">10m</span><br>        <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">severity:</span> <span class="hljs-string">P1</span>, <span class="hljs-attr">team:</span> <span class="hljs-string">doris</span>&#125;<br>        <span class="hljs-attr">annotations:</span><br>          <span class="hljs-attr">summary:</span> <span class="hljs-string">&#x27;FE 元数据同步落后&#x27;</span><br>          <span class="hljs-attr">description:</span> <span class="hljs-string">&#x27;多 FE journal ID 差距 <span class="hljs-template-variable">&#123;&#123; $value | printf &quot;%.0f&quot; &#125;&#125;</span>，Follower 回放慢或网络问题。&#x27;</span><br><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">DorisEditLogTooBig</span><br>        <span class="hljs-attr">expr:</span> <span class="hljs-string">doris_fe_edit_log&#123;type=&quot;current_bytes&quot;&#125;</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">1073741824</span><br>        <span class="hljs-attr">for:</span> <span class="hljs-string">30m</span><br>        <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">severity:</span> <span class="hljs-string">P2</span>, <span class="hljs-attr">team:</span> <span class="hljs-string">doris</span>&#125;<br>        <span class="hljs-attr">annotations:</span><br>          <span class="hljs-attr">summary:</span> <span class="hljs-string">&#x27;EditLog 偏大 <span class="hljs-template-variable">&#123;&#123; $labels.instance &#125;&#125;</span>&#x27;</span><br>          <span class="hljs-attr">description:</span> <span class="hljs-string">&#x27;当前 editlog <span class="hljs-template-variable">&#123;&#123; $value | humanize1024 &#125;&#125;</span>B，关注 image 生成是否正常（示例阈值）。&#x27;</span><br><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">DorisBEDiskUsageHigh</span><br>        <span class="hljs-attr">expr:</span> <span class="hljs-string">(1</span> <span class="hljs-bullet">-</span> <span class="hljs-string">doris_be_disks_avail_capacity</span> <span class="hljs-string">/</span> <span class="hljs-string">doris_be_disks_total_capacity)</span> <span class="hljs-string">*</span> <span class="hljs-number">100</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">85</span><br>        <span class="hljs-attr">for:</span> <span class="hljs-string">10m</span><br>        <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">severity:</span> <span class="hljs-string">P1</span>, <span class="hljs-attr">team:</span> <span class="hljs-string">doris</span>&#125;<br>        <span class="hljs-attr">annotations:</span><br>          <span class="hljs-attr">summary:</span> <span class="hljs-string">&#x27;BE 数据盘高 <span class="hljs-template-variable">&#123;&#123; $labels.instance &#125;&#125;</span> <span class="hljs-template-variable">&#123;&#123; $labels.path &#125;&#125;</span>&#x27;</span><br>          <span class="hljs-attr">description:</span> <span class="hljs-string">&#x27;使用率 <span class="hljs-template-variable">&#123;&#123; $value | printf &quot;%.1f&quot; &#125;&#125;</span>%。Doris 磁盘满会直接拒绝写入。&#x27;</span><br><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">DorisBEFdNearLimit</span><br>        <span class="hljs-attr">expr:</span> <span class="hljs-string">doris_be_process_fd_num_used</span> <span class="hljs-string">/</span> <span class="hljs-string">doris_be_process_fd_num_limit_soft</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">0.9</span><br>        <span class="hljs-attr">for:</span> <span class="hljs-string">5m</span><br>        <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">severity:</span> <span class="hljs-string">P1</span>, <span class="hljs-attr">team:</span> <span class="hljs-string">doris</span>&#125;<br>        <span class="hljs-attr">annotations:</span><br>          <span class="hljs-attr">summary:</span> <span class="hljs-string">&#x27;BE 文件句柄将耗尽 <span class="hljs-template-variable">&#123;&#123; $labels.instance &#125;&#125;</span>&#x27;</span><br>          <span class="hljs-attr">description:</span> <span class="hljs-string">&#x27;已达软限制 <span class="hljs-template-variable">&#123;&#123; $value | printf &quot;%.0f&quot; &#125;&#125;</span>%。&#x27;</span><br><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">DorisFEConnectionHigh</span><br>        <span class="hljs-attr">expr:</span> <span class="hljs-string">doris_fe_connection_total</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">1024</span><br>        <span class="hljs-attr">for:</span> <span class="hljs-string">5m</span><br>        <span class="hljs-attr">labels:</span> &#123;<span class="hljs-attr">severity:</span> <span class="hljs-string">P2</span>, <span class="hljs-attr">team:</span> <span class="hljs-string">doris</span>&#125;<br>        <span class="hljs-attr">annotations:</span><br>          <span class="hljs-attr">summary:</span> <span class="hljs-string">&#x27;FE 连接数高 <span class="hljs-template-variable">&#123;&#123; $labels.instance &#125;&#125;</span>&#x27;</span><br>          <span class="hljs-attr">description:</span> <span class="hljs-string">&#x27;当前 <span class="hljs-template-variable">&#123;&#123; $value | printf &quot;%.0f&quot; &#125;&#125;</span> 连接（示例阈值，按 qe_max_connection 的 80% 调整）。&#x27;</span><br>&#123;<span class="hljs-string">%</span> <span class="hljs-string">endraw</span> <span class="hljs-string">%</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">promtool check rules /etc/prometheus/rules/doris-rules.yml<br>curl -X POST http://127.0.0.1:9090/-/reload   <span class="hljs-comment"># 热加载</span><br></code></pre></td></tr></table></figure>
+
+<p>配套建议：Alertmanager 里加一条抑制——BE 挂掉时抑制同实例的其他 Doris 告警，避免风暴（写法见主教程 9.2 的 inhibit_rules）。</p>
+<h2 id="7-Grafana-面板"><a href="#7-Grafana-面板" class="headerlink" title="7. Grafana 面板"></a>7. Grafana 面板</h2><ul>
+<li>Doris 官方在文档《监控和报警》（monitor-alert）页面提供 Prometheus 配置样例和 Grafana Dashboard 模板 JSON，直接 Import 即可，覆盖 FE&#x2F;BE 概览、查询延迟、导入、Compaction 等面板；</li>
+<li>Doris 所在主机层导入 Node Exporter Full（面板 ID 1860）；</li>
+<li>多套集群时用第 2 节的 <code>cluster</code>&#x2F;<code>group</code> 标签做 Dashboard 变量，一套模板管所有集群。</li>
+</ul>
+<h2 id="8-Compaction-Score-高的排查路径"><a href="#8-Compaction-Score-高的排查路径" class="headerlink" title="8. Compaction Score 高的排查路径"></a>8. Compaction Score 高的排查路径</h2><p>Compaction Score 是 Doris 最值得盯的单指标，但它只在<strong>持续走高</strong>时是问题（导入高峰短时上冲后回落属正常）。顺序排查：</p>
+<ol>
+<li>看趋势确认是持续堆积还是毛刺：<code>max(doris_fe_max_tablet_compaction_score)</code> 近几小时曲线；</li>
+<li>定位是哪台 BE：按节点拆 <code>doris_be_tablet_cumulative_max_compaction_score</code> &#x2F; <code>..._base_...</code>，看是否集中在个别节点（往往对应磁盘热点或 tablet 倾斜）；</li>
+<li>看是不是导入突增：stream load &#x2F; insert 相关速率指标（<code>doris_be_streaming_load_current_processing</code>、<code>doris_fe_job&#123;job=&quot;load&quot;&#125;</code>）是否同步上扬；</li>
+<li>看主机层磁盘 IO：node_exporter 的 <code>node_disk_io_time_seconds_total</code>（IO util）与 await——IO 打满时 compaction 追不上写入；</li>
+<li>处置：先限流导入止血，再调整 compaction 并发&#x2F;磁盘配比（be.conf 相关参数随版本文档调整），tablet 倾斜严重时考虑重分布。</li>
+</ol>
+<h2 id="9-与主机监控联动"><a href="#9-与主机监控联动" class="headerlink" title="9. 与主机监控联动"></a>9. 与主机监控联动</h2><p>Doris 机器同样要挂 node_exporter（主教程第 5 章），以下三条主机告警对 Doris 尤其重要：</p>
+<ul>
+<li><strong>时钟偏移 &#x2F; NTP 失步</strong>（HostClockSkew &#x2F; HostNtpSyncLost）：Doris 元数据与副本协议对时钟敏感；</li>
+<li><strong>数据盘水位与写满预测</strong>（HostOutOfDiskSpace &#x2F; HostDiskWillFillIn24Hours）：BE 满盘直接拒绝写入；</li>
+<li><strong>文件句柄</strong>：与第 6 节 <code>DorisBEFdNearLimit</code> 互为印证。</li>
+</ul>
+<h2 id="10-接入检查清单"><a href="#10-接入检查清单" class="headerlink" title="10. 接入检查清单"></a>10. 接入检查清单</h2><ol>
+<li><input disabled="" type="checkbox"> <code>/targets</code> 里 doris_fe &#x2F; doris_be 两个 job 全绿</li>
+<li><input disabled="" type="checkbox"> FE 全部节点都在抓取列表里（不只 Master）</li>
+<li><input disabled="" type="checkbox"> 指标名按实际 &#x2F;metrics 输出逐个校对过（第 4 节工作流）</li>
+<li><input disabled="" type="checkbox"> 官方 Grafana 模板导入成功，cluster&#x2F;group 变量工作正常</li>
+<li><input disabled="" type="checkbox"> 三条 P0 告警（FE Down &#x2F; BE Down &#x2F; Compaction Critical）做一次实战演练：人为停一个 BE，确认告警到达、恢复通知也到</li>
+<li><input disabled="" type="checkbox"> 抑制规则生效：BE 停机期间同实例衍生告警被 suppressed</li>
+<li><input disabled="" type="checkbox"> compaction &#x2F; 元数据同步 &#x2F; BE 磁盘三条告警的阈值记录在案，注明是经验值及调整日期</li>
+</ol>
+<h2 id="11-参考资料"><a href="#11-参考资料" class="headerlink" title="11. 参考资料"></a>11. 参考资料</h2><ul>
+<li>Doris 监控指标（P0 级指标清单，中文）：<a target="_blank" rel="noopener" href="https://doris.apache.org/zh-CN/docs/dev/admin-manual/maint-monitor/metrics/">https://doris.apache.org/zh-CN/docs/dev/admin-manual/maint-monitor/metrics/</a></li>
+<li>Doris 监控和报警（官方 Prometheus&#x2F;Grafana 搭建步骤与 Dashboard 模板）：<a target="_blank" rel="noopener" href="https://doris.apache.org/zh-CN/docs/dev/admin-manual/maint-monitor/monitor-alert/">https://doris.apache.org/zh-CN/docs/dev/admin-manual/maint-monitor/monitor-alert/</a></li>
+<li>Prometheus 告警规则语法：<a target="_blank" rel="noopener" href="https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/">https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/</a></li>
+<li>配套主教程：《Prometheus 监控保姆级教程 —— Linux 服务器通用版》（~&#x2F;prometheus-tutorial.md）</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Posts/" class="category-chain-item">Posts</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/doris-prometheus-monitoring-grafana-devops/" class="print-no-link">#doris, prometheus, monitoring, grafana, devops</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Apache Doris 监控接入：Prometheus + Grafana 实战</div>
+      <div>https://piupiuxiupa.github.io/2026/10/24/doris-monitoring-guide/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>piupiuxiupa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年10月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/10/24/prometheus-monitoring-guide/" title="Prometheus 监控保姆级教程：从单机到生产可用">
+                        <span class="hidden-mobile">Prometheus 监控保姆级教程：从单机到生产可用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> <a href="https://piupiuxiupa.github.io/" target="_blank" rel="nofollow noopener"><span>piupiuxiupa</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
