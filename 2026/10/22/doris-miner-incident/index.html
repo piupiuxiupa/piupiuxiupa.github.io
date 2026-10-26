@@ -16,17 +16,20 @@
   <meta name="author" content="piupiuxiupa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Doris BE 的 &#x2F;api&#x2F;update_config 接口被利用进行命令注入，植入 XMRig 门罗币挖矿木马，导致两个 BE 节点 CPU 打满挂死。本文还原完整攻击链与样本行为，并给出可复用的应急排查流程。">
+    <meta name="description" content="Doris BE 的 &#x2F;api&#x2F;update_config 接口被利用进行命令注入，植入 XMRig 门罗币挖矿木马，导致两个 BE 节点 CPU 打满挂死。本文还原完整攻击链与样本行为，并给出可复用的应急排查流程；三天后集群复发、攻击者更换入口，文中一并记录二次溯源与加固落地。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一次门罗币挖矿病毒应急排查：从 Doris BE update_config 进来的矿工">
 <meta property="og:url" content="https://piupiuxiupa.github.io/2026/10/22/doris-miner-incident/index.html">
 <meta property="og:site_name" content="piupiuxiupa&#39;s blog">
-<meta property="og:description" content="Doris BE 的 &#x2F;api&#x2F;update_config 接口被利用进行命令注入，植入 XMRig 门罗币挖矿木马，导致两个 BE 节点 CPU 打满挂死。本文还原完整攻击链与样本行为，并给出可复用的应急排查流程。">
+<meta property="og:description" content="Doris BE 的 &#x2F;api&#x2F;update_config 接口被利用进行命令注入，植入 XMRig 门罗币挖矿木马，导致两个 BE 节点 CPU 打满挂死。本文还原完整攻击链与样本行为，并给出可复用的应急排查流程；三天后集群复发、攻击者更换入口，文中一并记录二次溯源与加固落地。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-22T15:53:13.000Z">
-<meta property="article:modified_time" content="2026-10-23T03:11:27.219Z">
+<meta property="article:modified_time" content="2026-10-26T02:49:36.928Z">
 <meta property="article:author" content="piupiuxiupa">
-<meta property="article:tag" content="security, linux, doris, incident-response">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="security">
+<meta property="article:tag" content="doris">
+<meta property="article:tag" content="incident-response">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -222,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.9k 字
+          3.9k 字
         
       </span>
     
@@ -233,7 +236,7 @@
         
         
         
-          25 分钟
+          33 分钟
         
       </span>
     
@@ -420,6 +423,24 @@
 <li>fail2ban &#x2F; 安全组限制 SSH 来源</li>
 <li>安装主机安全 agent（HIDS），对 <code>cron.d</code> 变更、异常进程名等配置告警</li>
 </ul>
+<h2 id="三天后复发：换了入口，同一伙人"><a href="#三天后复发：换了入口，同一伙人" class="headerlink" title="三天后复发：换了入口，同一伙人"></a>三天后复发：换了入口，同一伙人</h2><p>本文写完三天后（10-25 13:32~13:37），两台 BE 相隔 4 分钟再次中招：同一个下载 CDN、同一套伪装（<code>[kworker/u8:2]</code>、<code>.systemd-private-*</code> 隐藏目录、<code>0hourly-sysstat</code> 假 cron、<code>.nm-dog.sh</code> 看门狗），但钱包、dropper 形态、以及<strong>入口</strong>都变了。上一节的流程原样跑了一遍，这里只记增量和教训。</p>
+<h3 id="这次入口不是-update-config"><a href="#这次入口不是-update-config" class="headerlink" title="这次入口不是 update_config"></a>这次入口不是 update_config</h3><p>BE 日志里没有任何新的 <code>update_config</code> 注入记录——攻击者换了洞。但这次留下了更完整的取证链：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">ps -eo pid,ppid,lstart,cmd | grep -E <span class="hljs-string">&#x27;&lt;恶意进程链&gt;&#x27;</span><br><span class="hljs-comment"># → 最早的 defunct &lt;sh&gt; 僵尸进程，PPID 正是 doris_be 主进程</span><br><br>ss -tnp | grep &lt;矿工PID&gt;<br><span class="hljs-comment"># → 同一条 ESTAB 连接（含 doris_be 连往 FE 的内部连接）的 fd，</span><br><span class="hljs-comment">#   同时出现在 doris_be、dropper、安装器、矿工四个进程上</span><br></code></pre></td></tr></table></figure>
+
+<p>僵尸子进程的 PPID 指向 doris_be + <strong>fd 继承</strong>（同一 fd 被整条 fork&#x2F;exec 链共享）双重证明：恶意进程链是<strong>从 doris_be 进程内部 fork 出来的</strong>，代码执行发生在 Doris 服务进程内。而 OS 层全部干净：<code>/var/log/secure</code> 无任何登录记录（爆破次数为 0）、<code>authorized_keys</code> 未被篡改、systemd 单元无新增、cron 里只有攻击者写的那一个假任务。</p>
+<p>入侵时段 BE 本机的 UDF 加载日志（jni.log）没有记录——若走 UDF 路径，更可能是<strong>在 FE 侧注册、由查询触发</strong>。结合 BE 端口仍暴露公网，最可能的向量是 <strong>FE 弱口令&#x2F;未授权 + Java UDF 或 JDBC Catalog RCE</strong>：注册恶意 jar，BE 的内嵌 JVM 执行时拉起 shell。确证要靠 FE 审计日志：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SHOW</span> FUNCTIONS;                      <span class="hljs-comment">-- 有没有来路不明的函数？</span><br><span class="hljs-keyword">SHOW</span> JDBC CATALOGS;                  <span class="hljs-comment">-- 有没有可疑 Catalog？</span><br><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">user</span>, host <span class="hljs-keyword">FROM</span> mysql.user;   <span class="hljs-comment">-- 有没有新增账号？</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">grep -iE <span class="hljs-string">&#x27;create function|using jar|jdbc&#x27;</span> fe/log/fe.audit.log   <span class="hljs-comment"># 入侵时段前后</span><br></code></pre></td></tr></table></figure>
+
+<p>审计日志里入侵时刻之前最后一条 <code>CREATE FUNCTION ... USING JAR</code> 或 Catalog 创建语句，就是确切的切入点。应急排查 Doris 集群时，<strong>BE 本机日志干净 ≠ 没走 Doris 进来</strong>。</p>
+<h3 id="样本的新花样"><a href="#样本的新花样" class="headerlink" title="样本的新花样"></a>样本的新花样</h3><ul>
+<li><strong>dropper 换形态</strong>：<code>sh /tmp/.st</code>（执行完自删）→ <code>/tmp/.cache_&lt;随机数&gt; --bypass</code>（自删）→ 落地 <code>/var/lib/.systemd-private-*/</code>，并在 <code>/tmp</code> 留下 <code>.dsync_rs.cache</code> 标记文件</li>
+<li><strong>篡改 DNS</strong>：<code>/etc/resolv.conf</code> 被追加 8 行 <code>nameserver 8.8.8.8 / 1.1.1.1</code>，保障矿池域名解析——排查清单再添一项</li>
+<li>看门狗失败时往 <code>.nm-state</code> 写<strong>中文</strong>日志（如”拉起阶梯全灭(疑AV&#x2F;容器沙箱拦截)”）——冲着中文运维环境定制的</li>
+<li>启动先 <code>kill -9</code> 同类矿马独占机器；矿工密码直接硬编码在配置里</li>
+</ul>
+<h3 id="复发的教训"><a href="#复发的教训" class="headerlink" title="复发的教训"></a>复发的教训</h3><p>上次处置止住了血，但集群暴露面没有真正收敛——BE 的 8040&#x2F;8060 依然公网可达。攻击者 3 天后换了个洞回来，实证了开头那句话：**”清干净”不等于”应急结束”，入口永久关闭才是**。本次两台节点都已落地 iptables 默认 DROP 白名单（先设自动回滚保险、验证业务会话存活后再解除，规则经 <code>iptables-restore</code> + systemd 单元持久化开机自动加载），其余节点全集群 IOC 排查、所有凭据轮换。</p>
 <h2 id="IOC-指标（Indicators-of-Compromise）"><a href="#IOC-指标（Indicators-of-Compromise）" class="headerlink" title="IOC 指标（Indicators of Compromise）"></a>IOC 指标（Indicators of Compromise）</h2><table>
 <thead>
 <tr>
@@ -471,6 +492,26 @@
 <td>样本 sha256</td>
 <td><code>bda36d92056a55a62fd46b2e63bc8266fa9105bed43067a15638d6742c23bdde</code><br><code>fcff861a6d77ec532a63645512818b87e73498883e04723aa510ceddcaf6bd38</code><br><code>fa80a387cb00bee0937c9f26b8c0c3060d55b8f5b0103a7903d180098d47df5c</code>（残片）</td>
 </tr>
+<tr>
+<td>dropper（第二次）</td>
+<td><code>/tmp/.st</code>、<code>/tmp/.cache_*</code>（<code>--bypass</code> 参数）、<code>/tmp/.dsync_rs.cache</code> 标记</td>
+</tr>
+<tr>
+<td>DNS 篡改</td>
+<td><code>/etc/resolv.conf</code> 被追加 <code>nameserver 8.8.8.8</code> &#x2F; <code>1.1.1.1</code></td>
+</tr>
+<tr>
+<td>攻击源（第二次）</td>
+<td><code>77.67.26.83</code> &#x2F; <code>77.67.26.99</code> &#x2F; <code>77.67.26.127</code>、<code>195.206.182.215</code>（扫描源）；<code>69.5.169.123</code>（入侵前后直连 BE 8060，未确证）</td>
+</tr>
+<tr>
+<td>矿池（第二次）</td>
+<td><code>205.172.58.170:443</code>（另两个矿池与首次重合）</td>
+</tr>
+<tr>
+<td>钱包（第二次）</td>
+<td><code>493P7TrZcyKcxCwqkiRhzmHKgahveQAQzCpWCD9qm22X2eX4GwQfBkbE6pkKZnFSHdGiKrKRQiPfYdAMXhY9XADELaZfmuy</code>（主）、<code>41nJkspd9hvgyCS86TgSYeVJS4Z2XLYzkisDe7sWVUSXCXF7QjmXBttQXyu84oKdyQYRDFdMBWKnPQyugj2H4Z4JV2WW7EX</code></td>
+</tr>
 </tbody></table>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ol>
 <li><strong>大数据组件的管理端口暴露公网 &#x3D; 交出服务器</strong>，没有例外。本次攻击者 21 小时内注入 4 次，入口不封，清理永无止境</li>
@@ -478,6 +519,7 @@
 <li>清除挖矿病毒的核心不是杀进程，而是<strong>先拆干净守护机制</strong>（本例：7 分钟粒度的 cron 看门狗）</li>
 <li>这个家族的反排查手法值得记住：进程名伪装成内核线程、cron 文件伪装成 sysstat、时间戳伪造、每副本哈希扰动、OOM 自杀保护。识别它靠的不是杀软，而是 <code>ls -l /proc/&lt;PID&gt;/exe</code> 这类朴素手段</li>
 <li>应急结束的标准：重启后无复发 + 所有凭据已轮换 + 入口永久关闭</li>
+<li>本文写完三天后集群复发，第二次实战把第 1 条钉死了：攻击者会换洞再来。应急的最后一步永远是<strong>确认暴露面已收敛</strong>，而不是”样本清完了”；同时 BE 本机日志查不到注入不代表入口不在 Doris——UDF&#x2F;JDBC Catalog 这类”从 FE 注册、在 BE 执行”的路径，要靠 FE 审计日志说话</li>
 </ol>
 
                 
@@ -512,7 +554,13 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/security-linux-doris-incident-response/" class="print-no-link">#security, linux, doris, incident-response</a>
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
+      
+        <a href="/tags/security/" class="print-no-link">#security</a>
+      
+        <a href="/tags/doris/" class="print-no-link">#doris</a>
+      
+        <a href="/tags/incident-response/" class="print-no-link">#incident-response</a>
       
     </div>
   
