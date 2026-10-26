@@ -1,7 +1,7 @@
 ---
 title: Redis 基础入门
 date: 2026-06-23 18:30:00
-tags: Redis, 数据库, 缓存
+tags: [Redis, 数据库, 缓存]
 categories: Posts
 excerpt: Redis 核心概念、五大基础数据类型、常用命令速查、持久化机制与应用场景
 ---

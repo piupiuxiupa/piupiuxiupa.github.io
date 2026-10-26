@@ -1,7 +1,7 @@
 ---
 title: Linux服务器日志收集完整方案（ELK Stack）
 date: 2026-06-03 21:30:00
-tags: linux, elk, logstash, elasticsearch, kibana, filebeat
+tags: [linux, elk, logstash, elasticsearch, kibana, filebeat]
 categories: Posts
 excerpt: 基于 Filebeat → Logstash → Elasticsearch → Kibana 的企业级日志收集架构部署方案
 ---

@@ -1,7 +1,7 @@
 ---
 title: Apache Doris 监控接入：Prometheus + Grafana 实战
 date: 2026-10-24 23:55:37
-tags: doris, prometheus, monitoring, grafana, devops
+tags: [doris, prometheus, monitoring, grafana, devops]
 categories: Posts
 excerpt: Doris FE/BE 自带 Prometheus 格式指标，无需插件。本文给出抓取配置、FE/BE 关键指标清单、11 条告警规则（含 Compaction Score、元数据同步、BE 磁盘）、Compaction 堆积的五步排查路径，以及版本间指标命名差异的校对方法。
 ---

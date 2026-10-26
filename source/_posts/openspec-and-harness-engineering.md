@@ -1,7 +1,7 @@
 ---
 title: AI编程三剑客：OpenSpec + Harness Engineering 详解
 date: 2026-06-04 00:30:00
-tags: AI, programming, OpenSpec, Harness
+tags: [AI, programming, OpenSpec, Harness]
 categories: Posts
 excerpt: 2026年AI编程领域最火的规范驱动开发与Harness工程化方法论，详解OpenSpec和Harness的核心概念、工作流与实战用法
 ---

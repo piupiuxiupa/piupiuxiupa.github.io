@@ -1,7 +1,7 @@
 ---
 title: 一次门罗币挖矿病毒应急排查：从 Doris BE update_config 进来的矿工
 date: 2026-10-22 23:53:13
-tags: security, linux, doris, incident-response
+tags: [security, linux, doris, incident-response]
 categories: Posts
 excerpt: Doris BE 的 /api/update_config 接口被利用进行命令注入，植入 XMRig 门罗币挖矿木马，导致两个 BE 节点 CPU 打满挂死。本文还原完整攻击链与样本行为，并给出可复用的应急排查流程。
 ---

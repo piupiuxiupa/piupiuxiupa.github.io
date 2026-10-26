@@ -1,7 +1,7 @@
 ---
 title: Prometheus 监控保姆级教程：从单机到生产可用
 date: 2026-10-24 23:55:37
-tags: prometheus, monitoring, linux, grafana, alertmanager, devops
+tags: [prometheus, monitoring, linux, grafana, alertmanager, devops]
 categories: Posts
 excerpt: Prometheus 3.15 + node_exporter + Alertmanager + Grafana 完整落地指南：安装、抓取配置、服务发现、PromQL、12 条主机告警模板、告警路由与抑制、容量规划、高可用与安全加固。所有配置均经 promtool 校验与实机运行验证。
 ---
