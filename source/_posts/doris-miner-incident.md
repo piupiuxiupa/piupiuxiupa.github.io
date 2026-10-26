@@ -3,7 +3,7 @@ title: 一次门罗币挖矿病毒应急排查：从 Doris BE update_config 进�
 date: 2026-10-22 23:53:13
 tags: [security, linux, doris, incident-response]
 categories: Posts
-excerpt: Doris BE 的 /api/update_config 接口被利用进行命令注入，植入 XMRig 门罗币挖矿木马，导致两个 BE 节点 CPU 打满挂死。本文还原完整攻击链与样本行为，并给出可复用的应急排查流程。
+excerpt: Doris BE 的 /api/update_config 接口被利用进行命令注入，植入 XMRig 门罗币挖矿木马，导致两个 BE 节点 CPU 打满挂死。本文还原完整攻击链与样本行为，并给出可复用的应急排查流程；三天后集群复发、攻击者更换入口，文中一并记录二次溯源与加固落地。
 ---
 
 # 一次门罗币挖矿病毒应急排查：从 Doris BE update_config 进来的矿工
@@ -184,6 +184,50 @@ grep -rE "update_config|jeprofile_dir" <be_log_dir>/
 - fail2ban / 安全组限制 SSH 来源
 - 安装主机安全 agent（HIDS），对 `cron.d` 变更、异常进程名等配置告警
 
+## 三天后复发：换了入口，同一伙人
+
+本文写完三天后（10-25 13:32~13:37），两台 BE 相隔 4 分钟再次中招：同一个下载 CDN、同一套伪装（`[kworker/u8:2]`、`.systemd-private-*` 隐藏目录、`0hourly-sysstat` 假 cron、`.nm-dog.sh` 看门狗），但钱包、dropper 形态、以及**入口**都变了。上一节的流程原样跑了一遍，这里只记增量和教训。
+
+### 这次入口不是 update_config
+
+BE 日志里没有任何新的 `update_config` 注入记录——攻击者换了洞。但这次留下了更完整的取证链：
+
+```bash
+ps -eo pid,ppid,lstart,cmd | grep -E '<恶意进程链>'
+# → 最早的 defunct <sh> 僵尸进程，PPID 正是 doris_be 主进程
+
+ss -tnp | grep <矿工PID>
+# → 同一条 ESTAB 连接（含 doris_be 连往 FE 的内部连接）的 fd，
+#   同时出现在 doris_be、dropper、安装器、矿工四个进程上
+```
+
+僵尸子进程的 PPID 指向 doris_be + **fd 继承**（同一 fd 被整条 fork/exec 链共享）双重证明：恶意进程链是**从 doris_be 进程内部 fork 出来的**，代码执行发生在 Doris 服务进程内。而 OS 层全部干净：`/var/log/secure` 无任何登录记录（爆破次数为 0）、`authorized_keys` 未被篡改、systemd 单元无新增、cron 里只有攻击者写的那一个假任务。
+
+入侵时段 BE 本机的 UDF 加载日志（jni.log）没有记录——若走 UDF 路径，更可能是**在 FE 侧注册、由查询触发**。结合 BE 端口仍暴露公网，最可能的向量是 **FE 弱口令/未授权 + Java UDF 或 JDBC Catalog RCE**：注册恶意 jar，BE 的内嵌 JVM 执行时拉起 shell。确证要靠 FE 审计日志：
+
+```sql
+SHOW FUNCTIONS;                      -- 有没有来路不明的函数？
+SHOW JDBC CATALOGS;                  -- 有没有可疑 Catalog？
+SELECT user, host FROM mysql.user;   -- 有没有新增账号？
+```
+
+```bash
+grep -iE 'create function|using jar|jdbc' fe/log/fe.audit.log   # 入侵时段前后
+```
+
+审计日志里入侵时刻之前最后一条 `CREATE FUNCTION ... USING JAR` 或 Catalog 创建语句，就是确切的切入点。应急排查 Doris 集群时，**BE 本机日志干净 ≠ 没走 Doris 进来**。
+
+### 样本的新花样
+
+- **dropper 换形态**：`sh /tmp/.st`（执行完自删）→ `/tmp/.cache_<随机数> --bypass`（自删）→ 落地 `/var/lib/.systemd-private-*/`，并在 `/tmp` 留下 `.dsync_rs.cache` 标记文件
+- **篡改 DNS**：`/etc/resolv.conf` 被追加 8 行 `nameserver 8.8.8.8 / 1.1.1.1`，保障矿池域名解析——排查清单再添一项
+- 看门狗失败时往 `.nm-state` 写**中文**日志（如"拉起阶梯全灭(疑AV/容器沙箱拦截)"）——冲着中文运维环境定制的
+- 启动先 `kill -9` 同类矿马独占机器；矿工密码直接硬编码在配置里
+
+### 复发的教训
+
+上次处置止住了血，但集群暴露面没有真正收敛——BE 的 8040/8060 依然公网可达。攻击者 3 天后换了个洞回来，实证了开头那句话：**"清干净"不等于"应急结束"，入口永久关闭才是**。本次两台节点都已落地 iptables 默认 DROP 白名单（先设自动回滚保险、验证业务会话存活后再解除，规则经 `iptables-restore` + systemd 单元持久化开机自动加载），其余节点全集群 IOC 排查、所有凭据轮换。
+
 ## IOC 指标（Indicators of Compromise）
 
 | 类型 | 值 |
@@ -199,6 +243,11 @@ grep -rE "update_config|jeprofile_dir" <be_log_dir>/
 | 钱包 | `49hM2EPoSp94KEYpN6SdR5gWASZZXbQ8sT1Pthdk1AnXLMFkzZHUUSeYwQCL5vZcJxMdV72DcwaDD2e71qnitukfSqy8pcP` |
 | 载荷标记 | `TD_PROJ=doris-1021` / `cve50-1021` / `doris-1022` / `doris-1023` |
 | 样本 sha256 | `bda36d92056a55a62fd46b2e63bc8266fa9105bed43067a15638d6742c23bdde`<br>`fcff861a6d77ec532a63645512818b87e73498883e04723aa510ceddcaf6bd38`<br>`fa80a387cb00bee0937c9f26b8c0c3060d55b8f5b0103a7903d180098d47df5c`（残片） |
+| dropper（第二次） | `/tmp/.st`、`/tmp/.cache_*`（`--bypass` 参数）、`/tmp/.dsync_rs.cache` 标记 |
+| DNS 篡改 | `/etc/resolv.conf` 被追加 `nameserver 8.8.8.8` / `1.1.1.1` |
+| 攻击源（第二次） | `77.67.26.83` / `77.67.26.99` / `77.67.26.127`、`195.206.182.215`（扫描源）；`69.5.169.123`（入侵前后直连 BE 8060，未确证） |
+| 矿池（第二次） | `205.172.58.170:443`（另两个矿池与首次重合） |
+| 钱包（第二次） | `493P7TrZcyKcxCwqkiRhzmHKgahveQAQzCpWCD9qm22X2eX4GwQfBkbE6pkKZnFSHdGiKrKRQiPfYdAMXhY9XADELaZfmuy`（主）、`41nJkspd9hvgyCS86TgSYeVJS4Z2XLYzkisDe7sWVUSXCXF7QjmXBttQXyu84oKdyQYRDFdMBWKnPQyugj2H4Z4JV2WW7EX` |
 
 ## 小结
 
@@ -207,3 +256,4 @@ grep -rE "update_config|jeprofile_dir" <be_log_dir>/
 3. 清除挖矿病毒的核心不是杀进程，而是**先拆干净守护机制**（本例：7 分钟粒度的 cron 看门狗）
 4. 这个家族的反排查手法值得记住：进程名伪装成内核线程、cron 文件伪装成 sysstat、时间戳伪造、每副本哈希扰动、OOM 自杀保护。识别它靠的不是杀软，而是 `ls -l /proc/<PID>/exe` 这类朴素手段
 5. 应急结束的标准：重启后无复发 + 所有凭据已轮换 + 入口永久关闭
+6. 本文写完三天后集群复发，第二次实战把第 1 条钉死了：攻击者会换洞再来。应急的最后一步永远是**确认暴露面已收敛**，而不是"样本清完了"；同时 BE 本机日志查不到注入不代表入口不在 Doris——UDF/JDBC Catalog 这类"从 FE 注册、在 BE 执行"的路径，要靠 FE 审计日志说话
