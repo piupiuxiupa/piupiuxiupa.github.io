@@ -1,0 +1,868 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="piupiuxiupa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一份可以直接抄走改密码用的 Redis 7 容器化生产基线：RDB+AOF 混合持久化、内存上限与淘汰策略、多线程 IO、日志轮转与安全加固，附启动验证清单和踩坑排查表。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis 7.x 生产配置模板：容器化部署下的持久化、内存与安全基线">
+<meta property="og:url" content="https://piupiuxiupa.github.io/2026/11/06/redis-7-production-config/index.html">
+<meta property="og:site_name" content="piupiuxiupa&#39;s blog">
+<meta property="og:description" content="一份可以直接抄走改密码用的 Redis 7 容器化生产基线：RDB+AOF 混合持久化、内存上限与淘汰策略、多线程 IO、日志轮转与安全加固，附启动验证清单和踩坑排查表。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-06T05:58:42.000Z">
+<meta property="article:modified_time" content="2026-11-06T06:00:30.392Z">
+<meta property="article:author" content="piupiuxiupa">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="redis">
+<meta property="article:tag" content="运维">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Redis 7.x 生产配置模板：容器化部署下的持久化、内存与安全基线 - piupiuxiupa&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"piupiuxiupa.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>piupiuxiupa&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Redis 7.x 生产配置模板：容器化部署下的持久化、内存与安全基线"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-11-06 13:58" pubdate>
+          2026年11月6日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Redis 7.x 生产配置模板：容器化部署下的持久化、内存与安全基线</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Redis 裸奔在公网上被清库、被写计划任务挖矿的案例每年都有，事后翻配置，翻来覆去就是那几个口子：没设密码、<code>0.0.0.0</code> 加端口直接映射公网、没设 <code>maxmemory</code>。这篇把容器化部署下这些口子一次性堵上，给一份能直接落地的基线：强密码、RDB + AOF 双持久化、内存上限、Docker 日志轮转，最后附启动验证清单和一份排查表。Redis 基础概念在<a href="/2026/06/23/redis-basic/">之前的入门篇</a>里写过，这篇只谈生产落地。</p>
+<p><strong>上手前必改三处</strong>：<code>requirepass</code>（32 位以上强随机密码）、<code>maxmemory</code>（按实际内存调整）、<code>io-threads</code>（按核数调整）。端口映射不要暴露公网。</p>
+<h2 id="关键取舍"><a href="#关键取舍" class="headerlink" title="关键取舍"></a>关键取舍</h2><table>
+<thead>
+<tr>
+<th>项</th>
+<th>选择</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>持久化</td>
+<td>RDB + AOF 同开，<code>aof-use-rdb-preamble yes</code></td>
+<td>RDB 管紧凑备份和快速全量恢复，AOF 管秒级数据安全；混合模式下重启恢复兼得两者</td>
+</tr>
+<tr>
+<td>fsync</td>
+<td><code>appendfsync everysec</code></td>
+<td>最多丢约 1 秒数据，换性能值得；<code>always</code> 对磁盘 IOPS 要求太高</td>
+</tr>
+<tr>
+<td>maxmemory</td>
+<td>内存限额的 60%~70%</td>
+<td>给 fork 的写时复制、连接缓冲和系统进程留空间，避免 OOM</td>
+</tr>
+<tr>
+<td>淘汰策略</td>
+<td>纯缓存 <code>allkeys-lru</code>；部分 key 必须保留则 <code>volatile-lru</code></td>
+<td>按业务数据特征选</td>
+</tr>
+<tr>
+<td>惰性释放</td>
+<td><code>lazyfree-*</code> 全开</td>
+<td>删大 key、过期淘汰放后台，主线程少一顿卡顿</td>
+</tr>
+<tr>
+<td>多线程 IO</td>
+<td><code>io-threads</code> 约为核数的一半到 3&#x2F;4</td>
+<td>只加速网络读写，命令执行仍是单线程</td>
+</tr>
+<tr>
+<td>日志</td>
+<td><code>logfile &quot;&quot;</code> 输出 stdout，交给 Docker 落盘轮转</td>
+<td>Redis 原生做不到日志既进 <code>docker logs</code> 又进文件，二选一</td>
+</tr>
+</tbody></table>
+<h2 id="完整配置（容器版）"><a href="#完整配置（容器版）" class="headerlink" title="完整配置（容器版）"></a>完整配置（容器版）</h2><p>保存为 <code>/opt/redis/redis.conf</code>。容器内约定：配置挂载到 <code>/usr/local/etc/redis/redis.conf</code>，数据目录挂载到 <code>/data</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><code class="hljs conf">########################################<br># 基础网络与进程<br>########################################<br># 容器内监听所有接口，宿主机侧用端口映射收紧来源<br>bind 0.0.0.0<br>port 6379<br><br># 容器网络已隔离 + 强密码，可关闭保护模式<br>protected-mode no<br><br># 必须替换为 32 位以上强随机密码<br>requirepass Your_Strong_Random_Password_Here_32chars+<br><br># 容器中必须前台运行，否则主进程退出，Docker 会认为容器挂了<br>daemonize no<br>supervised no<br><br>pidfile /var/run/redis_6379.pid<br><br># 输出到标准输出，供 docker logs 捕获<br>loglevel notice<br>logfile &quot;&quot;<br><br># 高并发下设 300，避免死连接堆积<br>timeout 300<br>tcp-keepalive 60<br>tcp-backlog 1024<br><br># 与容器 nofile 上限匹配，见文末排查表<br>maxclients 10000<br><br>databases 16<br>always-show-logo no<br><br>########################################<br># RDB 持久化<br>########################################<br>save 900 1<br>save 300 10<br>save 60 10000<br><br>stop-writes-on-bgsave-error yes<br>rdbcompression yes<br>rdbchecksum yes<br>rdb-save-incremental-fsync yes<br>rdb-del-sync-files no<br><br>dbfilename dump.rdb<br><br># 必须挂载到宿主机，且 UID 999 可写<br>dir /data<br><br>########################################<br># AOF 持久化 + 混合持久化<br>########################################<br>appendonly yes<br>appendfilename &quot;appendonly.aof&quot;<br>appenddirname &quot;appendonlydir&quot;<br><br>appendfsync everysec<br><br># AOF 重写以 RDB 格式开头，恢复快、完整性也保住<br>aof-use-rdb-preamble yes<br><br>auto-aof-rewrite-percentage 100<br>auto-aof-rewrite-min-size 64mb<br><br># 重写期间不阻塞 fsync，写入密集场景保持 no<br>no-appendfsync-on-rewrite no<br><br># 宕机导致 AOF 尾部截断时允许加载，避免起不来<br>aof-load-truncated yes<br><br>aof-rewrite-incremental-fsync yes<br><br># 给 AOF 加时间戳注释，排查问题用得上<br>aof-timestamp-enabled yes<br><br>########################################<br># 内存上限与淘汰策略<br>########################################<br># 参照物是容器的 memory limit（docker --memory），不是宿主机总内存<br># 示例：容器限额 16g，设 11g 左右<br>maxmemory 11gb<br>maxmemory-policy allkeys-lru<br>maxmemory-samples 10<br><br>########################################<br># 惰性释放<br>########################################<br>lazyfree-lazy-eviction yes<br>lazyfree-lazy-expire yes<br>lazyfree-lazy-server-del yes<br>lazyfree-lazy-user-del yes<br>lazyfree-lazy-user-flush yes<br>replica-lazy-flush yes<br><br>########################################<br># 多线程 I/O（Redis 6+）<br>########################################<br># 约为核数的 1/2～3/4，不要超过核数<br>io-threads 4<br># 读多线程目前收益很小，官方文档明确不推荐，保持默认 no<br>io-threads-do-reads no<br><br>########################################<br># 慢查询与延迟监控<br>########################################<br>slowlog-log-slower-than 10000<br>slowlog-max-len 256<br>latency-monitor-threshold 100<br><br>########################################<br># 哈希与事件循环<br>########################################<br>activerehashing yes<br>hz 10<br>dynamic-hz yes<br><br># 启动时尝试禁用透明大页（THP），宿主机层面关掉更彻底<br>disable-thp yes<br><br>########################################<br># 安全加固（按需启用）<br>########################################<br># 至少禁 FLUSHALL / FLUSHDB / KEYS<br># 禁 CONFIG 会影响在线排查，依赖 CONFIG 运维的话保留或用 ACL 限制<br>rename-command FLUSHALL &quot;&quot;<br>rename-command FLUSHDB &quot;&quot;<br>rename-command KEYS &quot;&quot;<br># rename-command CONFIG &quot;&quot;<br># rename-command SHUTDOWN &quot;&quot;<br># rename-command DEBUG &quot;&quot;<br><br># Redis 7 的三道运行时保险丝，默认即 no，显式写出防手改<br>enable-protected-configs no<br>enable-debug-command no<br>enable-module-command no<br></code></pre></td></tr></table></figure>
+
+<h2 id="宿主机部署的差异"><a href="#宿主机部署的差异" class="headerlink" title="宿主机部署的差异"></a>宿主机部署的差异</h2><p>同一份配置放到宿主机（systemd 管理）要改这些：</p>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>容器版</th>
+<th>宿主机版</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>bind</code></td>
+<td><code>0.0.0.0</code></td>
+<td><code>127.0.0.1 内网IP</code>，不要写 <code>0.0.0.0</code></td>
+</tr>
+<tr>
+<td><code>protected-mode</code></td>
+<td><code>no</code></td>
+<td><code>yes</code></td>
+</tr>
+<tr>
+<td><code>daemonize</code> &#x2F; <code>supervised</code></td>
+<td><code>no</code> &#x2F; <code>no</code></td>
+<td><code>no</code> &#x2F; systemd 管理可设 <code>systemd</code>（编译无 libsystemd 就用 <code>no</code>）</td>
+</tr>
+<tr>
+<td><code>logfile</code></td>
+<td><code>&quot;&quot;</code></td>
+<td><code>/var/log/redis/redis-server.log</code></td>
+</tr>
+<tr>
+<td><code>dir</code></td>
+<td><code>/data</code></td>
+<td><code>/var/lib/redis</code></td>
+</tr>
+</tbody></table>
+<p>日志里若出现 <code>systemd supervision requested or auto-detected, but Redis is compiled without libsystemd support!</code>，容器里把 <code>supervised</code> 设回 <code>no</code> 就好；宿主机上交给 systemd unit 管进程，不影响运行。</p>
+<h2 id="部署步骤"><a href="#部署步骤" class="headerlink" title="部署步骤"></a>部署步骤</h2><h3 id="目录与权限"><a href="#目录与权限" class="headerlink" title="目录与权限"></a>目录与权限</h3><p>官方镜像默认以 <code>redis</code> 用户（UID 999）运行，挂载进来的文件要让它可读，数据目录要可写：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p /opt/redis/data<br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">chown</span> 999:999 /opt/redis/redis.conf<br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">chmod</span> 644 /opt/redis/redis.conf<br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">chown</span> -R 999:999 /opt/redis/data<br></code></pre></td></tr></table></figure>
+
+<p>宿主机开了 SELinux（CentOS&#x2F;RHEL&#x2F;Fedora）的话，挂载加 <code>:z</code> 或 <code>:Z</code> 标签。</p>
+<h3 id="docker-run"><a href="#docker-run" class="headerlink" title="docker run"></a>docker run</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d \<br>  --name redis-prod \<br>  --memory 16g \<br>  --<span class="hljs-built_in">ulimit</span> nofile=65535:65535 \<br>  -p 127.0.0.1:6379:6379 \<br>  -v /opt/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro,z \<br>  -v /opt/redis/data:/data:z \<br>  --log-opt max-size=10m \<br>  --log-opt max-file=3 \<br>  redis:7.2.12 \<br>  redis-server /usr/local/etc/redis/redis.conf<br></code></pre></td></tr></table></figure>
+
+<p>几个细节：<code>-p 127.0.0.1:6379:6379</code> 只绑回环，需要内网访问就改成内网 IP；<code>--memory</code> 和配置里的 <code>maxmemory</code> 是一套规划，先定限额再算 <code>maxmemory</code>；<code>--ulimit</code> 直接给容器设 nofile 上限，不依赖宿主机 limits.conf（原因见系统层配套一节）。</p>
+<h3 id="docker-compose"><a href="#docker-compose" class="headerlink" title="docker-compose"></a>docker-compose</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">redis:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">redis:7.2.12</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">redis-prod</span><br>    <span class="hljs-attr">user:</span> <span class="hljs-string">&quot;999:999&quot;</span><br>    <span class="hljs-attr">mem_limit:</span> <span class="hljs-string">16g</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;127.0.0.1:6379:6379&quot;</span><br>    <span class="hljs-attr">ulimits:</span><br>      <span class="hljs-attr">nofile:</span><br>        <span class="hljs-attr">soft:</span> <span class="hljs-number">65535</span><br>        <span class="hljs-attr">hard:</span> <span class="hljs-number">65535</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./redis.conf:/usr/local/etc/redis/redis.conf:ro,z</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./data:/data:z</span><br>    <span class="hljs-attr">command:</span> <span class="hljs-string">redis-server</span> <span class="hljs-string">/usr/local/etc/redis/redis.conf</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&quot;10m&quot;</span><br>        <span class="hljs-attr">max-file:</span> <span class="hljs-string">&quot;3&quot;</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="系统层配套"><a href="#系统层配套" class="headerlink" title="系统层配套"></a>系统层配套</h2><p>以下都在<strong>宿主机</strong>执行，容器内替代不了。</p>
+<h3 id="内存-overcommit"><a href="#内存-overcommit" class="headerlink" title="内存 overcommit"></a>内存 overcommit</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sysctl vm.overcommit_memory=1<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;vm.overcommit_memory = 1&quot;</span> &gt;&gt; /etc/sysctl.conf<br></code></pre></td></tr></table></figure>
+
+<p>解决启动日志的 <code>WARNING Memory overcommit must be enabled!</code>，否则低内存时后台保存或复制可能失败。</p>
+<h3 id="网络-backlog"><a href="#网络-backlog" class="headerlink" title="网络 backlog"></a>网络 backlog</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sysctl net.core.somaxconn=1024<br>sysctl net.ipv4.tcp_max_syn_backlog=1024<br></code></pre></td></tr></table></figure>
+
+<p>同样持久化到 <code>/etc/sysctl.conf</code>，与配置里的 <code>tcp-backlog 1024</code> 对齐。</p>
+<h3 id="关闭透明大页-THP"><a href="#关闭透明大页-THP" class="headerlink" title="关闭透明大页 THP"></a>关闭透明大页 THP</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> never &gt; /sys/kernel/mm/transparent_hugepage/enabled<br><span class="hljs-built_in">echo</span> never &gt; /sys/kernel/mm/transparent_hugepage/defrag<br></code></pre></td></tr></table></figure>
+
+<p>配置里的 <code>disable-thp yes</code> 只是 Redis 启动时尝试设置，宿主机层面关掉更彻底，能明显减少延迟抖动。</p>
+<h3 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs conf"># /etc/security/limits.conf<br>* soft nofile 65535<br>* hard nofile 65535<br></code></pre></td></tr></table></figure>
+
+<p>注意：limits.conf 只对 PAM 登录的进程生效，<strong>容器内的 nofile 上限继承自 dockerd</strong>，改这个文件对已运行的容器无效。要么像上文那样在 run&#x2F;compose 里显式 <code>--ulimit</code>，要么调 dockerd 的 <code>LimitNOFILE</code>。<code>maxclients</code> 要留在这个上限之内。</p>
+<h2 id="启动后验证什么"><a href="#启动后验证什么" class="headerlink" title="启动后验证什么"></a>启动后验证什么</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker ps -a --filter <span class="hljs-string">&quot;name=redis-prod&quot;</span><br>docker logs --<span class="hljs-built_in">tail</span> 100 redis-prod<br></code></pre></td></tr></table></figure>
+
+<p>看到启动 Logo 和 <code>Ready to accept connections</code> 即正常。</p>
+<p>连接与密码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">REDISCLI_AUTH=<span class="hljs-string">&#x27;Your_Strong_Random_Password_Here_32chars+&#x27;</span> \<br>redis-cli -h 127.0.0.1 -p 6379 PING<br></code></pre></td></tr></table></figure>
+
+<p>返回 <code>PONG</code> 就通。接着确认持久化状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">REDISCLI_AUTH=<span class="hljs-string">&#x27;密码&#x27;</span> redis-cli INFO persistence<br></code></pre></td></tr></table></figure>
+
+<p>关注四个字段：<code>aof_enabled:1</code>、<code>rdb_last_bgsave_status:ok</code>、<code>aof_last_write_status:ok</code>、<code>aof_last_bgrewrite_status:ok</code>。</p>
+<p>RDB 实际落盘路径用 <code>CONFIG GET dir</code> + <code>CONFIG GET dbfilename</code> 查，容器里应为 <code>/data/dump.rdb</code>。手动触发一次：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">REDISCLI_AUTH=<span class="hljs-string">&#x27;密码&#x27;</span> redis-cli BGSAVE<br>REDISCLI_AUTH=<span class="hljs-string">&#x27;密码&#x27;</span> redis-cli INFO persistence<br></code></pre></td></tr></table></figure>
+
+<p><code>rdb_last_bgsave_status</code> 为 <code>ok</code> 且 <code>rdb_last_save_time</code> 更新即成功；若是 <code>err</code>，查 <code>/data</code> 权限、磁盘空间、fork 内存。</p>
+<p>Docker 日志落盘路径：</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker inspect --format=<span class="hljs-string">&#x27;&#123;&#123;.LogPath&#125;&#125;&#x27;</span> redis-prod<br></code></pre></td></tr></table></figure>
+
+
+<p>这是 Docker 管理的 JSON 日志文件，可以直接 <code>tail</code>、<code>grep</code> 做归档分析。</p>
+<h2 id="RDB-与-AOF：共存与”看不到-dump-rdb”"><a href="#RDB-与-AOF：共存与”看不到-dump-rdb”" class="headerlink" title="RDB 与 AOF：共存与”看不到 dump.rdb”"></a>RDB 与 AOF：共存与”看不到 dump.rdb”</h2><p>两者可以同开，本文就是这么配的。重启时 Redis <strong>优先加载 AOF</strong>（数据通常更完整），RDB 承担紧凑备份和快速全量恢复。另外后台 fork 任务同一时间只跑一个：AOF 重写进行中时，计划中的 RDB 保存会被推迟，反之亦然——这是正常行为，不是 bug。</p>
+<p>看不到 <code>dump.rdb</code>，按这个顺序查：</p>
+<ol>
+<li><strong>save 条件没触发</strong>：<code>save 900 1</code> 这类规则没满足，或写入量本来就少。空闲实例长时间没有新 RDB 是正常的。</li>
+<li><strong>被 AOF 重写推迟</strong>：见上。</li>
+<li><strong>文件在容器里没映射出来</strong>：<code>CONFIG GET dir</code> 确认是不是 <code>/data</code>，<code>/data</code> 有没有挂到宿主机。</li>
+<li><strong>保存失败</strong>：手动 <code>BGSAVE</code> 后看 <code>INFO persistence</code> 的 <code>rdb_last_bgsave_status</code>，失败常见原因是目录权限、磁盘满、fork 内存不足。</li>
+<li><strong>被覆盖</strong>：容器停止时的保存会覆盖旧 <code>dump.rdb</code>，正常。</li>
+</ol>
+<h2 id="常见故障排查表"><a href="#常见故障排查表" class="headerlink" title="常见故障排查表"></a>常见故障排查表</h2><table>
+<thead>
+<tr>
+<th>现象</th>
+<th>原因</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>can&#39;t open config file: Permission denied</code></td>
+<td>配置文件属主与容器内 UID 999 不匹配</td>
+<td><code>chown 999:999</code> + <code>chmod 644</code>，SELinux 加 <code>:z</code></td>
+</tr>
+<tr>
+<td>容器启动即退、无日志</td>
+<td><code>daemonize yes</code> 或 <code>supervised systemd</code></td>
+<td>改 <code>daemonize no</code>、<code>supervised no</code></td>
+</tr>
+<tr>
+<td><code>docker logs</code> 无输出但文件有日志</td>
+<td><code>logfile</code> 指向了文件</td>
+<td>改 <code>logfile &quot;&quot;</code>，走 Docker 日志</td>
+</tr>
+<tr>
+<td>日志停在 <code>Configuration loaded</code></td>
+<td>配置加载后进程退出：daemonize&#x2F;supervised&#x2F;dir 权限&#x2F;端口冲突</td>
+<td>前台交互跑一次 <code>redis-server</code> 看真实报错，重点查 <code>dir</code> 权限和端口</td>
+</tr>
+<tr>
+<td><code>Memory overcommit must be enabled</code> 警告</td>
+<td>宿主机没设 overcommit</td>
+<td><code>sysctl vm.overcommit_memory=1</code></td>
+</tr>
+<tr>
+<td><code>systemd supervision requested...</code> 警告</td>
+<td>容器里配了 supervised</td>
+<td>改 <code>supervised no</code></td>
+</tr>
+<tr>
+<td>看不到 <code>dump.rdb</code></td>
+<td>save 未触发 &#x2F; 目录未映射 &#x2F; BGSAVE 失败</td>
+<td><code>CONFIG GET dir</code> → <code>BGSAVE</code> → <code>INFO persistence</code></td>
+</tr>
+<tr>
+<td>写操作报错</td>
+<td>RDB 保存失败 + <code>stop-writes-on-bgsave-error yes</code></td>
+<td>查磁盘&#x2F;权限&#x2F;fork，修复后 <code>BGSAVE</code></td>
+</tr>
+</tbody></table>
+<h2 id="安全加固清单"><a href="#安全加固清单" class="headerlink" title="安全加固清单"></a>安全加固清单</h2><ol>
+<li><code>requirepass</code> 用 32 位以上随机串，定期轮换。</li>
+<li>端口只绑 <code>127.0.0.1</code> 或内网 IP，云上再加安全组限制来源。</li>
+<li>危险命令至少禁 <code>FLUSHALL</code>、<code>FLUSHDB</code>、<code>KEYS</code>；<code>CONFIG</code> 禁不禁看运维方式，禁了就无法在线 <code>CONFIG GET/SET</code>。</li>
+<li>用 ACL 给不同应用建最小权限用户，别所有业务共用 default。</li>
+<li>容器不用 <code>--privileged</code>，不以 root 跑。</li>
+<li>Docker 日志务必配 <code>max-size</code> &#x2F; <code>max-file</code>，JSON 日志撑满磁盘这种事故没必要发生。</li>
+<li>定期备份 <code>/data/dump.rdb</code> 和 <code>/data/appendonlydir</code>，并且真的演练一次恢复。</li>
+</ol>
+<p>改完密码、按内存设好 <code>maxmemory</code>，这份配置就可以直接上生产。真出问题时先看 <code>docker logs</code>，再看 <code>INFO persistence</code>，多数答案都在这两处。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Posts/" class="category-chain-item">Posts</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/docker/" class="print-no-link">#docker</a>
+      
+        <a href="/tags/redis/" class="print-no-link">#redis</a>
+      
+        <a href="/tags/%E8%BF%90%E7%BB%B4/" class="print-no-link">#运维</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Redis 7.x 生产配置模板：容器化部署下的持久化、内存与安全基线</div>
+      <div>https://piupiuxiupa.github.io/2026/11/06/redis-7-production-config/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>piupiuxiupa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年11月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/10/24/doris-monitoring-guide/" title="Apache Doris 监控接入：Prometheus + Grafana 实战">
+                        <span class="hidden-mobile">Apache Doris 监控接入：Prometheus + Grafana 实战</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com" target="_blank" rel="nofollow noopener"><span>github</span></a> <i class="iconfont icon-love"></i> <a href="https://piupiuxiupa.github.io/" target="_blank" rel="nofollow noopener"><span>piupiuxiupa</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
